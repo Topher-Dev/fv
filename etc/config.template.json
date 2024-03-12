@@ -1,0 +1,51 @@
+{
+  "COMMENT": "DO NOT ALTER THIS FILE its a tempalte for /etc/../config.json",
+  "app": {
+    "name": null,
+    "domain": "fightview.app",
+    "abbrev": "fv",
+    "version": "1.0",
+    "runmode": null,
+    "description": "An app for MMA enthusiasts",
+    "author": "topher",
+    "license": "None"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Topher-Dev/fv"
+  },
+  "jwt": {
+    "secret": null,
+    "expires_in": "+8 hour"
+  },
+  "database": {
+    "engine": "psql",
+    "host": "localhost",
+    "port": "5432",
+    "user": null,
+    "password": null,
+    "name": null
+  },
+  "dependencies": {
+    "pip": [
+      "requests"
+    ],
+    "apt": [
+      "inotify-tools",
+      "nano",
+      "apache2",
+      "postgresql",
+      "memcached",
+      "php-memcache",
+      "php",
+      "php-pgsql",
+      "php-intl",
+      "php-curl",
+      "php-zip",
+      "composer",
+      "certbot",
+      "python3-certbot-apache",
+      "ifstat"
+    ]
+  }
+}
