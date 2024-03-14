@@ -218,22 +218,23 @@ f_database() {
     CONFIG_FILE="$CONFIG_DIR/config.json"
     declare -A DB
 
+    # Extract database configuration into associative array
     while IFS== read -r key value; do
-        DB[$key]=$value
-    done < <(jq -r '.database | to_entries | .[] | .key + "=" + .value ' "$CONFIG_FILE")
+        DB[$key]="$value"
+    done < <(jq -r '.database | to_entries | .[] | .key + "=" + .value' "$CONFIG_FILE")
 
     echo "Setting up database: ${DB[name]}"
 
-    # Check if the user exists
+    # Check if the PostgreSQL user exists, create if not
     if ! sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='${DB[user]}'" | grep -qw 1; then
         echo "Creating PostgreSQL user ${DB[user]}"
-        sudo -u postgres psql -c "CREATE USER ${DB[user]} WITH PASSWORD '${DB[password]}';"
+        sudo -u postgres psql -c "CREATE USER \"${DB[user]}\" WITH PASSWORD '${DB[password]}';"
     else
         echo "User ${DB[user]} already exists."
     fi
 
-    # Check if the database exists
-    if ! sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw ${DB[name]}; then
+    # Check if the PostgreSQL database exists, create if not
+    if ! sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw "${DB[name]}"; then
         echo "Creating PostgreSQL database ${DB[name]}"
         sudo -u postgres psql -c "CREATE DATABASE \"${DB[name]}\" OWNER \"${DB[user]}\";"
     else
@@ -241,17 +242,102 @@ f_database() {
     fi
 
     echo "Granting all privileges on database ${DB[name]} to ${DB[user]}"
-    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE \"${DB[name]}\" TO ${DB[user]};"
+    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE \"${DB[name]}\" TO \"${DB[user]}\";"
 
     echo "Finished database configuration"
 
+    # Load SQL files into the database
     echo "Loading SQL init file into the database"
     for sql_file in ini.sql functions.sql views.sql; do
-        echo "Processing $sql_file..."
-        sudo -u postgres psql -d "${DB[name]}" -a -f "$GIT_ROOT/etc/$sql_file"
+        if [ -f "$GIT_ROOT/etc/$sql_file" ]; then
+            echo "Processing $sql_file..."
+            sudo -u postgres psql -d "${DB[name]}" -f "$GIT_ROOT/etc/$sql_file"
+            echo "$sql_file loaded successfully."
+        else
+            echo "SQL file $sql_file not found in $GIT_ROOT/etc/"
+        fi
     done
 
     echo "SQL files loaded into the database successfully."
+
+    PG_VERSION=$(psql -V | awk '{print $3}' | cut -d. -f1)
+    PG_HBA_CONF_PATH="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
+
+    # Define the lines you want to add
+    LOCAL_IPV4_ENTRY="host    all             all             127.0.0.1/32            md5"
+    LOCAL_IPV6_ENTRY="host    all             all             ::1/128                 md5"
+
+    # Check if the entries already exist in pg_hba.conf
+    if grep -Fxq "$LOCAL_IPV4_ENTRY" "$PG_HBA_CONF_PATH" && grep -Fxq "$LOCAL_IPV6_ENTRY" "$PG_HBA_CONF_PATH"; then
+        echo "Localhost connection entries already exist in $PG_HBA_CONF_PATH. No changes made."
+        return
+    else
+        echo "Modifying $PG_HBA_CONF_PATH to allow localhost connections..."
+        # Backup the original pg_hba.conf file
+        cp "$PG_HBA_CONF_PATH" "${PG_HBA_CONF_PATH}.bak"
+
+        # Append the localhost connection rules
+        echo "$LOCAL_IPV4_ENTRY" >> "$PG_HBA_CONF_PATH"
+        echo "$LOCAL_IPV6_ENTRY" >> "$PG_HBA_CONF_PATH"
+
+        # Reload PostgreSQL to apply changes
+        systemctl reload postgresql
+        echo "pg_hba.conf modified to allow localhost connections. Original backed up to ${PG_HBA_CONF_PATH}.bak"
+    fi
+
+}
+
+
+f_apache() {
+    # Ensure Apache2 is installed and check its status
+    if ! command -v apache2ctl &> /dev/null; then
+        echo "Apache2 is not installed. Installing Apache2..."
+        apt update
+        apt install -y apache2
+    fi
+
+    echo "Verifying Apache2 service is active..."
+    systemctl is-active --quiet apache2 || systemctl start apache2
+
+    # Verify expected Apache2 directory structure
+    if [ ! -d "/etc/apache2/sites-available" ] || [ ! -d "/etc/apache2/sites-enabled" ]; then
+        echo "Unexpected Apache2 directory structure. Exiting..."
+        exit 1
+    fi
+
+    # Retrieve configuration values
+    APP_DOMAIN=$(jq -r '.app.domain' "$CONFIG_DIR/config.json")
+
+    APACHE_CONFIG_FILE="/etc/apache2/sites-available/$APP_NAME.conf"
+
+    # Create Apache configuration for the app if it doesn't exist
+    if [ ! -f "$APACHE_CONFIG_FILE" ]; then
+        echo "Creating Apache site configuration for $APP_NAME..."
+        cat > "$APACHE_CONFIG_FILE" <<EOF
+<VirtualHost *:80>
+    ServerName $APP_NAME
+    DocumentRoot $GIT_ROOT/web/client
+    <Directory $GIT_ROOT/web/client>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog \${APACHE_LOG_DIR}/$APP_NAME_error.log
+    CustomLog \${APACHE_LOG_DIR}/$APP_NAME_access.log combined
+</VirtualHost>
+EOF
+        echo "Apache site configuration for $APP_NAME created."
+    else
+        echo "Apache configuration for $APP_NAME already exists."
+    fi
+
+    # Enable the site and potentially disable the default site
+    a2ensite "$APP_NAME"
+    a2dissite 000-default.conf
+
+    # Reload Apache2 to apply the new configuration
+    systemctl reload apache2
+    echo "Apache configuration for $APP_NAME applied successfully."
 }
 
 # Check the first parameter and call the respective function
@@ -262,7 +348,8 @@ case "$1" in
         f_config
 	#f_apt
 	#f_pip
-	f_database
+	#f_database
+	f_apache
         ;;
     *)
         echo "Usage: $0 {full}"
