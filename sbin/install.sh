@@ -7,25 +7,6 @@ LOG_DIR=""
 GIT_ROOT=""
 CONFIG_FILE=""
 
-f_pre() {
-    echo "Checking preconditions..."
-
-    # Check for root/superuser privileges
-    if [[ $EUID -ne 0 ]]; then
-        echo "This script must be run with root privileges."
-        exit 1
-    fi
-    echo "Root privileges confirmed."
-
-    # Check if the current directory is part of a Git repository
-    if git rev-parse --git-dir > /dev/null 2>&1; then
-        echo "Git repository confirmed."
-    else
-        echo "This script must be executed within a Git repository."
-        exit 1
-    fi
-}
-
 f_jq() {
     echo "Attempting to install jq..."
 
@@ -343,8 +324,7 @@ EOF
 # Check the first parameter and call the respective function
 case "$1" in
     full)
-        f_pre
-        #f_jq
+        f_jq
         f_config
 	#f_apt
 	#f_pip
