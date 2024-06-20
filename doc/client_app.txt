@@ -1,0 +1,7 @@
+ini sequence
+
+0) app globaly scoped variable initiated 
+1) Javascript / css files are loaded
+2) Singleton Application class initated and assigned to
+variable
+    a) 

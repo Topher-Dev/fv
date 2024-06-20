@@ -2,10 +2,30 @@
 
 # Initialize variables as empty, set in f_config
 APP_NAME=""
-CONFIG_DIR=""
-LOG_DIR=""
-GIT_ROOT=""
-CONFIG_FILE=""
+APP_CONFIG_DIR=""
+APP_LOG_DIR=""
+APP_GIT_ROOT=""
+APP_CONFIG_FILE=""
+
+f_pre() {
+    echo "Checking preconditions..."
+
+    # Check for root/superuser privileges
+    if [[ $EUID -ne 0 ]]; then
+        echo "This script must be run with root privileges."
+        exit 1
+    fi
+    echo "Root privileges confirmed."
+
+        # Check if the current directory is part of a Git repository
+    if git rev-parse --git-dir > /dev/null 2>&1; then
+        echo "Git repository confirmed."
+    else
+        echo "This script must be executed within a Git repository."
+        #exit 1
+    fi
+
+}
 
 f_jq() {
     echo "Attempting to install jq..."
@@ -34,20 +54,20 @@ f_jq() {
 
 f_config() {
     APP_NAME=$(basename -s .git `git config --get remote.origin.url`)
-    CONFIG_DIR="/etc/${APP_NAME}"
-    LOG_DIR="/var/log/${APP_NAME}"
-    GIT_ROOT=$(git rev-parse --show-toplevel)
-    CONFIG_FILE="${CONFIG_DIR}/config.json"
+    APP_CONFIG_DIR="/etc/${APP_NAME}"
+    APP_LOG_DIR="/var/log/${APP_NAME}"
+    APP_GIT_ROOT=$(git rev-parse --show-toplevel)
+    APP_CONFIG_FILE="${APP_CONFIG_DIR}/config.json"
 
     # Check if the config file already exists
-    if [ -f "$CONFIG_FILE" ]; then
-        echo "Configuration already exists at $CONFIG_FILE."
+    if [ -f "$APP_CONFIG_FILE" ]; then
+        echo "Configuration already exists at $APP_CONFIG_FILE."
         echo "No changes were made to avoid overwriting existing configuration."
         return 0
     fi
 
-    mkdir -p "$CONFIG_DIR"
-    mkdir -p "$LOG_DIR"
+    mkdir -p "$APP_CONFIG_DIR"
+    mkdir -p "$APP_LOG_DIR"
     echo "Configuration and log directories created."
 
     # Prompt user for configurations
@@ -82,14 +102,14 @@ f_config() {
     .database.name = $appname |
     .database.user = $appname |
     .database.password = $dbpassword
-    ' "$GIT_ROOT/etc/config.template.json")"
+    ' "$APP_GIT_ROOT/etc/config.template.json")"
 
-    echo "$CONFIG_TEMPLATE" | tee "$CONFIG_DIR/config.json" > /dev/null
+    echo "$CONFIG_TEMPLATE" | tee "$APP_CONFIG_DIR/config.json" > /dev/null
 
     # Remove "COMMENT" entries from the template
-    jq 'del(.. | .COMMENT?)' "$CONFIG_DIR/config.json"
+    jq 'del(.. | .COMMENT?)' "$APP_CONFIG_DIR/config.json"
 
-    echo "Configuration file successfully created at $CONFIG_DIR/config.json"
+    echo "Configuration file successfully created at $APP_CONFIG_DIR/config.json"
 }
 
 f_apt() {
@@ -98,7 +118,7 @@ f_apt() {
 
     # Use jq to parse the config file for dependencies.apt and install them
     echo "Checking reliability of apt package names: "
-    DEPENDENCIES=$(jq -r '.dependencies.apt | join(" ")' "$CONFIG_DIR/config.json")
+    DEPENDENCIES=$(jq -r '.dependencies.apt | join(" ")' "$APP_CONFIG_DIR/config.json")
 
     # Simulate the installation of the packages to check if all are available
     OUTPUT=$(sudo apt install -s $DEPENDENCIES 2>&1)
@@ -148,7 +168,7 @@ f_pip() {
     fi
 
     # Define the virtual environment directory
-    VENV_DIR="$CONFIG_DIR/venv"
+    VENV_DIR="$APP_CONFIG_DIR/venv"
 
     # Create a virtual environment if it doesn't exist
     if [ ! -d "$VENV_DIR" ]; then
@@ -166,7 +186,7 @@ f_pip() {
 
     # Parse Python package dependencies from the config file
     echo "Checking for Python package dependencies..."
-    PYTHON_DEPENDENCIES=$(jq -r '.dependencies.pip[]' "$CONFIG_DIR/config.json")
+    PYTHON_DEPENDENCIES=$(jq -r '.dependencies.pip[]' "$APP_CONFIG_DIR/config.json")
 
     echo "Processing Python package installations..."
     for pkg in $PYTHON_DEPENDENCIES; do
@@ -196,13 +216,13 @@ f_pip() {
 
 f_database() {
     # Load database configuration from config.json
-    CONFIG_FILE="$CONFIG_DIR/config.json"
+    APP_CONFIG_FILE="$APP_CONFIG_DIR/config.json"
     declare -A DB
 
     # Extract database configuration into associative array
     while IFS== read -r key value; do
         DB[$key]="$value"
-    done < <(jq -r '.database | to_entries | .[] | .key + "=" + .value' "$CONFIG_FILE")
+    done < <(jq -r '.database | to_entries | .[] | .key + "=" + .value' "$APP_CONFIG_FILE")
 
     echo "Setting up database: ${DB[name]}"
 
@@ -230,12 +250,12 @@ f_database() {
     # Load SQL files into the database
     echo "Loading SQL init file into the database"
     for sql_file in ini.sql functions.sql views.sql; do
-        if [ -f "$GIT_ROOT/etc/$sql_file" ]; then
+        if [ -f "$APP_GIT_ROOT/etc/$sql_file" ]; then
             echo "Processing $sql_file..."
-            sudo -u postgres psql -d "${DB[name]}" -f "$GIT_ROOT/etc/$sql_file"
+            sudo -u postgres psql -d "${DB[name]}" -f "$APP_GIT_ROOT/etc/$sql_file"
             echo "$sql_file loaded successfully."
         else
-            echo "SQL file $sql_file not found in $GIT_ROOT/etc/"
+            echo "SQL file $sql_file not found in $APP_GIT_ROOT/etc/"
         fi
     done
 
@@ -287,24 +307,24 @@ f_apache() {
     fi
 
     # Retrieve configuration values
-    APP_DOMAIN=$(jq -r '.app.domain' "$CONFIG_DIR/config.json")
+    APP_DOMAIN=$(jq -r '.app.domain' "$APP_CONFIG_DIR/config.json")
 
-    APACHE_CONFIG_FILE="/etc/apache2/sites-available/$APP_NAME.conf"
+    APACHE_APP_CONFIG_FILE="/etc/apache2/sites-available/$APP_NAME.conf"
 
     # Create Apache configuration for the app if it doesn't exist
-    if [ ! -f "$APACHE_CONFIG_FILE" ]; then
+    if [ ! -f "$APACHE_APP_CONFIG_FILE" ]; then
         echo "Creating Apache site configuration for $APP_NAME..."
-        cat > "$APACHE_CONFIG_FILE" <<EOF
+        cat > "$APACHE_APP_CONFIG_FILE" <<EOF
 <VirtualHost *:80>
     ServerName $APP_NAME
-    DocumentRoot $GIT_ROOT/web/client
-    <Directory $GIT_ROOT/web/client>
+    DocumentRoot $APP_GIT_ROOT/web/client
+    <Directory $APP_GIT_ROOT/web/client>
         AllowOverride All
         Require all granted
     </Directory>
 
-    ErrorLog \${APACHE_LOG_DIR}/$APP_NAME_error.log
-    CustomLog \${APACHE_LOG_DIR}/$APP_NAME_access.log combined
+    ErrorLog \${APACHE_APP_LOG_DIR}/$APP_NAME_error.log
+    CustomLog \${APACHE_APP_LOG_DIR}/$APP_NAME_access.log combined
 </VirtualHost>
 EOF
         echo "Apache site configuration for $APP_NAME created."
@@ -324,12 +344,13 @@ EOF
 # Check the first parameter and call the respective function
 case "$1" in
     full)
+        f_pre
         f_jq
         f_config
-	#f_apt
-	#f_pip
-	#f_database
-	f_apache
+        f_apt
+        f_pip
+        f_database
+        f_apache
         ;;
     *)
         echo "Usage: $0 {full}"

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Alert</title>
+</head>
+<style>
+
+    .table.differences {
+        overflow-y: auto;
+        height: 96%;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    .differences tr:first-child th {
+        border-top: none;
+        padding-top: 0;
+    }
+
+    .container.differences tr:not(.table-sub-header){
+        height: 3rem;
+    }
+
+    .differences td {
+        font-size: 16px;
+    }
+
+    .differences th {
+        font-family: 'Graphik Regular';
+        text-align: right;
+        font-size: 18px;
+        padding-top: .3rem;
+        padding-right: .5rem;
+        border-bottom: .1rem solid #d7d7dd;
+        border-top: .1rem solid #d7d7dd;
+    }
+
+    /* if the screen is phone size shrink all the text*/
+    @media screen and (max-width: 600px) {
+        .differences th {
+            font-size: 13px !important;
+        }
+        .differences td {
+            font-size: 13px !important;
+            max-width: 100px !important;
+        }
+    }
+
+    tr td:first-child {
+        padding-left: .5rem;
+        text-transform: capitalize;
+    }
+
+    .old-value{
+        background-color: rgba(226, 0, 0, 0.086);
+        padding: 0 .75rem;
+        text-decoration: line-through;
+        color: #A7ADB7;
+        width: 40%;
+    }
+
+    .new-value {
+        background-color: rgba(0, 226, 0, 0.086);
+        padding: 0 .75rem;
+        width: 40%;
+    }
+
+
+    i {
+        font-weight: 500;
+    }
+
+    img {
+        width: 200px;
+        height: auto;
+        margin: 5px 5px;
+        cursor: pointer;
+    }
+
+    ul {
+        list-style: none;
+        margin: 5px 0px;
+        padding: 0;
+        line-height: 23px;
+    }
+
+    li:first-letter {
+        text-transform: uppercase;
+    }
+
+    h4 {
+        text-transform: capitalize;
+        text-decoration: underline;
+        margin: 11px 0;
+    }
+
+    .containor {
+        border: .1rem solid #e5e5e5;
+        border-radius: .5rem;
+        padding: 10px 15px;
+        width: fit-content;
+    }
+
+    .col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+    }
+
+    button {
+        outline: 0;
+        letter-spacing: 0.02857em;
+        min-width: fit-content;
+        padding: .65rem 2rem;
+        font-family: arial;
+        border-radius: .75rem;
+        color: white;
+        font-weight: bold;
+        background-color: #0085e2;
+        box-shadow: rgba(0,0,0,0.2) 0px 1px 2px -1px,rgba(0,0,0,0.14) 0px 2px 3px 0px,rgba(0,0,0,0.12) 0px 1px 3px 0px;
+    }
+
+    button:hover {
+        opacity: .7;
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    /* Media query for smaller screens (like phones) */
+    @media screen and (max-width: 600px) {
+        img {
+            width: 150px; /* smaller size for mobile devices */
+            height: auto;
+            margin-bottom: 5px;
+        }
+    }
+
+</style>
+<body class="col">
+    <ul class="containor">
+        <li>Code: <?= $code ?></li>
+        <li>Stock #: <?= $stock_no ?></li>
+        <li>Customer: <?= $customer_name ?></li>
+        <li>Action User: <?= $user ?></li>
+    </ul>
+    <h3 style="margin: 15px 0 15px 0;"><?= $message ?></h3>
+    <div><?= $details ?></div>
+    <a style="display: block;" class="pointer" target='_blank' <?= $href ?> ><button style="margin: 35px 0 30px 0;">Go To Prepsheet</button></a>
+    <a style="display: block;" href="https://salesprep.app/"  target="_blank">
+        <img width=200 src="https://salesprep.app/imgs/logo.svg" alt="Salesprep">
+    </a>
+</body>
+</html>
