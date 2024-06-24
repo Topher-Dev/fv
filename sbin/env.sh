@@ -49,7 +49,6 @@ f_export() {
     export PGPORT=$DATABASE_PORT
     echo "Environment variables exported."
     echo "You should see the APP_NAME here: $APP_NAME"
-echo "Current PYTHONPATH: $PYTHONPATH"
 }
 
 # This script is used to write the environment variables to apache

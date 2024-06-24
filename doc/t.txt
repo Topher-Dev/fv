@@ -1,0 +1,47 @@
+
+
+
+1)
+#one "scrape" file per source aka www.somedata.com/data.json (can be xml, html.. etc)
+#there may be an interable portion of the url, such as www.somedata.com/data/1.json, www.somedata.com/data/2.json, etc.
+
+2)
+Once we have the data or one iteration of the data the dedicated scraper will parse it into data for each table. it could be
+one table or multiple tables.
+
+3) the scraper will produce the list of raw table data from the internet, loop through the tables
+
+    import somedata_scraper
+
+    #eg. [ { table: table1, data: [ { 'name': 'john', 'age': 30 }, { 'name': 'jane', 'age': 25 } ], instructions: {...} }, 
+    # { table: table2, data: [ { 'name': 'john', 'age': 30 }, { 'name': 'jane', 'age': 25 } ], , instructions: {...} } ]
+    raw_table_data_list = somedata_scraper.get_raw_data_from_internet(content, 'json')
+
+
+    db = Database(host=host, database=database, user=user, password=password)
+    db.connect()
+
+    for raw_table_data in raw_table_data_list:
+
+        try:
+            
+            table = Table(db, raw_table_data)
+
+            # Transform, validate, and save data
+            table.transform()
+            table.validate()
+
+            if not table.errors:
+                table.save(crud)
+                print("Data saved successfully")
+            else:
+                print("Errors occurred during validation:", table.errors)
+
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            db.disconnect()
+            print("Database connection closed")
+    
+
+

@@ -3,7 +3,7 @@
 echo "Setting up bin"
 
 create_symlink() {
-        local script_path="/home/fvadmin/fv/sbin/env.sh"
+        local script_path="/home/chris/Workspace/fv/sbin/env.sh"
         local symlink_path="/usr/local/bin/app_env"
 
         if [ ! -f "$script_path" ]; then
