@@ -1,20 +1,6 @@
 #!/bin/bash
 
-# List of required environment variables
-required_vars=($APP_GIT_ROOT PGHOST PGPORT PGDATABASE PGUSER PGPASSWORD)
-
-# Iterate through the list of required variables
-for var in "${required_vars[@]}"
-do
-    # Check if the variable is set
-    if [[ -z "${!var}" ]]; then
-        echo "Error: $var is not set."
-        exit 1
-    fi
-done
-
-# If all required variables are set, continue running the script
-echo "All required environment variables are set. Continuing script execution..."
+app_env export
 
 # Get a list of all tables in the database
 tables=$(psql -c "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'")

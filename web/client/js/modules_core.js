@@ -289,6 +289,7 @@ function get_nav(){
                     <ul role="list" class="d--f fd--r"> ${ items.map( ( { key, icon }, i ) => html`
                         <li 
                             key="${key}" 
+                            style="border:1px solid yellow"
                             class="d--f ai--c nav-item ${ i === 0 ? "active" : "" }" 
                             onclick="select()">${get_svg(icon, 'class="nav-icon"')}
                         </li>`)}

@@ -1,18 +1,25 @@
 #!/bin/bash
+#test
+# Function to retrieve app_name from /etc/app_name
+app_name_file="/etc/app_name"
 
-# Check if the current directory is part of a Git repository
-if git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "Git repository confirmed."
-else
-    echo "This script must be executed within a Git repository."
-    #exit 1
+if [ ! -f "$app_name_file" ]; then
+    echo "Error: App name file not found: $app_name_file"
+    exit 1
 fi
 
-export APP_NAME=$(basename -s .git `git config --get remote.origin.url`)
+export APP_NAME=$(cat "$app_name_file")
+
+if [ -z "$APP_NAME" ]; then
+    echo "Failed to retrieve app_name from file."
+    exit 1
+fi
+
 export APP_CONFIG_DIR="/etc/${APP_NAME}"
 export APP_LOG_DIR="/var/log/${APP_NAME}"
 export APP_CONFIG_FILE="${APP_CONFIG_DIR}/config.json"
 export APP_GIT_ROOT=$(git rev-parse --show-toplevel)
+export PYTHONPATH="$APP_GIT_ROOT/lib"
 
 # Check if the JSON file exists
 if [ ! -f "$APP_CONFIG_FILE" ]; then
@@ -33,7 +40,7 @@ exported_vars=$(jq -r '
 
 # This script is used to export the environment variables
 f_export() {
-	eval "$exported_vars"
+    eval "$exported_vars"
     #export the pg variables
     export PGUSER=$DATABASE_USER
     export PGHOST=$DATABASE_HOST
@@ -42,7 +49,7 @@ f_export() {
     export PGPORT=$DATABASE_PORT
     echo "Environment variables exported."
     echo "You should see the APP_NAME here: $APP_NAME"
-
+echo "Current PYTHONPATH: $PYTHONPATH"
 }
 
 # This script is used to write the environment variables to apache

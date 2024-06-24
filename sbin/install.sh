@@ -19,12 +19,21 @@ f_pre() {
 
         # Check if the current directory is part of a Git repository
     if git rev-parse --git-dir > /dev/null 2>&1; then
-        echo "Git repository confirmed."
+        echo "Git repository confirmed, setting var APP_NAME."
+	APP_NAME=$(basename -s .git `git config --get remote.origin.url`)
     else
         echo "This script must be executed within a Git repository."
         #exit 1
     fi
 
+}
+
+f_set_name() {
+    local app_name_file="/etc/app_name"
+
+    # Store app_name in a flat file
+    echo "$APP_NAME" > "$app_name_file"
+    echo "Stored app_name: $APP_NAME in $app_name_file"
 }
 
 f_jq() {
@@ -53,7 +62,7 @@ f_jq() {
 }
 
 f_config() {
-    APP_NAME=$(basename -s .git `git config --get remote.origin.url`)
+
     APP_CONFIG_DIR="/etc/${APP_NAME}"
     APP_LOG_DIR="/var/log/${APP_NAME}"
     APP_GIT_ROOT=$(git rev-parse --show-toplevel)
@@ -215,7 +224,10 @@ f_pip() {
 }
 
 f_database() {
-    # Load database configuration from config.json
+ 
+
+   cd /tmp
+
     APP_CONFIG_FILE="$APP_CONFIG_DIR/config.json"
     declare -A DB
 
@@ -245,21 +257,23 @@ f_database() {
     echo "Granting all privileges on database ${DB[name]} to ${DB[user]}"
     sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE \"${DB[name]}\" TO \"${DB[user]}\";"
 
-    echo "Finished database configuration"
+    export PGUSER="${DB[user]}"
+    export PGHOST="${DB[host]}"
+    export PGPASSWORD="${DB[password]}"
+    export PGDATABASE="${DB[name]}"
+    export PGPORT="${DB[port]}"
 
-    # Load SQL files into the database
+    # Load SQL files into the database using the created user
     echo "Loading SQL init file into the database"
     for sql_file in ini.sql functions.sql views.sql; do
-        if [ -f "$APP_GIT_ROOT/etc/$sql_file" ]; then
+        sql_file_path="$APP_GIT_ROOT/etc/$sql_file"
+        if [ -f "$sql_file_path" ]; then
             echo "Processing $sql_file..."
-            sudo -u postgres psql -d "${DB[name]}" -f "$APP_GIT_ROOT/etc/$sql_file"
-            echo "$sql_file loaded successfully."
+            psql < "$sql_file_path"
         else
             echo "SQL file $sql_file not found in $APP_GIT_ROOT/etc/"
         fi
     done
-
-    echo "SQL files loaded into the database successfully."
 
     PG_VERSION=$(psql -V | awk '{print $3}' | cut -d. -f1)
     PG_HBA_CONF_PATH="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
@@ -287,7 +301,6 @@ f_database() {
     fi
 
 }
-
 
 f_apache() {
     # Ensure Apache2 is installed and check its status
@@ -323,8 +336,9 @@ f_apache() {
         Require all granted
     </Directory>
 
-    ErrorLog \${APACHE_APP_LOG_DIR}/$APP_NAME_error.log
-    CustomLog \${APACHE_APP_LOG_DIR}/$APP_NAME_access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
 </VirtualHost>
 EOF
         echo "Apache site configuration for $APP_NAME created."
@@ -345,12 +359,13 @@ EOF
 case "$1" in
     full)
         f_pre
-        f_jq
-        f_config
-        f_apt
-        f_pip
-        f_database
-        f_apache
+	f_set_name
+        #f_jq
+        #f_config
+        #f_apt
+        #f_pip
+        #f_database
+        #f_apache
         ;;
     *)
         echo "Usage: $0 {full}"
