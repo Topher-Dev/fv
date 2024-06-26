@@ -105,3 +105,5 @@ def load_scraper(scraper_name):
         return scraper_function
     except KeyError:
         raise ValueError(f"Scraper function '{scraper_name}' not found.")
+
+
