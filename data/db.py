@@ -21,6 +21,7 @@ class Database:
                     password=self.password,
                     row_factory=dict_row
                 )
+                self.connection.autocommit = True
                 print("Connected to PostgreSQL database")
             else:
                 raise ValueError(f"Unsupported engine type: {self.engine}")

@@ -37,3 +37,24 @@ CREATE TABLE external_id (
 
 -- Create a unique constraint on the external_id and internal_id and id_type
 ALTER TABLE external_id ADD CONSTRAINT unique_external_id_internal_id_id_type UNIQUE (external_id, internal_id, id_type);
+
+-- Create a simple table for a person drop if exists person;
+DROP TABLE IF EXISTS ufc_event;
+CREATE TABLE ufc_event (
+
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    web_url VARCHAR(255) UNIQUE NOT NULL,
+    status VARCHAR(30) NOT NULL DEFAULT 'pending_fmid',
+
+    fmid INTEGER UNIQUE,
+    data JSONB,
+
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    created_by INTEGER,
+    updated_by INTEGER,
+    deleted_by INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP,
+    deleted_at TIMESTAMP
+);

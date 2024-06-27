@@ -30,7 +30,7 @@ def main():
         print("Database connection successful")
 
         # Scrape data from the internet
-        raw_table_data_list = scraper_function()
+        raw_table_data_list = scraper_function(crud)
 
         for raw_table_data in raw_table_data_list:
             try:

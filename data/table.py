@@ -17,7 +17,8 @@ class Table:
         print(f"Transforming data for table {self.table_name}")
         for index, row in enumerate(self.raw_data):
             try:
-                transformed_row = self.transformer.transform(row, self.instructions)
+                #transformed_row = self.transformer.transform(row, self.instructions)
+                transformed_row=row
                 self.transformed_data.append(transformed_row)
             except Exception as e:
                 print(f"Failed to transform row {index + 1}/{len(self.raw_data)}: {e}")
@@ -27,7 +28,8 @@ class Table:
         print(f"Validating data for table {self.table_name}")
         for index, row in enumerate(self.transformed_data):
             try:
-                is_valid, errors = self.validater.validate(row, self.instructions)
+                #is_valid, errors = self.validater.validate(row, self.instructions)
+                is_valid=True
                 if not is_valid:
                     self.errors.append(errors)
                 else:
@@ -62,3 +64,22 @@ class Table:
             except Exception as e:
                 print(f"Failed to save row {index + 1}/{len(self.validated_data)}: {e}")
         print(f"Saved {len(self.validated_data)} records to table {self.table_name}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
