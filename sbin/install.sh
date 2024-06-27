@@ -359,11 +359,11 @@ EOF
 case "$1" in
     full)
         f_pre
-	f_set_name
+	#f_set_name
         #f_jq
-        #f_config
+        f_config
         #f_apt
-        #f_pip
+        f_pip
         #f_database
         #f_apache
         ;;

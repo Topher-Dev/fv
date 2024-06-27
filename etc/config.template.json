@@ -28,7 +28,9 @@
   },
   "dependencies": {
     "pip": [
-      "requests"
+      "requests",
+      "beautifulsoup4",
+      "psycopg"
     ],
     "apt": [
       "inotify-tools",

@@ -35,10 +35,11 @@ def gather_ufcevent_upcoming_urls(db):
     print(len(event_urls))
     return event_urls
 
-def external_id_sync(db):
+def external_id_sync(view_display_id, page=0):
 
     page=0
-    id_type='event_id'
+    id_type='url'
+    id_for='event_ufc'
     source = "ufc_ajax"
     external_ufc_event_ids=[]
     base_url = "https://www.ufc.com/views/ajax"
@@ -46,7 +47,7 @@ def external_id_sync(db):
     # Query parameters
     params = {
         "view_name": "events_upcoming_past_solr",
-        "view_display_id": "past",
+        "view_display_id": view_display_id,
         "view_args": "",
         "view_path": "/events",
         "view_base_path": "",
@@ -58,23 +59,33 @@ def external_id_sync(db):
         "ajax_page_state[libraries]": "eJx1kQFyhCAMRS8Ey0V6ByZCVLZZ4pDg1p6-FHS6005nHP3_RfEngRiVIR8OTnGbC2c1E4R3r9yuzb1of5d_S4ofauKObk8R2cwJKfqlcN0cEj4w623lkj7b8UBeYRKzMC-EHjLQoSmI-w0MwcFVfUwSeMdyOM4YmMzGRC6WugHdvrWllN_FyCGKjxZL0NQ5uKmqcpauA5RoQ_t7S2JnZsXyw3Fv9LJcBambOVF7zTaLYZQX4gnIBpFXex9uxcJD8NMq2ydoWF_O_ottH1AvpmwhaOLcXe_HxsJb5OdAbYTVPiANt8EyepQ27gmKnVMRPYnia4fdrwjx9H32TfgeQdx4vKXxuZ_TsuoGIg6q9pXBFcsTB6ATuILLxY-2fCcIJay-hTF7wqe4fr89OFbCgTzc4cMvqO4SJ095Trnl9BLK9247tRe1g34BunMJCA"
     }
 
-    while True:
+    #while True:
         # Sending the request
-        response = requests.get(base_url, params=params, headers=headers)
+    response = requests.get(base_url, params=params, headers=headers)
 
-        # Checking the response
-        if response.status_code == 200:
-            data = response.json()
-            print(data)
-            return data
-        else:
-            print(f"Error: {response.status_code}")
-            return None
+    # Checking the response
+    json_response = response.json()
+
+    html_content=""
+
+    # Loop through the JSON array to find the item with command="insert"
+    for item in json_response:
+        if item.get('command') == 'insert':
+            html_content+=item['data']
+            break
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    event_links = []
+    events = soup.find_all('div', class_='c-card-event--result__info')
+
+    for event in events:
+        event_name = event.find('h3', class_='c-card-event--result__headline')
+        event_link = event_name.find('a')['href'] if event_name else ''
+        event_links.append(event_link)
 
 
+    print(event_links)
+external_id_sync('upcoming')
 
-    print("External ID sync complete")
-
-#external_id_sync('db')
-
-gather_ufcevent_upcoming_urls('db')
+#gather_ufcevent_upcoming_urls('db')
