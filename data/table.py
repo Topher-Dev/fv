@@ -30,6 +30,7 @@ class Table:
             try:
                 #is_valid, errors = self.validater.validate(row, self.instructions)
                 is_valid=True
+                errors=[]
                 if not is_valid:
                     self.errors.append(errors)
                 else:
@@ -40,13 +41,20 @@ class Table:
         if self.errors:
             print(f"Validation errors: {self.errors}")
 
+
     def check_and_upsert(self, crud, row):
+        #I want to ensure that we identify from the data wether this relates to an existing record (if so, update it) or a new record (if so, insert it)
         unique_criteria = {key: row[key] for key in self.instructions.get('unique', []) if key in row}
         if unique_criteria:
             try:
                 existing_record = crud.read_one(self.table_name, unique_criteria)
                 if existing_record:
                     print(f"Updating existing record in table {self.table_name} with criteria {unique_criteria}")
+                    
+                    #remove unique criteria from row
+                    for key in unique_criteria.keys():
+                        row.pop(key)
+
                     return crud.update_one(self.table_name, unique_criteria, row)
             except Exception as e:
                 print(f"Failed to update record with criteria {unique_criteria}: {e}")

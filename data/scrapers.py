@@ -223,14 +223,19 @@ def ufcevent_1(crud):
 
 def ufcfight_1(crud):
     #read all the pending fmids
-    pending_fmids=crud.read_list("ufc_event", { 'status' : 'pending_fmid'})
+    events_pending_fmids=crud.read_list("ufc_event", { 'status' : 'pending_fmid'})
 
     #loop through
     base_url='https://ufc.com'
 
-    for pf in pending_fmids:
+    #handle the case where the events_pending_fmids list is empty
+    if not events_pending_fmids:
+        print("No events with pending FMIDs found.")
+        return []
 
-        url = base_url + pf['web_url']
+    for event_pf in events_pending_fmids:
+
+        url = base_url + event_pf['web_url']
         print(url)
         #make the request
         # Fetch the HTML content 
@@ -267,7 +272,7 @@ def ufcfight_1(crud):
 
 
         #get all the fights
-# Find all <li> tags with class "l-listing__item"
+        # Find all <li> tags with class "l-listing__item"
         fight_list_items = soup.find_all('li', class_='l-listing__item')
 
         # Initialize an empty list to store fight details
@@ -286,21 +291,169 @@ def ufcfight_1(crud):
                         fighter_1_url = fight_div.find('div', class_='c-listing-fight__corner--red').find('a')['href']
                         fighter_2_url = fight_div.find('div', class_='c-listing-fight__corner--blue').find('a')['href']
                         
+                        #strip the base url
+                        fighter_1_url = fighter_1_url.split('com')[1]
+                        fighter_2_url = fighter_2_url.split('com')[1]
+
+
                         # Append fight details to the list
                         fights.append({
-                                'data_fmid': data_fmid,
+                                'fmid': data_fmid,
                                 'fighter_1_url': fighter_1_url,
-                                'fighter_2_url': fighter_2_url
+                                'fighter_2_url': fighter_2_url,
+                                'event_id': event_pf['id']
                         })
 
         # Print the list of fights
         for fight in fights:
-                print(f"Fight FMID: {fight['data_fmid']}")
+                print(f"Fight FMID: {fight['fmid']}")
                 print(f"Fighter 1 URL: {fight['fighter_1_url']}")
                 print(f"Fighter 2 URL: {fight['fighter_2_url']}")
-                print()
 
         #loop through them and extract fight_fmid, fighter_1_url, fighter_2_url
 
         break
 	#create fight record with above and ufc_event_id
+
+    return [
+        {
+            "table": "ufc_fight",
+            "data": fights
+        },
+        {
+            "table": "ufc_event",
+            "data": [{
+                "web_url": event_pf['web_url'],
+                "status": "pending_data",
+                "fmid": event_fmid
+            }],
+            "instructions": {
+                "unique": ["web_url"]
+            }
+        }
+    ]
+
+
+def ufcevent_2(crud):
+    #read all the pending fmids
+    events_pending_data=crud.read_list("ufc_event", { 'status' : 'pending_data'})
+
+    #loop through
+    base_url='https://d29dxerjsp82wz.cloudfront.net/api/v3/event/live/'
+
+    #handle the case where the events_pending_data list is empty
+    if not events_pending_data:
+        print("No events with pending FMIDs found.")
+        return []
+    
+
+    events_update_data = []
+
+    for event_pd in events_pending_data:
+
+        url = base_url + str(event_pd['fmid']) + '.json'
+        print(url)
+        response = requests.get(url=url, headers=headers)
+
+        # Parse JSON response
+        event_data = response.json()
+
+        events_update_data.append({
+            "id": event_pd['id'],
+            "status": "completed",
+            "data": json.dumps(event_data)
+        })
+
+        break
+
+
+    return [
+        {
+            "table": "ufc_event",
+            "data": events_update_data,
+            "instructions": {
+                "unique": ["id"]
+            }
+        }
+    ]
+
+def ufcfight_2(crud):
+
+    fights_pending_data=crud.read_list("ufc_fight", { 'status' : 'pending_data'})
+
+    #loop through
+    base_url='https://d29dxerjsp82wz.cloudfront.net/api/v3/fight/live/'
+
+    #handle the case where the fights_pending_data list is empty
+    if not fights_pending_data:
+        print("No fights with pending data status found.")
+        return []
+    
+
+    fights_update_data = []
+
+    for fight_pd in fights_pending_data:
+
+        url = base_url + str(fight_pd['fmid']) + '.json'
+        print(url)
+        response = requests.get(url=url, headers=headers)
+
+        # Parse JSON response
+        fight_data = response.json()
+
+        fights_update_data.append({
+            "id": fight_pd['id'],
+            "status": "completed",
+            "data": json.dumps(fight_data)
+        })
+
+        break
+
+
+    return [
+        {
+            "table": "ufc_fight",
+            "data": fights_update_data,
+            "instructions": {
+                "unique": ["id"]
+            }
+        }
+    ]
+
+def ufcfighter_1(crud):
+    #read a list of unique fighter_urls from the ufc_fight_table
+    fighters_pending_fmids=crud.read_list_by_query("ufc_fighter", { 'status' : 'pending_fmid'})
+
+    #loop through
+    base_url='https://ufc.com'
+
+    #handle the case where the fighters_pending_fmids list is empty
+    if not fighters_pending_fmids:
+        print("No fighters with pending FMIDs found.")
+        return []
+
+    for fighter_pf in fighters_pending_fmids:
+
+        url = base_url + fighter_pf['web_url']
+        print(url)
+
+        response = requests.get(url)
+        time.sleep(.5)
+        html_content = response.text
+
+
+        break
+
+    return [
+        {
+            "table": "ufc_fighter",
+            "data": [{
+                "web_url": fighter_pf['web_url'],
+                "status": "pending_data",
+                "fmid": fighter_fmid
+            }],
+            "instructions": {
+                "unique": ["web_url"]
+            }
+        }
+    ]
