@@ -86,3 +86,21 @@ CREATE TABLE ufc_fight (
 
 --add foreign key constraints
 ALTER TABLE ufc_fight ADD CONSTRAINT fk_ufc_fight_event_id FOREIGN KEY (event_id) REFERENCES ufc_event(id);
+
+
+DROP TABLE IF EXISTS ufc_fighter;
+CREATE TABLE ufc_fighter (
+
+    id SERIAL PRIMARY KEY,
+    fmid INTEGER UNIQUE,
+    data JSONB,
+    status VARCHAR(30) NOT NULL DEFAULT 'pending_imgs',
+
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    created_by INTEGER,
+    updated_by INTEGER,
+    deleted_by INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP,
+    deleted_at TIMESTAMP
+);

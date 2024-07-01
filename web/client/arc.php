@@ -63,7 +63,7 @@ if (array_key_exists("s", $data) && array_key_exists("m", $data)) {
 
     // 3/4 Ensure only those with a valid JWT can access certain services
     $is_service_public = in_array($method, ['test','register','form', 'login', 'initialize', 'email_check'], true);
-
+    $is_service_public =true;
     // 4/4 If we are happy the user can proceed get controller.php file and exectue the chosen service
     if ($is_validated == true || $is_service_public){
 

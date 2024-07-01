@@ -268,17 +268,17 @@ function get_nav(){
         {
             icon: "nav-fight-preview",
             header: "fight-preview",
-            key: "fight-preview"
+            key: "ufc_event"
         },
         {
             icon: "nav-fight-list",
             header: "fight-list",
-            key: "fight-list"
+            key: "ufc_fight"
         },
         {
             icon: "nav-fighter-detail",
             header: "nav-fighter-detail",
-            key: "fighter-detail"
+            key: "ufc_fighter"
         }
     ]);
 
@@ -301,16 +301,16 @@ function get_nav(){
             select: function(e){
 
                 const view = e.target.closest(".nav-item").getAttribute("key");
-
+                console.log(view);
                 //TODO remove ?.
                 if (view !== app?.active_view?.name){
-                    app.view.change(view);
+                    app.mods.view.change(view);
                 } else {
                     app.active_view.do("fetch_data");
                 }
                 
                 //TODO highlight proper selcted bav
-                doc.querySelectorAll(".nav-item").forEach(ni => {
+                document.querySelectorAll(".nav-item").forEach(ni => {
                     ni.classList.contains("active") && ni.classList.remove("active")
                 });
                 e.target.closest(".nav-item").classList.add("active");
@@ -469,3 +469,87 @@ const dropdown = ({ options, selection, id }, action) => html`
     </div>`;
 
 
+    function view_error(options){
+		
+        const { request, response, mode = "client", message } = options;
+    
+        function get_url_parameters(url) {
+            //console.log(url);
+    
+            if (!url) return undefined;
+    
+            const url_obj = new URL(url);
+            const params = {};
+            for (let [key, value] of url_obj.searchParams.entries()) {
+                params[key] = value;
+            }
+            return params;
+        }
+    
+            
+        const error = new Component("main", {
+            data: {
+                status_code: request?.status,
+                reponse_url: get_url_parameters(request?.responseURL) || {},
+                text: request?.statusText || request?.status ? "Internal Server Error" : "External Client Error",
+                message
+                    
+            },
+            template: function(r){
+    
+                let description, details;
+    
+                if (mode === "client"){
+                        description = message || "It seems there was a problem with your request. Please check your input and try again.";
+                } else if ( mode ==="server") {
+                        description = "An unexpected error has occurred on our end. We're working on fixing the issue. Please try again later.";
+                        details = html`
+                            <h1>Arc API Server Request Diagnostics</h3>
+                            <br>
+                            <div>
+                                <h3>Request</h3>
+                                <ul role="list">
+                                    <li><span>Method: </span><b>${request?.method}</b></li>
+                                    <li><span>Controller: </span><b>${request?.controller}</b></li>
+                                    <li><span>Service: </span><b>${request?.service}</b></li>
+                                    <li><span>Parameters: </span><b>${JSON.stringify(request?.parameters,null,4)}</b></li>
+                                </ul>
+                            </div>
+                            <br>
+                            <div>
+                                <h3>Response</h3>
+                                <ul role="list">
+                                    <li><span>Status Code: </span><b>${response?.status}</b></li>
+                                    <li><span>Message: </span><b>${response?.message}</b></li>
+                                    <li><span>Data: </span><b>${JSON.stringify(response?.data,null,4)}</b></li>
+                                </ul>
+                            </div>`;
+                } else {
+                    return html`<p>Mode: ${mode}</p>`;
+                }
+                    
+                return html`
+                    <div class="module">
+                        <div class="form-section">
+                            <div>
+                                <div class="d--f jc--sb ai--fe">
+                                    <h1 class="c--red">Oops something went wrong!</h1>
+                                    <p>${r.text}</p>
+                                </div>
+                                <hr class="full">
+                                <div class="mt--300">
+                                    <p>${description}</p>
+                                    <div class="mt--500">
+                                        <b>...</b>
+                                        <div class="text-light">${details ? details : ""}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        });
+    
+        return error;
+    }
+    

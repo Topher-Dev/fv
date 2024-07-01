@@ -31,7 +31,8 @@ class Model {
 
         //validation & html
         $model = $this->get_model();
-        
+        lg($model);
+        error_log("test");
         $this->table = $model['table'];
         $this->fields = $model['fields'];
         $this->operations = $model['operations'];
@@ -53,6 +54,7 @@ class Model {
         // If not in cache, search the directories for the json model and combine with db
         foreach ($this->locations as $dir) {
             $full_path = $_SERVER["APP_GIT_ROOT"] . $dir . '/' . $this->id . '.json';
+            error_log($full_path);
             if (file_exists($full_path)) {
                 $model_json = file_get_contents($full_path);
                 $model_arr = json_decode($model_json, true);

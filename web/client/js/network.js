@@ -35,11 +35,12 @@
     const DEPARTMENT = "department";
     const PERSON = "person";
     const ROLE = "role";
-    const PREPSHEET = "prepsheet";
     const ALERT = "alert";
     const EVENT_TYPE = "event_type";
-    const SELLING_DAY = "selling_day";
     const EVENT = "event";
+    const UFC_EVENT = "ufc_event";
+    const UFC_FIGHT = "ufc_fight";
+    const UFC_FIGHTER = "ufc_fighter";
 
 
     /**

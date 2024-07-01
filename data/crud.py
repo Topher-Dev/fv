@@ -60,6 +60,23 @@ class CRUD:
                 print(f"Error reading all records from table {table}: {e}")
                 raise
 
+    def read_list_unique_fighters(self):
+        query = """
+        SELECT DISTINCT url,data
+        FROM (
+            SELECT fighter_1_url AS url,data FROM public.ufc_fight
+            UNION
+            SELECT fighter_2_url AS url,data FROM public.ufc_fight
+        ) AS combined_urls;
+        """
+        try:
+            print("Reading all unique fighters")
+            return self.db.read_all(query)
+        except Exception as e:
+            print(f"Error reading all unique fighters: {e}")
+            raise
+
+
     def update_one(self, table, criteria, data):
         set_clause = ', '.join([f"{key} = %s" for key in data.keys()])
         where_clause = ' AND '.join([f"{key} = %s" for key in criteria.keys()])

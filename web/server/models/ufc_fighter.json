@@ -1,0 +1,314 @@
+{
+  "table": "ufc_fighter",
+  "fields": {
+    "id": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "id"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "fmid": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "fmid"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "data": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "data"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "status": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "status"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "is_deleted": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "is_deleted"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "created_by": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "created_by"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "updated_by": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "updated_by"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "deleted_by": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "deleted_by"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "created_at": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "created_at"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "updated_at": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "updated_at"
+        },
+        "options": {},
+        "icon": {}
+      }
+    },
+    "deleted_at": {
+      "include_in_form": true,
+      "validation": {},
+      "html": {
+        "template": "input-std",
+        "element": {
+          "attributes": {},
+          "data": {},
+          "single": []
+        },
+        "label": {
+          "attributes": {},
+          "text": "deleted_at"
+        },
+        "options": {},
+        "icon": {}
+      }
+    }
+  },
+  "operations": {
+    "create_one": {
+      "method": "POST",
+      "request": {
+        "requires": {
+          "role": "",
+          "param": ""
+        }
+      },
+      "response": {
+        "type": "json",
+        "required": [
+          "id"
+        ]
+      }
+    },
+    "create_list": {
+      "method": "POST",
+      "request": {
+        "requires": {
+          "role": "",
+          "param": "list"
+        }
+      },
+      "response": {
+        "type": "boolean"
+      }
+    },
+    "read_one": {
+      "method": "GET",
+      "request": {
+        "requires": {
+          "role": "",
+          "param": "id"
+        }
+      },
+      "response": {
+        "type": "json",
+        "required": [
+          "id"
+        ]
+      }
+    },
+    "read_list": {
+      "method": "GET",
+      "request": {
+        "requires": {
+          "role": "",
+          "param": "list",
+          "filter": {}
+        }
+      },
+      "response": {
+        "type": "json",
+        "required": [
+          "id"
+        ]
+      }
+    },
+    "update_one": {
+      "method": "PUT",
+      "request": {
+        "requires": {
+          "role": "",
+          "param": "id",
+          "filter": {}
+        }
+      },
+      "response": {
+        "type": "boolean"
+      }
+    },
+    "update_list": {
+      "method": "PUT",
+      "request": {
+        "requires": {
+          "role": "",
+          "param": "list",
+          "filter": {}
+        }
+      },
+      "response": {
+        "type": "boolean"
+      }
+    },
+    "delete_one": {
+      "method": "DELETE",
+      "request": {
+        "requires": {
+          "role": "",
+          "param": "id"
+        }
+      },
+      "response": {
+        "type": "boolean"
+      }
+    },
+    "delete_list": {
+      "method": "DELETE",
+      "request": {
+        "requires": {
+          "role": "",
+          "param": "list",
+          "filter": {}
+        }
+      },
+      "response": {
+        "type": "boolean"
+      }
+    }
+  }
+}

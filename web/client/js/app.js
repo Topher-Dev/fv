@@ -78,7 +78,7 @@ var Application = (function () {
             let main = Q("main");
 
             //clear any existing listeners
-            Component.clear_events(main);
+            //Component.clear_events(main);
             let view;
 
             //check if view exists, if not throw an error in main
@@ -211,7 +211,20 @@ var Application = (function () {
                 view: {
                     add,
                     change,
-                    list: {},
+                    list: {
+                        "ufc_event": {
+                            get_view: view_ufc_event
+                        },
+                        "ufc_fight": {
+                            get_view: view_ufc_fight
+                        },
+                        "ufc_fighter": {
+                            get_view: view_ufc_fighter
+                        },
+                        error: {
+                            get_view: view_error
+                        }
+                    },
                     history: ['home'],
                     //Holds a reference to the active view
                     active: {

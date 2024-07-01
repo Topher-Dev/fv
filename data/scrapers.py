@@ -1,8 +1,9 @@
 import requests
-from scraper_utils import save_picture
+from utils import save_picture
 import os
 from requests.exceptions import RequestException
 import time
+from datetime import datetime
 from bs4 import BeautifulSoup
 import json
 
@@ -388,9 +389,12 @@ def ufcfight_2(crud):
     if not fights_pending_data:
         print("No fights with pending data status found.")
         return []
-    
+    else:
+        print(f"Found {len(fights_pending_data)} fights with pending data status.")
 
     fights_update_data = []
+
+    fighters =[]
 
     for fight_pd in fights_pending_data:
 
@@ -399,13 +403,24 @@ def ufcfight_2(crud):
         response = requests.get(url=url, headers=headers)
 
         # Parse JSON response
-        fight_data = response.json()
+        fight_data = response.json()['LiveFightDetail']
 
         fights_update_data.append({
             "id": fight_pd['id'],
-            "status": "completed",
+            "status": "pending_fighter_extract",
             "data": json.dumps(fight_data)
         })
+        
+        #pretty print the json properly
+        print(json.dumps(fight_data, indent=4))
+
+        for fighter in fight_data['Fighters']:
+            print(fighter)
+            fighters.append({
+                "fmid": fighter['FighterId'],
+                "data": json.dumps(fighter),
+                "status": "pending_imgs"
+            })
 
         break
 
@@ -417,43 +432,60 @@ def ufcfight_2(crud):
             "instructions": {
                 "unique": ["id"]
             }
+        },
+        {
+            "table": "ufc_fighter",
+            "data": fighters,
+            "instructions": {
+                "unique": ["fmid"]
+            }
         }
     ]
 
 def ufcfighter_1(crud):
+
+ 
     #read a list of unique fighter_urls from the ufc_fight_table
-    fighters_pending_fmids=crud.read_list_by_query("ufc_fighter", { 'status' : 'pending_fmid'})
-
+    fighters_pending_data=crud.read_list("ufc_fighter", { 'status' : 'pending_imgs'})
+    fighters = []
     #loop through
-    base_url='https://ufc.com'
+    for fighter_pd in fighters_pending_data:
 
-    #handle the case where the fighters_pending_fmids list is empty
-    if not fighters_pending_fmids:
-        print("No fighters with pending FMIDs found.")
-        return []
+        #parse the json data
+        fighter_data = json.loads(fighter_pd['data'])
 
-    for fighter_pf in fighters_pending_fmids:
+        #make a request using the fighter_data['UFCLink']
 
-        url = base_url + fighter_pf['web_url']
-        print(url)
+        url = fighter_data['UFCLink']
 
-        response = requests.get(url)
-        time.sleep(.5)
+        response = requests.get(url=url, headers=headers)
+
+        #parse the html for hero picture and save it util function
         html_content = response.text
 
+        # Parse HTML with BeautifulSoup
+        soup = BeautifulSoup(html_content, 'html.parser')
 
-        break
+        # find the hero picture
+        hero_picture = soup.find('div', class_='c-hero__image')
+
+        if hero_picture:
+            save_picture(hero_picture['src'], f"fighter_{fighter_pd['fmid']}.jpg")
+
+        
+        fighters.append({
+            "id": fighter_pd['id'],
+            "status": "completed",
+            "picture_path": f"fighter_{fighter_pd['fmid']}.jpg"
+        })
+
 
     return [
         {
             "table": "ufc_fighter",
-            "data": [{
-                "web_url": fighter_pf['web_url'],
-                "status": "pending_data",
-                "fmid": fighter_fmid
-            }],
+            "data": fighters,
             "instructions": {
-                "unique": ["web_url"]
+                "unique": ["id"]
             }
         }
     ]

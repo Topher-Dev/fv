@@ -1,1 +1,4 @@
-[ ] 
+[ ] finish fighter table load script
+[ ] ensure data in each table
+[ ] readlist into each module
+[ ] nav working in client app
