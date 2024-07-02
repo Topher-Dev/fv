@@ -1,0 +1,7 @@
+Task
+G:set default view to events list
+F1:index.php
+F2:app.js
+D:[x]
+
+G:have a working scrape script that fills the databse with 2events and all their fights and fighters

@@ -1,0 +1,37 @@
+[
+    {
+        "command": "settings",
+        "settings": {
+            "ajaxPageState": {
+                "theme": "ufc",
+                "libraries": "eJx1kQFyhCAMRS8Ey0V6ByZCVLZZ4pDg1p6-FHS6005nHP3_RfEngRiVIR8OTnGbC2c1E4R3r9yuzb1of5d_S4ofauKObk8R2cwJKfqlcN0cEj4w623lkj7b8UBeYRKzMC-EHjLQoSmI-w0MwcFVfUwSeMdyOM4YmMzGRC6WugHdvrWllN_FyCGKjxZL0NQ5uKmqcpauA5RoQ_t7S2JnZsXyw3Fv9LJcBambOVF7zTaLYZQX4gnIBpFXex9uxcJD8NMq2ydoWF_O_ottH1AvpmwhaOLcXe_HxsJb5OdAbYTVPiANt8EyepQ27gmKnVMRPYnia4fdrwjx9H32TfgeQdx4vKXxuZ_TsuoGIg6q9pXBFcsTB6ATuILLxY-2fCcIJay-hTF7wqe4fr89OFbCgTzc4cMvqO4SJ095Trnl9BLK9247tRe1g34BunMJCA"
+            },
+            "disableAnimationsUrlParam": "disableAnimations",
+            "disableAnimations": false,
+            "pluralDelimiter": "\u0003",
+            "user": {
+                "uid": 0,
+                "permissionsHash": "e78e456b46f1ab9056e290e4375048e2efa96a3776571ef53aa09ba015bfa180"
+            }
+        },
+        "merge": true
+    },
+    {
+        "command": "scrollTop",
+        "selector": ".js-view-dom-id-3a1eaea40b0c82725439c934e7dd88deb36bca88124bd351af91b67779f5747b"
+    },
+    {
+        "command": "insert",
+        "method": "replaceWith",
+        "selector": ".js-view-dom-id-3a1eaea40b0c82725439c934e7dd88deb36bca88124bd351af91b67779f5747b",
+        "data": null,
+        "settings": null
+    },
+    {
+        "command": "insert",
+        "method": "prepend",
+        "selector": ".js-view-dom-id-3a1eaea40b0c82725439c934e7dd88deb36bca88124bd351af91b67779f5747b",
+        "data": "",
+        "settings": null
+    }
+]

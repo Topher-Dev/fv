@@ -17,7 +17,7 @@ var Application = (function () {
             login(data);
         }
 
-        app_frame().render();
+        application.view.change("ufc_event");
     }
 
     function create() {

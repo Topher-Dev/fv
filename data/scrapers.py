@@ -157,16 +157,32 @@ def gather_ufcevent_urls(view_display_id, page=0):
 
                 #make sure we can use the .get method on the item
                 if item in ["0", "1", "2", "3"]:
+                    print("Handling case where data is embedded further in the tree: " + item)
                     item=json_response[item]
 
+                if 'data' not in item:
+                    print("no data found in json_response")
+                    continue
+
+
+                if item['data'] is None:
+                    print("Handling case where no data in response")
+                    continue
+
+
                 if item.get('command') == 'insert':
+                    print("html content has been found")
                     html_content += item['data']
 
-            if not html_content:
-                print(json_response)
+            if html_content == "":
                 print(f"No HTML content found for view_display_id {view_display_id} on page {params['page']}.")
-                break
 
+            # Save JSON response to a file for examination
+            filename = f"ufc_event_{view_display_id}_page_{params['page']}.json"
+            with open(filename, 'w') as json_file:
+                json.dump(json_response, json_file, indent=4)
+
+ 
             soup = BeautifulSoup(html_content, 'html.parser')
             events = soup.find_all('div', class_='c-card-event--result__info')
 

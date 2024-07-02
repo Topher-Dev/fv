@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <?php echo "<title>{$_SERVER['APP_NAME']} {$_SERVER['APP_VERSION']}</title>";?>
-
+        <title>fv 1.0</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,10 +18,10 @@
             
             //
             const version = "5";
-            const runmode = "<?php echo $_SERVER['APP_RUNMODE']; ?>";
+            const runmode = "dev";
 
-            const redirect_view = "<?php echo isset($_GET['view_name']) ? $_GET['view_name'] : "ufc_event"; ?>";
-            const redirect_id = "<?php echo isset($_GET['view_id']) ? $_GET['view_id'] : null; ?>";
+            const redirect_view = "ufc_event";
+            const redirect_id = "";
 
             const load_script = function (src) {
                 return new Promise((resolve, reject) => {
@@ -117,18 +116,6 @@
         <div onclick="close_expand(this)" id="expand"></div>
         
         <!-- Hidden Content -->
-        <?php
-            //The allowed parametrs give us the capability to initialize the app on a specific view
-            $allowed = ["view", "ticker"];
-
-            $valid_params = array_filter($_GET, fn($p) => in_array($p, $allowed), ARRAY_FILTER_USE_KEY);
-
-            $callback = fn($k, $v) => "data-{$k}='{$v}'";
-            $data_attributes = implode(" ", array_map($callback, array_keys($valid_params), array_values($valid_params)));
-
-            echo "<input id='data-store' {$data_attributes} type='hidden' />";
-
-        ?>
-    </body>
+        <input id='data-store'  type='hidden' />    </body>
 </html>
 
