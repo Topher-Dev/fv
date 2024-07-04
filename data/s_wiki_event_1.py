@@ -1,7 +1,13 @@
 import requests
-from bs4 import BeautifulSoup
+from utils import save_picture, headers
+import os
 import re
+from requests.exceptions import RequestException
 import time
+from datetime import datetime
+from bs4 import BeautifulSoup
+import json
+
 
 table_mappings = {
     'Past_events': {'name_col': 1, 'url_col': 1},
@@ -78,9 +84,10 @@ def scrape_ufc_event_urls(max_events=10):
                 for li in list_items:
                     if li.find('a', href=re.compile(r'https://www.ufc.com/event')):
                         ufc_url = li.find('a', href=re.compile(r'https://www.ufc.com/event')).get('href')
+                        ufc_url = ufc_url.split('com')[1]
                         break
                 
-                event_data['web_url'] = ufc_url
+                event_data['ufc_url'] = ufc_url
                 
                 print(ufc_url)
             except requests.RequestException as e:
@@ -89,21 +96,32 @@ def scrape_ufc_event_urls(max_events=10):
 
     return event_links
 
-def ufcevent_3(crud):
+def wikievent_1(crud):
 
     # Example usage:
     max_events_to_scrape = 15
     events = scrape_ufc_event_urls(max_events=max_events_to_scrape)
+    events_to_save = []
 
-    for event in event_links:
+    for event in events:
+
         print(f"Event Name: {event['name']}")
         print(f"Wikipedia URL: {event['wiki_url']}")
         print(f"UFC.com URL: {event['ufc_url'] if 'ufc_url' in event else 'Not found'}")
-        print()
+
+        e = {}
+
+        if event['ufc_url'] is not None:
+            e['web_url']=event['ufc_url']
+            e['status']='pending_fmid'
+            e['name']=event['name']
+            events_to_save.append(e)
+
+    print(events_to_save)
 
     return [{
         "table": "ufc_event",
-        "data": events,
+        "data": events_to_save,
         "instructions": {
             "unique": ["web_url"]
         }

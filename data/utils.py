@@ -2,6 +2,12 @@ import requests
 import os
 
 
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.>",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "X-Requested-With": "XMLHttpRequest"
+}
+
 def save_picture(image_url, save_path):
     """
     Downloads an image from the web and saves it to the specified path.

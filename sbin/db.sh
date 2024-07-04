@@ -1,26 +1,8 @@
 #!/bin/bash
 
-# Require the user to run the script as root
-if [ "$EUID" -ne 0 ]; then
-  echo "This script requires root privlages, use sudo."
-  exit 1
-fi
 
-# Check for the presence of a command argument
-if [ $# -lt 1 ]; then
-  echo "Please provide a command as an argument."
-  echo "Available commands are: list, reset_db"
-  exit 1
-fi
-
-# Get the path to the application root directory from git
-APP_ROOT=$(jq -r '.app_root' /etc/sales_prep/config.json)
-
-#if not in a git repo inform user and exit
-if [ -z "$APP_ROOT" ]; then
-  echo "Not value found in configration file for app_root"
-  exit 1
-fi
+# Source the environment variables from app_env
+. app_env export
 
 # get the backup dir in one directory above the app root
 BACKUP_DIR="$APP_ROOT/../backups"
@@ -198,13 +180,13 @@ EOSQL
     psql -U $PGUSER -d $PGDATABASE -c "$query"
 
     # Run the ini.sql & view.sql files to recreate the database
-    psql -U $PGUSER -d $PGDATABASE -f "$APP_ROOT/etc/sql/ini.sql"
-    psql -U $PGUSER -d $PGDATABASE -f "$APP_ROOT/etc/sql/views.sql"
-    psql -U $PGUSER -d $PGDATABASE -f "$APP_ROOT/etc/sql/functions.sql"
+    psql -U $PGUSER -d $PGDATABASE -f "$APP_GIT_ROOT/etc/ini.sql"
+    psql -U $PGUSER -d $PGDATABASE -f "$APP_GIT_ROOT/etc/views.sql"
+    psql -U $PGUSER -d $PGDATABASE -f "$APP_GIT_ROOT/etc/functions.sql"
 
-    php $APP_ROOT/web/client/arc.php --s=auth --m=register --token=null --email=su@salesprep.ca --password=Chris123! --first_name=super --last_name=user --phone=180000000 --company_id=1 --role_id=1
-    php $APP_ROOT/web/client/arc.php --s=auth --m=register --token=null --email=admin@salesprep.ca --password=Chris123! --first_name=admin --last_name=user --phone=180000000 --company_id=1 --role_id=2
-    php $APP_ROOT/web/client/arc.php --s=auth --m=register --token=null --email=clerk@salesprep.ca --password=Chris123! --first_name=clerk --last_name=user --phone=180000000 --company_id=1 --role_id=3
+    #php $APP_GIT_ROOT/web/client/arc.php --s=auth --m=register --token=null --email=su@salesprep.ca --password=Chris123! --first_name=super --last_name=user --phone=180000000 --company_id=1 --role_id=1
+    #php $APP_GIT_ROOT/web/client/arc.php --s=auth --m=register --token=null --email=admin@salesprep.ca --password=Chris123! --first_name=admin --last_name=user --phone=180000000 --company_id=1 --role_id=2
+    #php $APP_GIT_ROOT/web/client/arc.php --s=auth --m=register --token=null --email=clerk@salesprep.ca --password=Chris123! --first_name=clerk --last_name=user --phone=180000000 --company_id=1 --role_id=3
 
     ;;
   *)
