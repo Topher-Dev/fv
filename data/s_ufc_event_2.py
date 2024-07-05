@@ -1,107 +1,53 @@
-import requests
-from utils import save_picture, headers
-import os
-import re
-from requests.exceptions import RequestException
-import time
-from datetime import datetime
 from bs4 import BeautifulSoup
-import json
+from utils import retry_request, validate_html_response, headers
+
+def fetch_event_data(event_url):
+    base_url = 'https://ufc.com'
+    url = base_url + event_url
+    response = retry_request(url, headers=headers)
+    validate_html_response(response, ['script[data-drupal-selector="drupal-settings-json"]'])
+    return response.text
+
+def parse_event_data(html_content):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    script_tag = soup.select_one('script[data-drupal-selector="drupal-settings-json"]')
+    settings = json.loads(script_tag.string)
+    event_fmid = settings.get('eventLiveStats', {}).get('event_fmid')
+    if not event_fmid:
+        raise ValueError("event_fmid not found in event data")
+
+    return event_fmid
+
+def parse_fight_data(html_content, event_id):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    fight_list_items = soup.select('li.l-listing__item')
+    fights = []
+
+    for item in fight_list_items:
+        fight_div = item.select_one('div.c-listing-fight[data-fmid]')
+        if fight_div:
+            fights.append({
+                'fmid': fight_div['data-fmid'],
+                'fighter_1_url': fight_div.select_one('div.c-listing-fight__corner--red a')['href'].split('com')[1],
+                'fighter_2_url': fight_div.select_one('div.c-listing-fight__corner--blue a')['href'].split('com')[1],
+                'event_id': event_id
+            })
+
+    if not fights:
+        raise ValueError("No fights found in the HTML content")
+
+    return fights
 
 def ufcevent_2(crud):
-    #read all the pending fmids
-    events_pending_fmids=crud.read_list("ufc_event", { 'status' : 'pending_fmid'})
-
-    #loop through
-    base_url='https://ufc.com'
-
-    #handle the case where the events_pending_fmids list is empty
+    events_pending_fmids = crud.read_list("ufc_event", {'status': 'pending_fmid'})
     if not events_pending_fmids:
         print("No events with pending FMIDs found.")
         return []
 
-    for event_pf in events_pending_fmids:
-
-        url = base_url + event_pf['web_url']
-        print(url)
-        #make the request
-        # Fetch the HTML content 
-        response = requests.get(url)
-        time.sleep(.5)
-        html_content = response.text
-
-        # Parse HTML with BeautifulSoup
-        soup = BeautifulSoup(html_content, 'html.parser')
-
-        # Find the script tag containing JSON data
-        script_tag = soup.find('script', attrs={'data-drupal-selector': 'drupal-settings-json'})
-
-        if script_tag:
-            # Extract the JSON data
-            json_data = script_tag.string
-    
-            # Parse JSON string to dictionary
-            settings = json.loads(json_data)
-    
-            # Extract event_fmid
-            event_fmid = settings.get('eventLiveStats', {}).get('event_fmid')
-
-            if event_fmid:
-                 print(f'event_fmid found: {event_fmid}')
-            else:
-                 print('event_fmid not found in JSON data')
-        else:
-            print('Script tag not found')
-
-        #parse out the fmid with bs4
-
-        #update the record with fmid and update status
-
-
-        #get all the fights
-        # Find all <li> tags with class "l-listing__item"
-        fight_list_items = soup.find_all('li', class_='l-listing__item')
-
-        # Initialize an empty list to store fight details
-        fights = []
-
-        # Loop through each <li> tag found
-        for item in fight_list_items:
-                # Find <div> tag with class "c-listing-fight"
-                fight_div = item.find('div', class_='c-listing-fight', attrs={'data-fmid': True})
-                
-                if fight_div:
-
-                        print(fight_div.prettify())
-                        # Extract data-fmid attribute
-                        data_fmid = fight_div['data-fmid']
-                        
-                        # Find <a> tags for fighter_1 and fighter_2 URLs
-                        fighter_1_url = fight_div.find('div', class_='c-listing-fight__corner--red').find('a')['href']
-                        fighter_2_url = fight_div.find('div', class_='c-listing-fight__corner--blue').find('a')['href']
-                        
-                        #strip the base url
-                        fighter_1_url = fighter_1_url.split('com')[1]
-                        fighter_2_url = fighter_2_url.split('com')[1]
-
-
-                        # Append fight details to the list
-                        fights.append({
-                                'fmid': data_fmid,
-                                'fighter_1_url': fighter_1_url,
-                                'fighter_2_url': fighter_2_url,
-                                'event_id': event_pf['id']
-                        })
-
-        # Print the list of fights
-        for fight in fights:
-                print(f"Fight FMID: {fight['fmid']}")
-                print(f"Fighter 1 URL: {fight['fighter_1_url']}")
-                print(f"Fighter 2 URL: {fight['fighter_2_url']}")
-
-        #loop through them and extract fight_fmid, fighter_1_url, fighter_2_url
-
-        #create fight record with above and ufc_event_id
+    event_pf = events_pending_fmids[0]  # Process first event only for simplicity
+    html_content = fetch_event_data(event_pf['web_url'])
+    event_fmid = parse_event_data(html_content)
+    fights = parse_fight_data(html_content, event_pf['id'])
 
     return [
         {
@@ -120,4 +66,3 @@ def ufcevent_2(crud):
             }
         }
     ]
-
