@@ -13,14 +13,18 @@ load_scraper_config() {
     while IFS='=' read -r key value; do
         fallbacks["$key"]=$value
     done < <(awk -F "=" '/Fallbacks/ {flag=1; next} flag {print}' $config_file)
+    echo $scrapers
 }
 
 # Function to run scrapers sequentially
 run_scrapers() {
     results=()  # Initialize an array to store the results of each scraper
-    for scraper in "${scrapers[@]}"; do
-       echo "$scraper" 
-       run_scraper "$scraper"
+    total_scrapers=${#scrapers[@]}  # Total number of scrapers
+
+    for i in "${!scrapers[@]}"; do
+        scraper="${scrapers[$i]}"
+        log_message "Running scraper $((i+1))/$total_scrapers: $scraper"
+        run_scraper "$scraper"
         if [ $? -ne 0 ]; then
             handle_error "$scraper"
             results+=("$scraper: failed")
@@ -46,8 +50,6 @@ run_scraper() {
     local SCRAPER_NAME=$1
     local scrape_script="$APP_GIT_ROOT/data/scrape.py"
     local log_file="$APP_LOG_DIR/${SCRAPER_NAME}.log"
-
-    log_message "-----------------Starting data scraping for $SCRAPER_NAME-----------------"
 
     # Check if the scraper function exists in any s_*.py file
     if ! function_exists "$SCRAPER_NAME"; then
@@ -84,7 +86,7 @@ handle_error() {
         fi
     else
         log_message "No fallback available for $scraper. Aborting."
-        exit 1
+        return 1
     fi
 }
 
@@ -114,14 +116,32 @@ handle_completion() {
     echo "Successful Scrapers: $success_count"
     echo "Failed Scrapers: $failure_count"
 
+    # Output the command to retrieve the log for this specific run
+    local start_time=$(date -d "$SCRAPE_START_TIME" +%s)
+    local end_time=$(date +%s)
+    echo "To view the log for this run, use the following command:"
+    echo "awk -v start=$start_time -v end=$end_time '\$1 >= start && \$1 <= end' $APP_LOG_DIR/scrape.log"
+
     # Exit with a non-zero status if there were any failures
     if [ $failure_count -ne 0 ]; then
         exit 1
     fi
+
+    log_message "===================[SCRAPE_END]=================="
+    exit 0
 }
 
+#indicate scrape conf
+
+scrape_conf="scrapers.conf"
+
 # Load scraper configuration
-load_scraper_config "$APP_GIT_ROOT/etc/scrapers.conf"
+load_scraper_config "$APP_GIT_ROOT/etc/$scrape_conf"
+
+log_message "==================[SCRAPE_START]=================="
+
+# Mark the start time of the script
+export SCRAPE_START_TIME=$(date +%Y-%m-%d\ %H:%M:%S)
 
 # Run scrapers
 run_scrapers

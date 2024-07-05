@@ -1,0 +1,55 @@
+MISSION
+For the data / scraper package to provide the coded process for routinely (daily usually) requesting resources from remote web servers over the internet to populate and sync our database.
+More poetically we are extending our tendrils out into the world mapping our database tables to web html / json (among others if needed) structures at indicated endpoints and routinely sycing with them.
+
+GOALS
+
+[ ] Robustness: Every day is a new possiblety that when we query a certain endpoint ufc.com/data.json, it could either no longer be located there or modofied to a different
+ structure and our 'scrape' will fail. This is the single biggest issue we need to compensate for and different ways it can matastcise into errors such as
+	- no resource found on the server with that file endpoint
+        - Potential API paramter changes disfigure exepected response
+        - format of response has changed, aka different HTML Tree structures, changes of css selectors etc..
+We compensate with this by having backup scrapers designated to execute to match extracting the same data from a seperate data source aka (ufc.com/events, backup=>wiki.com/ufc/events
+[ ] Completeness: We do not want to miss data. if there are 309 ufc events known factually in the universe and we only have 308 in the database ,
+ our digital model has lost sync with reality. we need a way of clearly auditing our sync with the truth sources of data.
+[ ] Pre scrape sync: An important concept and a new feature. These are represented as a side along validation function for each indvidiaul scrape scripts and are a requrirement.
+There purpose is to provide a true or false value to wether the web resoruce conforms to the structure we are expecting.
+ We need this as it will be the sol arbitor to wether we attempt to continue with the scrape or call a backup scraper function. 
+If false is returned we exit the individaul scrape with a sys code to represent a complete failure.
+
+COMPONENTS
+
+etc/scrape.config
+- This is the master plan for the scrape, it describes the ordered sequence of individiaul scrape scripts to be called as well as designating backup scripts to be called when
+ they fail to establish a "sync" with the web resrouces expected structure.
+
+sbin/scrape.sh
+-the linux utility for starting the program. executing the file will run per the scrape.config, if arg 1 is passed you can specify one individ scraper to run
+-loads the plan
+-executes the plan
+-reports on results
+
+data/scrape.py
+-The controller for the entire individual scrape. calling the scraper function to get the data, validating, transforming and  modeling it to a table and performing CRUD with the DB
+
+data/s_*.py
+-The individual scrape scripts there job is to
+
+a) indicate by throwing an error if there is no "sync"
+b) return the data in the specified format
+
+data/table.py
+-models the raw data returned from the scraper to table(s)
+
+data/crud.py
+-preparing the data for indicated crud operations
+
+data/db.py
+-utility methods for interfacing with the database
+
+data/utils.py
+-reusable helper functions
+data/validate.py
+-ensure data fits defined contrains by field
+data/transform.py
+-handle specific modifications of data based on fields

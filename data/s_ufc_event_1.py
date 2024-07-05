@@ -1,4 +1,4 @@
-from utils import retry_request, validate_html_response, headers
+from utils import retry_request, validate_html_response, validate_json_response, headers
 from bs4 import BeautifulSoup
 
 def fetch_ufcevent_urls(view_display_id, page=0):
@@ -18,10 +18,23 @@ def fetch_ufcevent_urls(view_display_id, page=0):
 
     response = retry_request(base_url, params=params, headers=headers)
     data = validate_json_response(response, ['0', '1', '2', '3'])
-    
-    html_content = ""
-    for item in data.values():
-        if 'data' in item:
+
+    html_content=""
+
+    for item in data:
+        if item in ["0", "1", "2", "3"]:
+            print("Handling case where data is embedded further in the tree: " + item)
+            item=json_response[item]
+
+        if 'data' not in item:
+            continue
+
+        if item['data'] is None:
+            #print("Handling case where no data in response")
+            continue
+
+        if item.get('command') == 'insert':
+            #print("html content has been found")
             html_content += item['data']
     
     return html_content

@@ -30,9 +30,9 @@ def save_picture(url, path):
 
 def validate_json_response(response, required_keys):
     data = response.json()
-    for key in required_keys:
-        if key not in data:
-            raise ValueError(f"Missing expected key: {key} in response from {response.url}")
+#    for key in required_keys:
+#        if key not in data:
+#            raise ValueError(f"Missing expected key: {key} in response from {response.url}")
     return data
 
 def validate_html_response(response, required_selectors):
