@@ -33,11 +33,14 @@
     --clr-placeholder: #888888;
 
     /* Font Family */
-    --ff-primary: 'Graphik', sans-serif;
+    --ff-primary:
+    'Graphik', sans-serif;
     /* Proxima Nova Maybe? */
 
-    --ff-body: var(--ff-primary);
-    --ff-heading: var(--ff-primary);
+    --ff-body:
+    var(--ff-primary);
+    --ff-heading:
+    var(--ff-primary);
 
     /* Font Weight */
     --fw-regular: 400;
@@ -52,12 +55,18 @@
     --fs-600: 2.2rem;
     --fs-700: 2.4rem;
 
-    --fs-text: var(--ffs-200);
-    --fs-body: var(--fs-400);
-    --fs-button: var(--fs-400);
-    --fs-header-1: var(--fs-400);
-    --fs-header-2: var(--fs-400);
-    --fs-header-3: var(--fs-400);
+    --fs-text:
+    var(--ffs-200);
+    --fs-body:
+    var(--fs-400);
+    --fs-button:
+    var(--fs-400);
+    --fs-header-1:
+    var(--fs-400);
+    --fs-header-2:
+    var(--fs-400);
+    --fs-header-3:
+    var(--fs-400);
 
     /* Spacing */
     --gap-xxxl: 6rem;
@@ -78,8 +87,10 @@
     --br-focus: 1px solid #94AFCB;
 
     /* Box shadow */
-    --bs-sm: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
-    --bs-lg: 0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%);
+    --bs-sm: 0px 2px 1px -1px
+    rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+    --bs-lg: 0px 3px 3px -2px
+    rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%);
 }
 
 @font-face {
@@ -182,7 +193,7 @@
 
     /* Align items */
     .ai--fs { align-items: flex-start; }
-    .ai--c  { align-items: center; }
+    .ai--c  {align-items: center;}
     .ai--fe { align-items: flex-end; }
     .ai--s  { align-items: stretch; } /* Default */
     .ai--b  { align-items: baseline; }
@@ -405,13 +416,18 @@
 
     header, nav{
         background-color: #fff;
+        position: fixed;
+        width: 100%;
     }
 
     main {
         opacity: 1;
         transition: opacity .15s ease-in-out;
-        background-color: #e0e0e024;
-        padding-bottom: 5.5rem; /* Compensate for fix nav */
+        background-color: #9bc2e64f;
+        height: 122vh;
+        overflow-y: scroll;
+         /* Compensate for fix nav */
+        padding-top: 8rem;
     }
 
     main.transition {

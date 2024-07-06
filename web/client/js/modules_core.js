@@ -266,18 +266,18 @@ function get_nav(){
 
     const items = Object.freeze([
         {
-            icon: "nav-fight-preview",
-            header: "fight-preview",
-            key: "ufc_event"
-        },
-        {
-            icon: "nav-fight-list",
-            header: "fight-list",
+            icon: "nav-ufc-fight",
+            header: "ufc-fight",
             key: "ufc_fight"
         },
         {
-            icon: "nav-fighter-detail",
-            header: "nav-fighter-detail",
+            icon: "nav-ufc-event",
+            header: "ufc-event",
+            key: "ufc_event"
+        },
+        {
+            icon: "nav-ufc-fighter",
+            header: "nav-ufc-fighter",
             key: "ufc_fighter"
         }
     ]);
@@ -289,9 +289,8 @@ function get_nav(){
                     <ul role="list" class="d--f fd--r"> ${ items.map( ( { key, icon }, i ) => html`
                         <li 
                             key="${key}" 
-                            style="border:1px solid yellow"
                             class="d--f ai--c nav-item ${ i === 0 ? "active" : "" }" 
-                            onclick="select()">${get_svg(icon, 'class="nav-icon"')}
+                            onclick="select()"><div>${get_svg(icon, 'class="nav-icon"')}</div>
                         </li>`)}
                     </ul>
                     <!-- <div id="li-indicator"></div> -->

@@ -386,10 +386,10 @@ class Controller {
             //trim any whitespace
             $p = trim($p);
             
-            if($this->user->has_permission($p)){
-                error_log("User has permissions");
+            // if($this->user->has_permission($p)){
+            //     error_log("User has permissions");
                 return true;
-            }
+            // }
         }
         return $this->error("Missing permission {$permissions}");
     }

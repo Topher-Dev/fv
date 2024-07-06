@@ -4,17 +4,24 @@ function view_ufc_event(){
             header: "event"
         },
         template: function(props) {
+
+            if (this.isLoading || !props?.list){
+                return "loader()";
+            }
+
             return html`
-                <div>
-                    ${props.header}
-                </div>
+                <ul>
+                    ${props.list.map( li => {
+                        return html`<li>${li.id} | ${li.name}</li>`
+                    })}
+                </ul>
             `;
         },
-        listeners :{
-        }
+        listeners :{},
+        setters: setters.LIST(UFC_EVENT, READ_LIST)
     });
 
-    return ufc_event;
+    return ufc_event.do("fetch"), ufc_event;
 }
 
 function view_ufc_fight(){

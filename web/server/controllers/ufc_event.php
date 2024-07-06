@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER["APP_ROOT"]."/web/server/controller.php";
+include_once $_SERVER["APP_GIT_ROOT"]."/web/server/controller.php";
 
 class Ufc_event extends Controller {
 

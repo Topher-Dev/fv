@@ -1,6 +1,6 @@
 <?php
-include_once $_SERVER["APP_ROOT"]."/web/server/controller.php";
-include_once $_SERVER["APP_ROOT"]."/web/server/user.php";
+include_once $_SERVER["APP_GIT_ROOT"]."/web/server/controller.php";
+include_once $_SERVER["APP_GIT_ROOT"]."/web/server/user.php";
 
 /*Clients first action is to authenticate who is visiting our App, it 
 1) Checks if token exists in local storage => if its expired

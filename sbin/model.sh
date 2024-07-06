@@ -144,7 +144,7 @@ operations="{ \
     \"request\": { \
       \"requires\": { \
         \"role\": \"\", \
-        \"param\": \"list\", \
+        \"param\": \"\", \
         \"filter\": {} \
       } \
     }, \
@@ -240,7 +240,7 @@ if [ -f "$output_file" ]; then
 else
     # Create the controller file
     echo "<?php" > "$output_file"
-    echo "include_once \$_SERVER[\"APP_ROOT\"].\"/web/server/controller.php\";" >> "$output_file"
+    echo "include_once \$_SERVER[\"APP_GIT_ROOT\"].\"/web/server/controller.php\";" >> "$output_file"
     echo "" >> "$output_file"
     echo "class $(tr '[:lower:]' '[:upper:]' <<< ${table_name:0:1})${table_name:1} extends Controller {" >> "$output_file"
     echo "" >> "$output_file"

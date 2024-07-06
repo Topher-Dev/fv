@@ -279,16 +279,16 @@ class Model {
                         $filter_template .=  "and ";
                     }
 
-                    $filter_template .= "is_active=:is_active ";
+                    $filter_template .= "is_deleted=:is_deleted ";
 
                     if ($client_data['row_status'] == "active"){
 
-                        $filter_params['is_active'] = 't';
+                        $filter_params['is_deleted'] = 'f';
                     }
 
                     if ($client_data['row_status'] == "inactive"){
 
-                        $filter_params['is_active'] = 'f';
+                        $filter_params['is_deleted'] = 't';
                     }
 
                 }
@@ -452,16 +452,16 @@ class Model {
     //             $parts = json_decode($data['filterx']);
                 
     //             if (isset($parts['active'])){
-    //                 $template .= "is_active=:is_active";
-    //                 //$params['is_active']
+    //                 $template .= "is_deleted=:is_deleted";
+    //                 //$params['is_deleted']
     //             }
                 
     //             if (isset($parts['inactive'])){
-    //                 $template .= "is_active=:is_active";
+    //                 $template .= "is_deleted=:is_deleted";
     //             }
 
     //             if (isset($parts['we_owe'])){
-    //                 $template .= "is_active=:is_active";
+    //                 $template .= "is_deleted=:is_deleted";
     //             }
 
     //             if (isset($parts['pending'])){

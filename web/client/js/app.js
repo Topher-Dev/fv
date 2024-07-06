@@ -17,7 +17,7 @@ var Application = (function () {
             login(data);
         }
 
-        application.view.change("ufc_event");
+        application.mods.view.change("ufc_event");
     }
 
     function create() {
@@ -33,16 +33,16 @@ var Application = (function () {
             const src = `js/views/${role_name}.js?id=${id}`; 
     
             load_script(src).then(() => {
-                application.view.change("home");
+                application.mods.view.change("home");
                 connect_arc_ws();
     
                 if (application.start_view.name !== "default"){
-                    application.view.change(application.start_view.name, { id: application.start_view.id });
+                    application.mods.view.change(application.start_view.name, { id: application.start_view.id });
                     //clear the start view
                     console.log(`Clearing start view ${application.start_view.name} with id ${application.start_view.id}`);
                     application.start_view = { name: "default", id: null };
                 } else {
-                    application.view.change("prepsheet_list");
+                    application.mods.view.change("prepsheet_list");
                 }
             
                 clear_url_params();

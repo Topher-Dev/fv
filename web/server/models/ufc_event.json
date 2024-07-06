@@ -275,7 +275,8 @@
       "response": {
         "type": "json",
         "required": [
-          "id"
+          "id",
+          "data"
         ]
       }
     },
@@ -284,15 +285,12 @@
       "request": {
         "requires": {
           "role": "",
-          "param": "list",
           "filter": {}
         }
       },
       "response": {
         "type": "json",
-        "required": [
-          "id"
-        ]
+        "required": []
       }
     },
     "update_one": {
