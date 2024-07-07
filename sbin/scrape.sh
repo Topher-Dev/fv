@@ -122,12 +122,13 @@ handle_completion() {
     echo "To view the log for this run, use the following command:"
     echo "awk -v start=$start_time -v end=$end_time '\$1 >= start && \$1 <= end' $APP_LOG_DIR/scrape.log"
 
+    log_message "===================[SCRAPE_END]=================="
+
     # Exit with a non-zero status if there were any failures
     if [ $failure_count -ne 0 ]; then
         exit 1
     fi
 
-    log_message "===================[SCRAPE_END]=================="
     exit 0
 }
 

@@ -1,3 +1,4 @@
+import json
 from bs4 import BeautifulSoup
 from utils import retry_request, validate_html_response, headers
 
@@ -14,8 +15,7 @@ def parse_event_data(html_content):
     settings = json.loads(script_tag.string)
     event_fmid = settings.get('eventLiveStats', {}).get('event_fmid')
     if not event_fmid:
-        raise ValueError("event_fmid not found in event data")
-
+        return None
     return event_fmid
 
 def parse_fight_data(html_content, event_id):
@@ -34,33 +34,53 @@ def parse_fight_data(html_content, event_id):
             })
 
     if not fights:
-        raise ValueError("No fights found in the HTML content")
+        return None
 
     return fights
 
-def ufcevent_2(crud):
+def ufcevent_2(crud, max_events=None):
     events_pending_fmids = crud.read_list("ufc_event", {'status': 'pending_fmid'})
     if not events_pending_fmids:
         print("No events with pending FMIDs found.")
         return []
 
-    event_pf = events_pending_fmids[0]  # Process first event only for simplicity
-    html_content = fetch_event_data(event_pf['web_url'])
-    event_fmid = parse_event_data(html_content)
-    fights = parse_fight_data(html_content, event_pf['id'])
+    all_fights = []
+    all_event_updates = []
+    events_processed = 0
+
+    for event_pf in events_pending_fmids:
+        html_content = fetch_event_data(event_pf['web_url'])
+        event_fmid = parse_event_data(html_content)
+
+        if event_fmid == None:
+            print(f"skipping name: {event_pf['name']} id: {event_pf['id']}, no event_fmid found yet")
+            continue
+
+        fights = parse_fight_data(html_content, event_pf['id'])
+
+        if fights == None:
+            print(f"skipping name: {event_pf['name']} id: {event_pf['id']}, no fights found yet")
+            continue
+
+        all_fights.extend(fights)
+        all_event_updates.append({
+            "web_url": event_pf['web_url'],
+            "status": "pending_data",
+            "fmid": event_fmid
+        })
+
+        events_processed += 1
+        if max_events and events_processed >= max_events:
+            break
 
     return [
         {
             "table": "ufc_fight",
-            "data": fights
+            "data": all_fights
         },
         {
             "table": "ufc_event",
-            "data": [{
-                "web_url": event_pf['web_url'],
-                "status": "pending_data",
-                "fmid": event_fmid
-            }],
+            "data": all_event_updates,
             "instructions": {
                 "unique": ["web_url"]
             }

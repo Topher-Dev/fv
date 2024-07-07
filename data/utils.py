@@ -9,10 +9,11 @@ headers = {
     "X-Requested-With": "XMLHttpRequest"
 }
 
-def retry_request(url, params=None, headers=None, max_retries=3, delay=1, proxies=None):
+def retry_request(url, params=None, headers=None, max_retries=3, delay=.5, proxies=None):
     attempts = 0
     while attempts < max_retries:
         try:
+            print(f"Request to url: {url}")
             response = requests.get(url, params=params, headers=headers, proxies=proxies)
             response.raise_for_status()
             return response

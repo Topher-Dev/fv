@@ -21,7 +21,7 @@ include_once $_SERVER["APP_GIT_ROOT"]."/web/server/token.php";
 error_log("[ARC Start] ------------------------------------- Request -------------------------------------");
 
 $app = $_SERVER["APP_NAME"];
-
+error_log($_SERVER["APP_GIT_ROOT"]."/web/server/token.php");
 //check if we have any command line arguments
 $_ARGS = [];
 if (isset($argv)) {

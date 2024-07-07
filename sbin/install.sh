@@ -355,6 +355,14 @@ EOF
     echo "Apache configuration for $APP_NAME applied successfully."
 }
 
+#setsup the scraper
+f_scrape(){
+    log_file_path="/var/log/fv/scrape.log"
+    setup_logrotate "$log_file_path"
+    echo "Populating the database from the web, this will take ahwile"
+    $APP_GIT_ROOT/scrape.sh
+}
+
 # Check the first parameter and call the respective function
 case "$1" in
     full)
@@ -362,10 +370,12 @@ case "$1" in
 	#f_set_name
         #f_jq
         f_config
+        . $APP_GIT_ROOT/utils.sh
         #f_apt
         f_pip
         #f_database
         #f_apache
+        #f_scrape
         ;;
     *)
         echo "Usage: $0 {full}"

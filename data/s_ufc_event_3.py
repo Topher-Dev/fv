@@ -1,3 +1,4 @@
+import json
 from utils import retry_request, validate_json_response, headers
 
 def fetch_event_details(event_fmid):
@@ -7,23 +8,31 @@ def fetch_event_details(event_fmid):
     data = validate_json_response(response, ['LiveEventDetail'])
     return data
 
-def ufcevent_3(crud):
+def ufcevent_3(crud, max_events=None):
     events_pending_data = crud.read_list("ufc_event", {'status': 'pending_data'})
     if not events_pending_data:
         print("No events with pending FMIDs found.")
         return []
 
-    event_pd = events_pending_data[0]  # Process first event only for simplicity
-    event_data = fetch_event_details(event_pd['fmid'])
+    events_update_data = []
+    events_processed = 0
+
+    for event_pd in events_pending_data:
+        event_data = fetch_event_details(event_pd['fmid'])
+        events_update_data.append({
+            "id": event_pd['id'],
+            "status": "completed",
+            "data": json.dumps(event_data)
+        })
+
+        events_processed += 1
+        if max_events and events_processed >= max_events:
+            break
 
     return [
         {
             "table": "ufc_event",
-            "data": [{
-                "id": event_pd['id'],
-                "status": "completed",
-                "data": json.dumps(event_data)
-            }],
+            "data": events_update_data,
             "instructions": {
                 "unique": ["id"]
             }

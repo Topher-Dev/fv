@@ -5,15 +5,12 @@
 . app_env export
 
 # get the backup dir in one directory above the app root
-BACKUP_DIR="$APP_ROOT/../backups"
+BACKUP_DIR="$APP_GIT_ROOT/../backups"
 
 #create the backup dir if it doesn't exist
 if [ ! -d "$BACKUP_DIR" ]; then
   mkdir -p "$BACKUP_DIR"
 fi
-
-#load config environment variables
-. $APP_ROOT/sbin/env.sh
 
 PGUSER=$DATABASE_USER
 PGDATABASE=$DATABASE_NAME
