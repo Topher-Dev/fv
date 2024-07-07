@@ -355,6 +355,37 @@ EOF
     echo "Apache configuration for $APP_NAME applied successfully."
 }
 
+f_php() {
+    # Source environment variables
+    . /path/to/your/app_env_export_script.sh
+
+    # Determine the PHP version
+    php_version=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
+
+    # Set the path to php.ini dynamically based on the PHP version
+    php_ini_path="/etc/php/$php_version/apache2/php.ini"
+
+    # Define the prepend file path
+    prepend_file="$APP_GIT_ROOT/web/server/app.php"
+
+    # Update php.ini to set auto_prepend_file
+    if grep -q "auto_prepend_file" "$php_ini_path"; then
+        sed -i "s|^;*\s*auto_prepend_file\s*=.*|auto_prepend_file = $prepend_file|" "$php_ini_path"
+    else
+        echo "auto_prepend_file = $prepend_file" >> "$php_ini_path"
+    fi
+
+    # Restart Apache to apply changes
+    systemctl restart apache2
+
+    if [ $? -eq 0 ]; then
+        echo "PHP configuration updated successfully: auto_prepend_file set to $prepend_file in $php_ini_path."
+        echo "Apache restarted successfully."
+    else
+        echo "Failed to restart Apache. Please check the configuration and try again."
+    fi
+}
+
 #setsup the scraper
 f_scrape(){
     log_file_path="/var/log/fv/scrape.log"
@@ -370,11 +401,12 @@ case "$1" in
 	#f_set_name
         #f_jq
         f_config
-        . $APP_GIT_ROOT/utils.sh
+        . $APP_GIT_ROOT/sbin/utils.sh
         #f_apt
-        f_pip
+        #f_pip
         #f_database
         #f_apache
+        f_php
         #f_scrape
         ;;
     *)
