@@ -1,6 +1,7 @@
+import os
 import json
 from bs4 import BeautifulSoup
-from utils import retry_request, validate_html_response, headers
+from utils import retry_request, validate_html_response, headers, save_picture
 
 def fetch_event_data(event_url):
     base_url = 'https://ufc.com'
@@ -26,17 +27,54 @@ def parse_fight_data(html_content, event_id):
     for item in fight_list_items:
         fight_div = item.select_one('div.c-listing-fight[data-fmid]')
         if fight_div:
+            fighter_1_url = fight_div.select_one('div.c-listing-fight__corner--red a')['href']
+            fighter_2_url = fight_div.select_one('div.c-listing-fight__corner--blue a')['href']
             fights.append({
                 'fmid': fight_div['data-fmid'],
-                'fighter_1_url': fight_div.select_one('div.c-listing-fight__corner--red a')['href'].split('com')[1],
-                'fighter_2_url': fight_div.select_one('div.c-listing-fight__corner--blue a')['href'].split('com')[1],
+                'fighter_1_url': fighter_1_url.split('com')[1],
+                'fighter_2_url': fighter_2_url.split('com')[1],
                 'event_id': event_id
             })
 
+            # Save fighter images
+            save_fighter_images(fight_div, fighter_1_url, fighter_2_url)
+    
     if not fights:
         return None
 
     return fights
+
+def save_fighter_images(fight_div, fighter_1_url, fighter_2_url):
+    base_dir = os.path.join(os.getenv('APP_GIT_ROOT'), 'web/client/imgs')
+    os.makedirs(base_dir, exist_ok=True)
+
+    # Fighter images
+    fighter_1_img_url = fight_div.select_one('div.c-listing-fight__corner--red img')['src']
+    fighter_2_img_url = fight_div.select_one('div.c-listing-fight__corner--blue img')['src']
+    fighter_1_name = fighter_1_url.split('/')[-1]
+    fighter_2_name = fighter_2_url.split('/')[-1]
+    fighter_1_img_path = os.path.join(base_dir, f"{fighter_1_name}.png")
+    fighter_2_img_path = os.path.join(base_dir, f"{fighter_2_name}.png")
+
+    # Check if images already exist before downloading
+    if not os.path.exists(fighter_1_img_path):
+        save_picture(fighter_1_img_url, fighter_1_img_path)
+    if not os.path.exists(fighter_2_img_path):
+        save_picture(fighter_2_img_url, fighter_2_img_path)
+
+    # Flag images
+    flag_red_url = fight_div.select_one('div.c-listing-fight__country--red img')['src']
+    flag_blue_url = fight_div.select_one('div.c-listing-fight__country--blue img')['src']
+    flag_red_name = flag_red_url.split('/')[-1]
+    flag_blue_name = flag_blue_url.split('/')[-1]
+    flag_red_path = os.path.join(base_dir, flag_red_name)
+    flag_blue_path = os.path.join(base_dir, flag_blue_name)
+
+    # Check if flags already exist before downloading
+    if not os.path.exists(flag_red_path):
+        save_picture(flag_red_url, flag_red_path)
+    if not os.path.exists(flag_blue_path):
+        save_picture(flag_blue_url, flag_blue_path)
 
 def ufcevent_2(crud, max_events=None):
     events_pending_fmids = crud.read_list("ufc_event", {'status': 'pending_fmid'})
@@ -52,13 +90,13 @@ def ufcevent_2(crud, max_events=None):
         html_content = fetch_event_data(event_pf['web_url'])
         event_fmid = parse_event_data(html_content)
 
-        if event_fmid == None:
+        if event_fmid is None:
             print(f"skipping name: {event_pf['name']} id: {event_pf['id']}, no event_fmid found yet")
             continue
 
         fights = parse_fight_data(html_content, event_pf['id'])
 
-        if fights == None:
+        if fights is None:
             print(f"skipping name: {event_pf['name']} id: {event_pf['id']}, no fights found yet")
             continue
 

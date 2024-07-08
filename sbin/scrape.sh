@@ -4,16 +4,33 @@
 . app_env export
 . $APP_GIT_ROOT/sbin/utils.sh
 
+# Initialize an associative array for fallbacks
+declare -A fallbacks
+
 # Utility function to load scraper configuration
 load_scraper_config() {
     local config_file=$1
-    # Read and parse the config file
+
+    # Read and parse the order of scrapers
     scrapers=($(awk -F "=" '/order/ {print $2}' $config_file | tr ',' ' '))
-    declare -A fallbacks
+
+    # Read and parse the fallbacks
     while IFS='=' read -r key value; do
-        fallbacks["$key"]=$value
-    done < <(awk -F "=" '/Fallbacks/ {flag=1; next} flag {print}' $config_file)
-    echo $scrapers
+        if [[ -n "$key" && -n "$value" ]]; then
+            # Trim whitespace
+            key=$(echo "$key" | xargs)
+            value=$(echo "$value" | xargs)
+            fallbacks["$key"]=$value
+        fi
+    done < <(awk -F "=" '/\[Fallbacks\]/,/^$/' $config_file | grep '=')
+
+    # Print scrapers for debugging
+    echo "Scrapers: ${scrapers[@]}"
+
+    # Print fallbacks for debugging
+    for key in "${!fallbacks[@]}"; do
+        echo "Fallback for $key: ${fallbacks[$key]}"
+    done
 }
 
 # Function to run scrapers sequentially
@@ -75,7 +92,12 @@ run_scraper() {
 # Function to handle errors and provide fallbacks
 handle_error() {
     local scraper=$1
+    echo "Handling error for scraper: $scraper"
+    echo "Fallbacks array keys: ${!fallbacks[@]}"
+    echo "Fallbacks array values: ${fallbacks[@]}"
+
     if [[ -n "${fallbacks[$scraper]}" ]]; then
+        echo "Found fallback for $scraper: ${fallbacks[$scraper]}"
         log_message "Attempting fallback for $scraper: ${fallbacks[$scraper]}"
         run_scraper "${fallbacks[$scraper]}"
         if [ $? -ne 0 ]; then
@@ -85,6 +107,7 @@ handle_error() {
             results+=("${fallbacks[$scraper]}: success")
         fi
     else
+        echo "No fallback available for $scraper"
         log_message "No fallback available for $scraper. Aborting."
         return 1
     fi

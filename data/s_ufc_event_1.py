@@ -1,5 +1,6 @@
 from utils import retry_request, validate_html_response, validate_json_response, headers
 from bs4 import BeautifulSoup
+import sys
 
 def fetch_ufcevent_urls(view_display_id, max_pages=1):
     base_url = "https://www.ufc.com/views/ajax"
@@ -83,6 +84,11 @@ def ufcevent_1(crud):
         upcoming_event_links = fetch_ufcevent_urls('upcoming', max_pages=1)
         past_event_links = fetch_ufcevent_urls('past', max_pages=1)
         event_links = upcoming_event_links + past_event_links
+
+        if len(event_links) == 0:
+            sys.exit(1)
+            raise ValueError("No events found from ufc source, trying backup")
+
     except Exception as e:
         print(f"Failed to fetch UFC event URLs: {e}")
         return []

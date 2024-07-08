@@ -1,6 +1,18 @@
 from bs4 import BeautifulSoup
 from utils import retry_request, validate_html_response, headers
 
+table_mappings = {
+    'Past_events': {'name_col': 1, 'url_col': 1},
+    'Scheduled_events': {'name_col': 0, 'url_col': 0}
+}
+
+def get_indices_for_id(table_id):
+    if table_id in table_mappings:
+        mapping = table_mappings[table_id]
+        return mapping['name_col'], mapping['url_col']
+    else:
+        return 1, 1
+
 def fetch_wiki_event_urls():
     base_url = "https://en.wikipedia.org/wiki/List_of_UFC_events"
     response = retry_request(base_url, headers=headers)
@@ -54,6 +66,7 @@ def wikievent_1(crud):
 
     events_to_save = []
     for event in events:
+        print(event)
         if event.get('wiki_url'):
             try:
                 event = fetch_ufc_event_url(event)
