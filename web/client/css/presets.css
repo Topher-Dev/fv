@@ -423,11 +423,12 @@
     main {
         opacity: 1;
         transition: opacity .15s ease-in-out;
-        background-color: #9bc2e64f;
-        height: 122vh;
-        overflow-y: scroll;
+        height: 100%;
+        /* overflow-y: scroll; */
          /* Compensate for fix nav */
+        margin-bottom: 0rem;
         padding-top: 8rem;
+        z-index: 2;
     }
 
     main.transition {
@@ -447,7 +448,7 @@
     button {
         border: none;
         padding: 0;
-	color: var(--clr-black);
+	    color: var(--clr-black);
         outline: none;
         background-color: transparent;
         cursor: pointer;

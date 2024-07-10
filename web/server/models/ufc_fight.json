@@ -328,9 +328,7 @@
       },
       "response": {
         "type": "json",
-        "required": [
-          "id"
-        ]
+        "required": ["id", "data", "fighter_1_url", "fighter_2_url"]
       }
     },
     "read_list": {

@@ -5,7 +5,7 @@
 
 let crud_debug = true;
 
-function log(action, data = {}, warn = false){
+function log(action, data = {}, warn = true){
     if (crud_debug){
         warn ? console.warn(`[ARC DEBUG]: ${action}`): //console.log(`[ARC DEBUG]: ${action}`);
         data && console.table(data);
@@ -1124,11 +1124,11 @@ const setters = {
                 arc.get(controller, service, params).then(({ status, message, data }) => {
 
                     component.isLoading = false;
-                    //console.log(status, message, data, params)
+                    console.log(status, message, data, params)
                     if (status === 0){
                         log(`FETCHING: Success, ${message}`, data);
-                        component.data.form = data.form;
-                        component.data.relations = data.relations;
+
+                        component.data.form = data;
 
                     } else {
                         log(`FETCHING: Failure, ${message}`, data, true);

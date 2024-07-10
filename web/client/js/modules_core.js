@@ -264,33 +264,38 @@ function get_header(){
 
 function get_nav(){
 
-    const items = Object.freeze([
-        {
-            icon: "nav-ufc-fight",
-            header: "ufc-fight",
-            key: "ufc_fight"
-        },
-        {
-            icon: "nav-ufc-event",
-            header: "ufc-event",
-            key: "ufc_event"
-        },
-        {
-            icon: "nav-ufc-fighter",
-            header: "nav-ufc-fighter",
-            key: "ufc_fighter"
-        }
-    ]);
 
     const nav = new Component('nav', {
-        template: function() {
+        data: {
+            items: [        
+                {
+                    icon: "nav-ufc-fight",
+                    key: "ufc_fight",
+                    text: "fight"
+                },
+                {
+                    icon: "nav-ufc-event",
+                    key: "ufc_event",
+                    text: "event"
+                },
+                {
+                    icon: "person_fill",
+                    key: "ufc_fighter",
+                    text: "fighter"
+                }
+            ]
+        },
+        template: function(props) {
             return html`
                 <div id="nav-bottom-containor">
-                    <ul role="list" class="d--f fd--r"> ${ items.map( ( { key, icon }, i ) => html`
+                    <ul role="list" class="d--f fd--r"> ${ props.items.map( ( { key, icon, text }, i ) => html`
                         <li 
                             key="${key}" 
                             class="d--f ai--c nav-item ${ i === 0 ? "active" : "" }" 
-                            onclick="select()"><div>${get_svg(icon, 'class="nav-icon"')}</div>
+                            onclick="select()"
+                        >
+                            <button>${get_svg(icon, 'class="nav-icon"')}</button>
+                            <p class="hide">${text}</p>
                         </li>`)}
                     </ul>
                     <!-- <div id="li-indicator"></div> -->

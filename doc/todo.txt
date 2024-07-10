@@ -1,5 +1,2 @@
-[ ] finish fighter table load script
-[ ] ensure data in each table
-[ ] readlist into each module
-[ ] nav working in client app
-[ ] make sure ufc_wiki_1 performs as a backup
+Mon 08 Jul 2024 11:25:36 PM ADT
+[ ] Try text under Icons for nav bar

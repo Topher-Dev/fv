@@ -1,0 +1,9 @@
+
+li.fight {
+    background-color: white;
+    border-radius: var(--br-radius);
+    color: #585b63;
+    padding: 2rem;
+    box-shadow: var(--bs-lg);
+    margin: .25rem .5rem .5rem .75rem;
+}
