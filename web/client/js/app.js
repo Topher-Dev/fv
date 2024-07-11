@@ -16,8 +16,11 @@ var Application = (function () {
         if (data?.is_authenticated === true){
             login(data);
         }
+        console.log("Application initialized", data)
+        application.mods.core.header.data.selected_event = data.upcoming_event.name;
+        application.mods.core.header.render();
 
-        application.mods.view.change("ufc_event");
+        application.mods.view.change("ufc_event", { selected_event: data.upcoming_event });
     }
 
     function create() {
@@ -247,6 +250,7 @@ var Application = (function () {
     return {
         get: function () {
             if (application) {
+                ini();
                 return application;
             }
             application = create();

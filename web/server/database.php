@@ -367,6 +367,27 @@ class Database
         return false;
     }
 
+    public function query_one($sql, array $params = []){
+        $stmt = $this->con->prepare($sql);
+        $this->debug && error_log($stmt->queryString);
+
+        if ($stmt->execute($params)) {
+            return $stmt->fetch($this->fetchAll_mode);
+        };
+    }
+
+    public function query_list(){
+        $stmt = $this->con->prepare($sql);
+        $this->debug && error_log($stmt->queryString);
+        
+        if ($stmt->execute($params)) {
+            return $stmt->fetchAll($this->fetchAll_mode);
+        };
+
+        return false;
+
+    }
+
     public function count($table, string $where_filter = "", array $where_params = [])
     {
         $sql = "SELECT count(*) from {$table} {$where_filter}";

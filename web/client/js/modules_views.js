@@ -1,14 +1,18 @@
-function view_ufc_event(){
+function view_ufc_event({ selected_event }){
     const ufc_event = new Component('main', {
         data: {
-            header: "event"
+            header: "event",
+            id: selected_event.id
         },
         template: function(props) {
 
-            if (this.isLoading || !props?.list){
+            if (this.isLoading || !props?.form){
                 return loader();
             }
+            console.log(props);
+            const event_details = JSON.parse(props.form.data)['LiveEventDetail'];
 
+            console.log(event_details)
             return html`
                 <div class="event-info">
                     <h3>Event Info</h3>
@@ -17,8 +21,9 @@ function view_ufc_event(){
                 </div>
                 <hr class="divider">
                 <ul class="event-fight-list">
-                    ${props.list.map( li => {
-                        return html`<li data-fight-id="${li.id}" onclick="select_fight()" class="fight">${li.id} | ${li.name}</li>`
+                    ${event_details.FightCard.map( li => {
+                        return html`<li data-fight-id="${li.Status}" onclick="select_fight()" class="fight">${li.Status} | ${li.CardSegmentStartTime
+                        }</li>`
                     })}
                 </ul>
             `;
@@ -32,7 +37,7 @@ function view_ufc_event(){
                 app.mods.view.change("ufc_fight", {id});
             }
         },
-        setters: setters.LIST(UFC_EVENT, READ_LIST)
+        setters: setters.CRUD(UFC_EVENT, READ_ONE)
     });
 
     return ufc_event.do("fetch"), ufc_event;

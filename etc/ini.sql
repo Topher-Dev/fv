@@ -41,15 +41,15 @@ ALTER TABLE external_id ADD CONSTRAINT unique_external_id_internal_id_id_type UN
 
 DROP TABLE IF EXISTS ufc_event;
 CREATE TABLE ufc_event (
-
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     web_url VARCHAR(255) UNIQUE NOT NULL,
     status VARCHAR(30) NOT NULL DEFAULT 'pending_fmid',
-
     fmid INTEGER UNIQUE,
     data JSONB,
-
+    main_card TIMESTAMP,
+    prelims_card TIMESTAMP,
+    timezone VARCHAR(10),
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_by INTEGER,
     updated_by INTEGER,
@@ -58,6 +58,7 @@ CREATE TABLE ufc_event (
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP
 );
+
 
 
 DROP TABLE IF EXISTS ufc_fight;
@@ -94,6 +95,7 @@ CREATE TABLE ufc_fighter (
     id SERIAL PRIMARY KEY,
     fmid INTEGER UNIQUE,
     data JSONB,
+    web_url VARCHAR(255) UNIQUE NOT NULL,
     status VARCHAR(30) NOT NULL DEFAULT 'pending_imgs',
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,

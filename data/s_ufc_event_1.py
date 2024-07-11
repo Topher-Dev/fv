@@ -1,5 +1,6 @@
 from utils import retry_request, validate_html_response, validate_json_response, headers
 from bs4 import BeautifulSoup
+from datetime import datetime
 import sys
 
 def fetch_ufcevent_urls(view_display_id, max_pages=1):
@@ -70,10 +71,28 @@ def parse_ufcevent_urls(html_content):
 
     event_links = []
     for event in events:
-        h3 = event.select_one('h3.c-card-event--result__headline')
+        h3 = event.select_one('h3.c-card-event--result__headline a')
+        event_date_div = event.select_one('div.c-card-event--result__date')
+
+        if not h3 or not event_date_div:
+            continue
+
+        event_url = h3['href']
+        event_name = h3.text.strip()
+        main_card_timestamp = event_date_div.get('data-main-card-timestamp')
+        prelims_card_timestamp = event_date_div.get('data-prelims-card-timestamp')
+        timezone = event_date_div.get('data-format', '').split()[-1]
+
+        # Convert timestamps to PostgreSQL compatible format
+        main_card = datetime.utcfromtimestamp(int(main_card_timestamp)).strftime('%Y-%m-%d %H:%M:%S') if main_card_timestamp else None
+        prelims_card = datetime.utcfromtimestamp(int(prelims_card_timestamp)).strftime('%Y-%m-%d %H:%M:%S') if prelims_card_timestamp else None
+
         event_links.append({
-            'web_url': h3.find('a')['href'] if h3 else '',
-            'name': h3.text.strip() if h3 else ''
+            'web_url': event_url,
+            'name': event_name,
+            'main_card': main_card,
+            'prelims_card': prelims_card,
+            'timezone': timezone
         })
     
     return event_links
@@ -87,7 +106,7 @@ def ufcevent_1(crud):
 
         if len(event_links) == 0:
             sys.exit(1)
-            raise ValueError("No events found from ufc source, trying backup")
+            #raise ValueError("No events found from ufc source, trying backup")
 
     except Exception as e:
         print(f"Failed to fetch UFC event URLs: {e}")

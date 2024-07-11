@@ -82,7 +82,7 @@ def ufcfighter_1(crud):
 
     for fighter in fighters_pending_imgs:
         try:
-            html_content = fetch_fighter_data(fighter['url'])
+            html_content = fetch_fighter_data(fighter['web_url'])
             fighter_data = parse_fighter_data(html_content)
 
             hero_img_path = save_fighter_image(fighter_data['hero_img_url'], fighter_data['fighter_name'])
@@ -112,7 +112,7 @@ def ufcfighter_1(crud):
         }
     ]
 
-"""
+
 if __name__ == "__main__":
     from db import Database
     from crud import CRUD
@@ -132,4 +132,3 @@ if __name__ == "__main__":
             crud.update_list(table, data, instructions)
     finally:
         db.disconnect()
-"""

@@ -1,2 +1,23 @@
 Mon 08 Jul 2024 11:25:36 PM ADT
 [ ] Try text under Icons for nav bar
+
+
+
+
+once the client has recieved all the neccessary javascript files the client app is launched
+with app start(). its at this point our server is going to start tracking the client we have this TCP connection 
+at a FV (application level). a request is made to the server, its purpose is to deliver the neccessary data to the 
+client to initalize the app. After this the specific default module (or specified with params) is loaded and a request is made for 
+the view specific module. 
+
+what needs to happen:
+1) We currently dont have the event_date on the psql record. Need to adjust the scrape script to collect this and add the field to the db
+table
+1)b the event_date will likely need to be transformed into a suitable format for the psql db to accept its
+2) Next we need to add the query to the server to get the event_date from the db and give it to the client on the initalize request
+3) Next this needs to be stores in the menu component as it will determine the default view, this value will be displayed in the UI
+and be updatable through the search/list module.
+
+
+
+this is our first look at the client, notabley an IP adress

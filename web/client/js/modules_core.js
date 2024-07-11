@@ -108,9 +108,11 @@ function get_header(){
     });
 
     const header = new Component('header', {
-        template: () => {
-            //const { name, exchange, symbol } = app.data?.security;
-            const name="test";
+        data: {
+            selected_event: "loading"
+        },
+        template: (props) => {
+
             const exchange="test";
             const symbol="test";
 
@@ -155,7 +157,7 @@ function get_header(){
                     <h3 class="d--f ai--c">
                         ${get_svg("activity", 'class="svg-activity"')}
                         ${get_svg("spinner", 'class="hide svg-loading"')}
-                        <p class="security-details ml--xs tt--c t" style="max-width: 55vw;">${name || "company"}</p>
+                        <p class="security-details ml--xs tt--c t" style="max-width: 55vw;">${props.selected_event || "selected_event"}</p>
                     </h3>
                     <h3 class="d--f ai--c jc--fs">
                         <p class="security-details tt--u blue t" style="font-size:1.3rem"><span style="font-weight: 100;margin-right: .05rem;">$</span>${symbol || "SYMBL"}</p>

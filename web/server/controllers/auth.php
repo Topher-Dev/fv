@@ -14,14 +14,30 @@ class Auth extends Controller
 
     public function initialize(){
 
+        #Get the next upcoming ufc_event record
+        $db = $this->get_db();
+        $upcoming_event = $db->find_one("ufc_event", "where main_card > now() order by main_card asc limit 1");
+
         if (!is_null($this->user)){
             return $this->success("Authenticated", [
                 "user" => $this->user->dump(),
-                "is_authenticated" => true
+                "is_authenticated" => true,
+                "upcoming_event" => $upcoming_event
             ]);
         } else {
+            #refactor the above for less code
+            $user_items = ['REMOTE_ADDR', 'HTTP_USER_AGENT', 'HTTP_REFERER', 'REQUEST_URI', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED_HOST', 'HTTP_X_FORWARDED_SERVER'];
+            $user = [];
+            foreach ($user_items as $ui){
+                if (isset($_SERVER[$ui])){
+                    $user[strtolower($ui)] = $_SERVER[$ui];
+                }
+            }
+
             return $this->success("Not Authenticated", [
-                "is_authenticated" => false
+                "user" => $user,
+                "is_authenticated" => false,
+                "upcoming_event" => $upcoming_event
             ]);
         }
     }
