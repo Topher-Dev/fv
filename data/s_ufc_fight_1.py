@@ -19,22 +19,29 @@ def ufcfight_1(crud, max_fights=None):
     fights_processed = 0
 
     for fight_pd in fights_pending_data:
-        fight_data = fetch_fight_details(fight_pd['fmid'])
-        fights_update_data.append({
-            "id": fight_pd['id'],
-            "status": "pending_fighter_extract",
-            "data": json.dumps(fight_data)
-        })
+        try:
+            fight_data = fetch_fight_details(fight_pd['fmid'])
+            fights_update_data.append({
+                "id": fight_pd['id'],
+                "status": "pending_fighter_extract",
+                "data": json.dumps(fight_data)
+            })
 
-        fighters.extend([{
-            "fmid": fighter['FighterId'],
-            "data": json.dumps(fighter),
-            "status": "pending_imgs"
-        } for fighter in fight_data['Fighters']])
+            fighters.extend([{
+                "url": fighter['UFCLink'].split('com')[1],
+                "fmid": fighter['FighterId'],
+                "data": json.dumps(fighter),
+                "status": "pending_imgs"
+            } for fighter in fight_data['Fighters']])
 
-        fights_processed += 1
-        if max_fights and fights_processed >= max_fights:
-            break
+            fights_processed += 1
+            if max_fights and fights_processed >= max_fights:
+                break
+        except Exception as e:
+            print(f"[UFCFight1] Error processing fight {fight_pd['fmid']}: {e}")
+            continue
+
+    print(f"[UFCFight1] Scraper completed for UFC Fight 1. Processed {fights_processed} fights.")
 
     return [
         {

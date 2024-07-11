@@ -23,7 +23,7 @@ def fetch_ufcevent_urls(view_display_id, max_pages=1):
 
         try:
             response = retry_request(base_url, params=params, headers=headers)
-            data = validate_json_response(response, ['0', '1', '2', '3'])
+            data = validate_json_response(response)
         except Exception as e:
             print(f"Failed to fetch data for view_display_id {view_display_id} on page {page}: {e}")
             break

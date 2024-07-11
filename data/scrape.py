@@ -9,6 +9,7 @@ from s_ufc_event_1 import ufcevent_1
 from s_ufc_event_2 import ufcevent_2
 from s_ufc_event_3 import ufcevent_3
 from s_ufc_fight_1 import ufcfight_1
+from s_ufc_fighter_1 import ufcfighter_1
 from s_wiki_event_1 import wikievent_1
 
 def load_scraper(scraper_name):
@@ -16,12 +17,12 @@ def load_scraper(scraper_name):
         scraper_function = globals()[scraper_name]
         return scraper_function
     except KeyError:
-        raise ValueError(f"Scraper function '{scraper_name}' not found.")
+        raise ValueError(f"[LoadScraper] Scraper function '{scraper_name}' not found.")
 
 def main():
     scraper_name = os.getenv('SCRAPER_NAME')
     if not scraper_name:
-        print("Error: SCRAPER_NAME environment variable is not set.")
+        print("[Main] Error: SCRAPER_NAME environment variable is not set.")
         sys.exit(1)
 
     try:
@@ -41,8 +42,12 @@ def main():
 
     try:
         db.connect()
-        print("Database connection successful")
+        print("[Main] Database connection successful")
+    except Exception as e:
+        print(f"[Main] Error connecting to database: {e}")
+        sys.exit(1)
 
+    try:
         # Scrape data from the internet
         raw_table_data_list = scraper_function(crud)
 
@@ -56,21 +61,20 @@ def main():
 
                 if not table.errors:
                     table.save(crud)
-                    print("Data saved successfully")
+                    print("[Main] Data saved successfully")
                 else:
-                    print("Errors occurred during validation:", table.errors)
+                    print(f"[Main] Errors occurred during validation: {table.errors}")
                     sys.exit(1)
 
             except Exception as e:
-                print(f"Error processing table data: {e}")
+                print(f"[Main] Error processing table data: {e}")
                 sys.exit(1)
-
     except Exception as e:
-        print(f"Error connecting to database: {e}")
+        print(f"[Main] Error during scraping: {e}")
         sys.exit(1)
     finally:
         db.disconnect()
-        print("Database connection closed")
+        print("[Main] Database connection closed")
 
     sys.exit(0)
 
