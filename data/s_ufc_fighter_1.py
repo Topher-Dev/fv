@@ -17,10 +17,10 @@ def parse_fighter_data(html_content):
         soup = BeautifulSoup(html_content, 'html.parser')
 
         # Extract hero image URL
-        hero_img_tag = soup.select_one('div.hero-profile__image-wrap img')
-        if not hero_img_tag:
-            raise ValueError(f"[ParseFighterData] Hero image tag not found")
-        hero_img_url = hero_img_tag['src']
+        head_img_tag = soup.select_one('img.image-style-event-results-athlete-headshot')
+        if not head_img_tag:
+            raise ValueError(f"[ParseFighterData] Head image tag not found")
+        head_img_url = head_img_tag['src']
         
         # Extract fighter details
         fighter_name_tag = soup.select_one('h1.hero-profile__name')
@@ -43,7 +43,7 @@ def parse_fighter_data(html_content):
                  for stat in stats_tags}
 
         return {
-            "hero_img_url": hero_img_url,
+            "head_img_url": head_img_url,
             "fighter_name": fighter_name,
             "nickname": nickname,
             "division": division,
@@ -53,16 +53,16 @@ def parse_fighter_data(html_content):
     except Exception as e:
         raise ValueError(f"[ParseFighterData] Error parsing fighter data: {e}")
 
-def save_fighter_image(hero_img_url, fighter_name):
+def save_fighter_image(head_img_url, fighter_name):
     try:
-        base_dir = os.path.join(os.getenv('APP_GIT_ROOT'), 'web/client/imgs')
+        base_dir = '/srv/images/fighter/headshot'
         os.makedirs(base_dir, exist_ok=True)
         
         img_path = os.path.join(base_dir, f"{fighter_name}.png")
         
         # Check if image already exists before downloading
         if not os.path.exists(img_path):
-            save_picture(hero_img_url, img_path)
+            save_picture(head_img_url, img_path)
         
         print(f"[SaveFighterImage] Fighter image saved for {fighter_name}")
         return img_path
@@ -84,10 +84,12 @@ def ufcfighter_1(crud):
         try:
             html_content = fetch_fighter_data(fighter['web_url'])
             fighter_data = parse_fighter_data(html_content)
-
-            hero_img_path = save_fighter_image(fighter_data['hero_img_url'], fighter_data['fighter_name'])
-            if hero_img_path is None:
-                print(f"[UFCFighter1] Skipping fighter {fighter['url']}, image not saved")
+           
+            fighter_name = fighter['web_url'].split("/")[-1]
+            print(fighter_name)
+            head_img_path = save_fighter_image(fighter_data['head_img_url'], fighter_name)
+            if head_img_path is None:
+                print(f"[UFCFighter1] Skipping fighter {fighter_name}, image not saved")
                 continue
 
             all_fighter_updates.append({
@@ -98,7 +100,7 @@ def ufcfighter_1(crud):
 
             fighters_processed += 1
         except Exception as e:
-            print(f"[UFCFighter1] Error processing fighter {fighter['url']}: {e}")
+            print(f"[UFCFighter1] Error processing fighter {fighter['web_url']}: {e}")
             continue
 
     print(f"[UFCFighter1] Scraper completed for UFC Fighter 1. Processed {fighters_processed} fighters.")

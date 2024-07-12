@@ -66,7 +66,7 @@ def parse_fight_data(html_content, event_id):
 
 def save_fighter_images(fight_div, fighter_1_url, fighter_2_url):
     try:
-        base_dir = os.path.join(os.getenv('APP_GIT_ROOT'), 'web/client/imgs')
+        base_dir = '/srv/images/'
         os.makedirs(base_dir, exist_ok=True)
 
         # Fighter images
@@ -74,8 +74,8 @@ def save_fighter_images(fight_div, fighter_1_url, fighter_2_url):
         fighter_2_img_url = fight_div.select_one('div.c-listing-fight__corner--blue img')['src']
         fighter_1_name = fighter_1_url.split('/')[-1]
         fighter_2_name = fighter_2_url.split('/')[-1]
-        fighter_1_img_path = os.path.join(base_dir, f"{fighter_1_name}.png")
-        fighter_2_img_path = os.path.join(base_dir, f"{fighter_2_name}.png")
+        fighter_1_img_path = os.path.join(base_dir + 'fighter/heroshot/', f"{fighter_1_name}.png")
+        fighter_2_img_path = os.path.join(base_dir + 'fighter/heroshot/', f"{fighter_2_name}.png")
 
         # Check if images already exist before downloading
         if not os.path.exists(fighter_1_img_path):
@@ -86,10 +86,10 @@ def save_fighter_images(fight_div, fighter_1_url, fighter_2_url):
         # Flag images
         flag_red_url = fight_div.select_one('div.c-listing-fight__country--red img')['src']
         flag_blue_url = fight_div.select_one('div.c-listing-fight__country--blue img')['src']
-        flag_red_name = flag_red_url.split('/')[-1]
-        flag_blue_name = flag_blue_url.split('/')[-1]
-        flag_red_path = os.path.join(base_dir, flag_red_name)
-        flag_blue_path = os.path.join(base_dir, flag_blue_name)
+        flag_red_name = flag_red_url.split('/')[-1].lower()
+        flag_blue_name = flag_blue_url.split('/')[-1].lower()
+        flag_red_path = os.path.join(base_dir + 'flags/', flag_red_name)
+        flag_blue_path = os.path.join(base_dir + 'flags/', flag_blue_name)
 
         # Check if flags already exist before downloading
         if not os.path.exists(flag_red_path):

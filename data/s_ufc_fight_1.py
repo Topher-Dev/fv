@@ -28,7 +28,7 @@ def ufcfight_1(crud, max_fights=None):
             })
 
             fighters.extend([{
-                "web_url": fighter['UFCLink'].split('com')[1],
+                "web_url": fighter['UFCLink'].split('com')[1].lower(),
                 "fmid": fighter['FighterId'],
                 "data": json.dumps(fighter),
                 "status": "pending_imgs"

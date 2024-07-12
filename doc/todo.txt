@@ -2,8 +2,6 @@ Mon 08 Jul 2024 11:25:36 PM ADT
 [ ] Try text under Icons for nav bar
 
 
-
-
 once the client has recieved all the neccessary javascript files the client app is launched
 with app start(). its at this point our server is going to start tracking the client we have this TCP connection 
 at a FV (application level). a request is made to the server, its purpose is to deliver the neccessary data to the 
@@ -18,6 +16,8 @@ table
 3) Next this needs to be stores in the menu component as it will determine the default view, this value will be displayed in the UI
 and be updatable through the search/list module.
 
-
-
 this is our first look at the client, notabley an IP adress
+
+Fri Jul 12 01:44:32 UTC 2024
+[x] ensure imgs are being saved to correct folders with the correct lowercase naming conventions
+[x] move the storeage location outside of the gitrepo

@@ -336,6 +336,14 @@ f_apache() {
         Require all granted
     </Directory>
 
+    <Directory /srv/images>
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    Alias /images /srv/images
+
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 
