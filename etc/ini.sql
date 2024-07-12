@@ -96,6 +96,7 @@ CREATE TABLE ufc_fighter (
     fmid INTEGER UNIQUE,
     data JSONB,
     web_url VARCHAR(255) UNIQUE NOT NULL,
+    data2 JSONB,
     status VARCHAR(30) NOT NULL DEFAULT 'pending_imgs',
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
