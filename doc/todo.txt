@@ -21,3 +21,7 @@ this is our first look at the client, notabley an IP adress
 Fri Jul 12 01:44:32 UTC 2024
 [x] ensure imgs are being saved to correct folders with the correct lowercase naming conventions
 [x] move the storeage location outside of the gitrepo
+
+
+Sat Jul 13 06:59:45 UTC 2024
+[ ] add social media links to ufc_fighter records in ini.sql, s_ufc_fighter_1.py 
