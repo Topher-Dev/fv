@@ -6,13 +6,18 @@ li.fight {
     box-shadow: var(--bs-lg);
     margin: 0.25rem;
     /* clip-path: inset(0.25% -4.75% -9.75% -16.75%); */
+    width: 100%;
     /* z-index: 10; */
 }
 
 img.fight-list-img {
-    height: 43px;
+    height: 64px;
 }
 
 .fight-list-name {
-    margin: .5rem 0;
+    margin: 2rem 0;
+}
+
+.fighter {
+    width: 50%;
 }
