@@ -17,7 +17,7 @@ var Application = (function () {
             login(data);
         }
         console.log("Application initialized", data)
-        application.mods.core.header.data.selected_event = data.upcoming_event.name;
+        application.mods.core.header.data.selected_event = data.upcoming_event;
         application.mods.core.header.render();
 
         application.mods.view.change("ufc_event", { selected_event: data.upcoming_event });

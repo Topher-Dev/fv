@@ -14,16 +14,37 @@ function view_ufc_event({ selected_event }){
 
             console.log(event_details)
             return html`
-                <div class="event-info">
-                    <h3>Event Info</h3>
-                    <p>Location</p>
-                    <p>Something Intresting</p>
+                <div class="event-info d--f ai--c jc--sb">
+                    <div>
+                        <p>Start Time: ${event_details.StartTime}</p>
+                        <p>Event Zone: ${event_details.TimeZone}</p>
+                        <p>Event Status: ${event_details.Status}</p>
+                    </div>
+                    <div>
+                        <p>State: ${event_details.Location.State}</p>
+                        <p>City: ${event_details.Location.City}</p>
+                        <p>Venue: ${event_details.Location.Venue}</p>
+                    </div>
                 </div>
                 <hr class="divider">
                 <ul class="event-fight-list">
                     ${event_details.FightCard.map( li => {
-                        return html`<li data-fight-id="${li.Status}" onclick="select_fight()" class="fight">${li.Status} | ${li.CardSegmentStartTime
-                        }</li>`
+                        return html`
+                        <li 
+                            data-fight-id="${li.Status}" 
+                            onclick="select_fight()" 
+                            class="d--f fd--r ai--c jc--c fight"
+                        >
+                            ${li.Fighters.map( (fighter, i) => {
+
+                                const src = `images/fighter/headshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
+                                console.log(src);
+                                return html`
+                                    <div class="fighter d--f ai--c ${i===0?"fd--rr":"fd--r"}">
+                                        <img class="fight-list-img" src="${src}" alt="">
+                                        <p class="fight-list-name">${fighter.Name.LastName}</p>
+                                    </div>`;})}
+                        </li>`
                     })}
                 </ul>
             `;

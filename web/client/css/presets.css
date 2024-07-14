@@ -428,7 +428,8 @@
          /* Compensate for fix nav */
         margin-bottom: 0rem;
         padding-top: 8rem;
-        z-index: 2;
+        z-index: 0;
+        BACKGROUND-COLOR: TRANSPARENT;
     }
 
     main.transition {

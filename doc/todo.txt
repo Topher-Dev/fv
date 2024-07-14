@@ -1,7 +1,6 @@
 Mon 08 Jul 2024 11:25:36 PM ADT
 [ ] Try text under Icons for nav bar
 
-
 once the client has recieved all the neccessary javascript files the client app is launched
 with app start(). its at this point our server is going to start tracking the client we have this TCP connection 
 at a FV (application level). a request is made to the server, its purpose is to deliver the neccessary data to the 
@@ -25,3 +24,6 @@ Fri Jul 12 01:44:32 UTC 2024
 
 Sat Jul 13 06:59:45 UTC 2024
 [ ] add social media links to ufc_fighter records in ini.sql, s_ufc_fighter_1.py 
+
+Sun 14 Jul 2024 01:21:27 AM ADT
+[ ] bug with extracting the correct headshot from the fighters ufc athele/page

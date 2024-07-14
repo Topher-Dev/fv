@@ -875,7 +875,7 @@ background: #fff;
 
 #nav-bottom-containor > ul > li:nth-child(2) > button {
     /* position: absolute; */
-    /* height: 101%; */
+    /* height: 79%; */
     /* border-radius: 0.95rem; */
     /* box-shadow: var(--bs-lg); */
     /* bottom: 0.06rem; */
@@ -885,7 +885,7 @@ background: #fff;
 }
 #nav-bottom-containor > ul > li:nth-child(2) {
     position: relative;
-    width: 38%;
+    /* width: 38%; */
 }
 
 #nav-bottom-containor > ul > li.nav-item.active > button {
@@ -929,10 +929,10 @@ background: #fff;
 nav::before{
     content: "";
     position: absolute;
-    top: -11.5rem;
+    top: -5.5rem;
     left: 0;
     right: 0;
-    height: 18.5rem;
+    height: 6.5rem;
     width: 100%;
     background: linear-gradient(rgb(255 255 255 / 10%), rgb(254 254 254));
     pointer-events: none;
@@ -940,14 +940,15 @@ nav::before{
 
 div.event-info {
     background-color: white;
-    border-radius: var(--br-radius);
+    /* border-radius: var(--br-radius); */
     color: #585b63;
-    padding: 2rem;
+    padding: 1rem;
     box-shadow: var(--bs-lg);
-    margin: .75rem .75rem .75rem .75rem;
+    font-size: var(--fs-300);
+    margin: 0.5rem;
 }
 
 ul.event-fight-list {
-    height: 60vh;
+    height: 66vh;
     overflow-y: scroll;
 }

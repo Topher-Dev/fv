@@ -109,7 +109,8 @@ function get_header(){
 
     const header = new Component('header', {
         data: {
-            selected_event: "loading"
+            form: null,
+            selected_event: null
         },
         template: (props) => {
 
@@ -157,7 +158,7 @@ function get_header(){
                     <h3 class="d--f ai--c">
                         ${get_svg("activity", 'class="svg-activity"')}
                         ${get_svg("spinner", 'class="hide svg-loading"')}
-                        <p class="security-details ml--xs tt--c t" style="max-width: 55vw;">${props.selected_event || "selected_event"}</p>
+                        <p class="security-details ml--xs tt--c t" style="max-width: 55vw;">${props.selected_event?.name || "selected_event"}</p>
                     </h3>
                     <h3 class="d--f ai--c jc--fs">
                         <p class="security-details tt--u blue t" style="font-size:1.3rem"><span style="font-weight: 100;margin-right: .05rem;">$</span>${symbol || "SYMBL"}</p>
@@ -265,8 +266,6 @@ function get_header(){
 }
 
 function get_nav(){
-
-
     const nav = new Component('nav', {
         data: {
             items: [        
@@ -293,7 +292,7 @@ function get_nav(){
                     <ul role="list" class="d--f fd--r"> ${ props.items.map( ( { key, icon, text }, i ) => html`
                         <li 
                             key="${key}" 
-                            class="d--f ai--c nav-item ${ i === 0 ? "active" : "" }" 
+                            class="d--f ai--c nav-item ${ i === 1 ? "active" : "" }" 
                             onclick="select()"
                         >
                             <button>${get_svg(icon, 'class="nav-icon"')}</button>
@@ -310,7 +309,10 @@ function get_nav(){
                 console.log(view);
                 //TODO remove ?.
                 if (view !== app?.active_view?.name){
-                    app.mods.view.change(view);
+
+                    const id = app.mods.core.header.data.selected_event.id
+
+                    app.mods.view.change(view, { id});
                 } else {
                     app.active_view.do("fetch_data");
                 }
