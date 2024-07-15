@@ -27,3 +27,6 @@ Sat Jul 13 06:59:45 UTC 2024
 
 Sun 14 Jul 2024 01:21:27 AM ADT
 [ ] bug with extracting the correct headshot from the fighters ufc athele/page
+
+Mon 15 Jul 2024 12:58:40 AM ADT
+[ ] add utility for pushing version
