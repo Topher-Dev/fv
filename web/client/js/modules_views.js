@@ -40,9 +40,13 @@ function view_ufc_event({ selected_event }){
                                 const src = `images/fighter/headshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
                                 console.log(src);
                                 return html`
-                                    <div class="fighter d--f ai--c ${i===0?"fd--rr":"fd--r"}">
-                                        <img class="fight-list-img" src="${src}" alt="">
-                                        <p class="fight-list-name">${fighter.Name.LastName}</p>
+                                    <div class="fighter d--f jc--sb ai--c ${i===0?"fd--rr":"fd--r"}">
+                                        <div class="fight-list-img-containor"><img class="fight-list-img" src="${src}" alt=""></div>
+                                        <div class="d--f fd--c ai--c">
+                                            <p class="fight-list-name">${fighter.Name.LastName}</p>
+                                            <p style="font-size: 1.2rem;margin-top: .25rem;">10-0-0</p>
+                                        </div>
+                                        <img class="fight-list-flag as--fs" src="images/flags/us.png" >
                                     </div>`;})}
                         </li>`
                     })}

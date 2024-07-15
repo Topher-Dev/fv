@@ -532,7 +532,7 @@ opacity: 1;
 
 /* <Nav> */
 
-nav {bottom: 0;/* border-top: 1px solid #d3d3d394; */z-index: 1;/* opacity: 1; *//* box-shadow: var(--bs-sm); */}
+nav {bottom: 0;/* border-top: 1px solid #d3d3d394; */z-index: 1 !important;/* opacity: 1; *//* box-shadow: var(--bs-sm); */}
 
 #nav-bottom-containor {
 position: relative;
@@ -945,7 +945,8 @@ div.event-info {
     padding: 1rem;
     box-shadow: var(--bs-lg);
     font-size: var(--fs-300);
-    margin: 0.5rem;
+    margin: .2rem .3rem .3rem .3rem;
+    /* border-radius: 1rem; */
 }
 
 ul.event-fight-list {

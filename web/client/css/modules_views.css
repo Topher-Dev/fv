@@ -2,22 +2,48 @@
 li.fight {
     background-color: white;
     color: #585b63;
-    padding: 0rem .25rem;
+    /* padding: 0rem .25rem; */
     box-shadow: var(--bs-lg);
-    margin: 0.25rem;
+    margin: 0.25rem 0rem 0.25rem 0rem;
     /* clip-path: inset(0.25% -4.75% -9.75% -16.75%); */
     width: 100%;
+    max-width: 98.9%;
+    overflow: hidden;
     /* z-index: 10; */
+    position: relative;
 }
 
 img.fight-list-img {
     height: 64px;
+    z-index: 1;
+    margin-right: 0rem;
 }
 
 .fight-list-name {
-    margin: 2rem 0;
+    /* margin-top: .5rem; */
+    line-height: 1rem;
+    z-index: 2;
+    font-weight: 700;
+    color: #5f5e5e;
+    text-align: center;
+    /* width: 133%; */
+    /* margin-left: 5rem; */
+    font-size: 1.5rem;
+}
+
+.fight-list-img-containor {
+    
 }
 
 .fighter {
-    width: 50%;
+    width: 49.5%;
+}
+
+.fight-list-flag {
+    /* position: absolute; */
+    /* top: -0.25rem; */
+    /* left: 0rem; */
+    width: 2.5rem;
+    z-index: 0;
+    opacity: .75;
 }
