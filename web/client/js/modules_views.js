@@ -26,22 +26,25 @@ function view_ufc_event({ selected_event }){
                         <p>Venue: ${event_details.Location.Venue}</p>
                     </div>
                 </div>
-                <hr class="divider">
+                <div class="ai--fe d--f event-list-manager fd--c">
+                    ${get_svg("caret-down-fill", 'style="fill:gold"')}
+                </div>
                 <ul class="event-fight-list">
-                    ${event_details.FightCard.map( li => {
+                    ${event_details.FightCard.map( (li, fi) => {
                         return html`
                         <li 
                             data-fight-id="${li.Status}" 
                             onclick="select_fight()" 
                             class="d--f fd--r ai--c jc--c fight"
                         >
+                            <div class="fight-tracker ps--a">${fi + 1}</div>
                             ${li.Fighters.map( (fighter, i) => {
-
                                 const src = `images/fighter/headshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
                                 console.log(src);
                                 return html`
                                     <div class="fighter d--f jc--sb ai--c ${i===0?"fd--rr":"fd--r"}">
-                                        <div class="fight-list-img-containor"><img class="fight-list-img" src="${src}" alt=""></div>
+                                        <div class="fight-list-img-containor">
+                                            <img class="fight-list-img" src="${src}" alt="xx"></div>
                                         <div class="d--f fd--c ai--c">
                                             <p class="fight-list-name">${fighter.Name.LastName}</p>
                                             <p style="font-size: 1.2rem;margin-top: .25rem;">10-0-0</p>
