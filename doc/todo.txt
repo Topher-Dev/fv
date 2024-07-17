@@ -30,3 +30,13 @@ Sun 14 Jul 2024 01:21:27 AM ADT
 
 Mon 15 Jul 2024 12:58:40 AM ADT
 [ ] add utility for pushing version
+
+Tue Jul 16 18:31:55 UTC 2024
+[ ] create new s_scraper for fighters, its main purpose being to extract the headshot and social links
+
+
+
+
+
+
+

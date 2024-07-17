@@ -29,6 +29,8 @@ def fetch_ufcevent_urls(view_display_id, max_pages=1):
             print(f"Failed to fetch data for view_display_id {view_display_id} on page {page}: {e}")
             break
 
+        print(response.text[:100])
+
         html_content = ""
 
         for item in data:

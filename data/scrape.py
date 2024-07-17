@@ -10,6 +10,7 @@ from s_ufc_event_2 import ufcevent_2
 from s_ufc_event_3 import ufcevent_3
 from s_ufc_fight_1 import ufcfight_1
 from s_ufc_fighter_1 import ufcfighter_1
+from s_ufc_fighter_2 import ufcfighter_2
 from s_wiki_event_1 import wikievent_1
 
 def load_scraper(scraper_name):
