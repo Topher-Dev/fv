@@ -155,9 +155,19 @@ handle_completion() {
     exit 0
 }
 
-#indicate scrape conf
 
-scrape_conf="scrapers.conf"
+
+
+
+scrape_conf=$1
+
+#check if the file exists in the $APP_GIT_ROOT/etc folder
+if [[ ! -e "$APP_GIT_ROOT/etc/$scrape_conf" ]]; then
+    echo "Scraper configuration file does not exist"
+    exit 1
+else
+    echo "Scraper configuration found"
+fi
 
 # Load scraper configuration
 load_scraper_config "$APP_GIT_ROOT/etc/$scrape_conf"
