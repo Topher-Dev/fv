@@ -393,7 +393,7 @@ function get_menu(){
             const footer = get_footer();
 
             return html`
-                <div class="d--f fd--c jc--fs" style="height:100%">
+                <div class="d--f fd--c jc--sb" style="height:100%">
                     <div>
                         ${profile}
                         <ul class="menu-list" style="margin-top: ${is_logged ? '1.75rem' : '4.75rem'}"> ${menu_items.map(({ key, label, help}) => html`

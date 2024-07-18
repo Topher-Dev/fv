@@ -4,12 +4,13 @@ li.fight {
     color: #585b63;
     /* padding: 0rem .25rem; */
     box-shadow: var(--bs-lg);
-    margin: 0.25rem 0rem 0.25rem 0rem;
+    /* margin: 0.25rem 0rem 0.25rem 0rem; */
     /* clip-path: inset(0.25% -4.75% -9.75% -16.75%); */
     width: 100%;
-    max-width: 98.9%;
+    /* max-width: 98.9%; */
     overflow: hidden;
     /* z-index: 10; */
+    /* padding-right: 1rem; */
     position: relative;
 }
 
@@ -37,7 +38,7 @@ img.fight-list-img {
 }
 
 .fighter {
-    width: 49.5%;
+    width: 50%;
 }
 
 .fight-list-flag {
@@ -58,9 +59,18 @@ img.fight-list-img {
 
 .event-list-manager{
     height: 2rem;
-    background-color: #a31818c9;
+    /* background-color: #a31818c9; */
+    /* background-color: #333333a8; */
     border-top: 0px solid #d0d0d0;
     border-bottom: 2px solid #d0d0d0;
     padding-right: 0.5rem;
-    margin: 0 0.4rem 0 0.3rem;
+    margin: 0 0.2rem 0 0.1rem;
+}
+
+
+/* View UFC Fight*/
+.fighter-heroshots{height: 34rem;}
+
+.fighter-heroshot {
+    /* flex-grow: 1; */
 }

@@ -27,20 +27,18 @@ function view_ufc_event({ selected_event }){
                     </div>
                 </div>
                 <div class="ai--fe d--f event-list-manager fd--c">
-                    ${get_svg("caret-down-fill", 'style="fill:gold"')}
+                    ${get_svg("caret-down-fill", 'style="fill:#585b63"')}
                 </div>
                 <ul class="event-fight-list">
                     ${event_details.FightCard.map( (li, fi) => {
                         return html`
                         <li 
-                            data-fight-id="${li.Status}" 
+                            data-fight-id="${li.FightId}" 
                             onclick="select_fight()" 
                             class="d--f fd--r ai--c jc--c fight"
                         >
-                            <div class="fight-tracker ps--a">${fi + 1}</div>
-                            ${li.Fighters.map( (fighter, i) => {
+                            <div class="fight-tracker ps--a">${fi + 1}</div>${li.Fighters.map( (fighter, i) => {
                                 const src = `images/fighter/headshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
-                                console.log(src);
                                 return html`
                                     <div class="fighter d--f jc--sb ai--c ${i===0?"fd--rr":"fd--r"}">
                                         <div class="fight-list-img-containor">
@@ -59,10 +57,10 @@ function view_ufc_event({ selected_event }){
         listeners :{
             select_fight: function(event){
                 console.log(event)
-
-                const id = event.target.dataset.fightId;
-                console.log(id);
-                app.mods.view.change("ufc_fight", {id});
+                const li = event.target.closest("li");
+                const fight_id = li.dataset.fightId;
+                console.log(fight_id);
+                app.mods.view.change("ufc_fight", {fight_id});
             }
         },
         setters: setters.CRUD(UFC_EVENT, READ_ONE)
@@ -71,10 +69,11 @@ function view_ufc_event({ selected_event }){
     return ufc_event.do("fetch"), ufc_event;
 }
 
-function view_ufc_fight({ id }){
+function view_ufc_fight({ fight_id }){
     const ufc_fight = new Component('main', {
         data: {
-            id,
+            id: null,
+            fight_id,
             header: "fight"
         },
         template: function(props) {
@@ -82,18 +81,30 @@ function view_ufc_fight({ id }){
             if (this.isLoading){
                 return loader();
             }
+
+            const fighters = JSON.parse(props.form.data.data)['Fighters'];
+
             console.log(props)
             return html`
-                <div>
-                    ${props.header}
-                    ${props.form.fighter_1_url}
-                    vs
-                    ${props.form.fighter_2_url}
+                <div class="fighter-heroshots d--f jc--sa">
+                    ${fighters.map( (fighter, i) => {
+                        const src = `images/fighter/heroshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
+                        return html`<img class="fighter-heroshot" src="${src}" alt="xx">`;
+                    })}
                 </div>`;
         },
         listeners :{
         },
-        setters: setters.CRUD(UFC_FIGHT, READ_ONE)
+        setters: {
+            fetch: async function(){
+                this.isLoading = true;
+                const fight = await arc.get(UFC_FIGHT, READ_ONE, {fight_fmid: this.data.fight_id});
+                console.log(fight)
+                this.isLoading = false;
+                this.data.form = fight;
+                this.render();
+            }
+        }
     });
 
     return ufc_fight.do("fetch"), ufc_fight;

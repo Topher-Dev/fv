@@ -933,17 +933,17 @@ nav::before{
     right: 0;
     height: 6.5rem;
     width: 100%;
-    background: linear-gradient(rgb(255 255 255 / 10%), rgb(254 254 254));
+    background: linear-gradient(rgb(206 206 206 / 10%), rgb(232 232 232));
     pointer-events: none;
 }
 
 div.event-info {
     background-color: white;
     color: #585b63;
-    padding: 1rem 1rem .4rem 1rem;
+    padding: .5rem 1rem .4rem 1rem;
     box-shadow: var(--bs-lg);
     font-size: var(--fs-300);
-    margin: .2rem .3rem .3rem .3rem;
+    margin: 0.1rem 0rem .3rem 0rem;
 }
 
 ul.event-fight-list {
