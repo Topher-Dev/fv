@@ -2,16 +2,11 @@
 li.fight {
     background-color: white;
     color: #585b63;
-    /* padding: 0rem .25rem; */
     box-shadow: var(--bs-lg);
-    /* margin: 0.25rem 0rem 0.25rem 0rem; */
-    /* clip-path: inset(0.25% -4.75% -9.75% -16.75%); */
     width: 100%;
-    /* max-width: 98.9%; */
     overflow: hidden;
-    /* z-index: 10; */
-    /* padding-right: 1rem; */
     position: relative;
+    user-select: none;
 }
 
 img.fight-list-img {
@@ -69,8 +64,32 @@ img.fight-list-img {
 
 
 /* View UFC Fight*/
-.fighter-heroshots{height: 34rem;}
+
+.fight-odds {
+
+}
+
+.fighter-details {width: 100%;}
+
+.fighter-heroshot-containor {width: 33%;}
 
 .fighter-heroshot {
-    /* flex-grow: 1; */
+    height: 28rem;
+    /* width: 50%; */
+    margin: 0 auto;
+    padding-top: 1rem;
+}
+
+.fighter-attributes {width: 34%;}
+
+.fighter-1-attributes {
+
+}
+
+.fighter-2-attributes {
+
+}
+
+.fight-analysis {
+
 }

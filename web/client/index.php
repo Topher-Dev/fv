@@ -58,7 +58,6 @@
                     'js/modules_modals.js',
                     'js/modules_core.js',
                     'js/token.js',
-                    'js/core.js',
                     'js/app.js',
                     'js/events.js',
                     'css/modules_core.css',

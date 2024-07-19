@@ -2,15 +2,16 @@ function view_ufc_event({ selected_event }){
     const ufc_event = new Component('main', {
         data: {
             header: "event",
-            id: selected_event.id
+            id: selected_event.id,
+            event: null
         },
         template: function(props) {
 
-            if (this.isLoading || !props?.form){
+            if (this.isLoading || !props?.event){
                 return loader();
             }
-            console.log(props);
-            const event_details = JSON.parse(props.form.data)['LiveEventDetail'];
+     
+            const event_details = props.event;
 
             console.log(event_details)
             return html`
@@ -63,7 +64,17 @@ function view_ufc_event({ selected_event }){
                 app.mods.view.change("ufc_fight", {fight_id});
             }
         },
-        setters: setters.CRUD(UFC_EVENT, READ_ONE)
+        setters: {
+            fetch: async function(){
+                this.isLoading = true;
+                const response = await arc.get(UFC_EVENT, READ_ONE, {id: this.data.id});
+                console.log(response,"response")
+                this.isLoading = false;
+                //TODO DATE: 2024-18-07// fix this data.data crap
+                this.data.event = JSON.parse(response.data.data)['LiveEventDetail'];
+                this.render();
+            }
+        }
     });
 
     return ufc_event.do("fetch"), ufc_event;
@@ -84,13 +95,75 @@ function view_ufc_fight({ fight_id }){
 
             const fighters = JSON.parse(props.form.data.data)['Fighters'];
 
+            /*
+            
+            
+                        ${fighters.map( (fighter, i) => {
+                const src = `images/fighter/heroshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
+                return html`<img class="fighter-heroshot" src="${src}" alt="xx">`;
+                <-- Refactor the above to usei ndex fighters[0] and fighters [1] -->
+            })}
+            */
+            const fighter_1 = fighters[0];
+            const fighter_2 = fighters[1];
+
+            //get src's
+            const fighter_1_heroshot_src = `images/fighter/heroshot/${fighter_1.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
+            const fighter_2_heroshot_src = `images/fighter/heroshot/${fighter_2.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
             console.log(props)
             return html`
-                <div class="fighter-heroshots d--f jc--sa">
-                    ${fighters.map( (fighter, i) => {
-                        const src = `images/fighter/heroshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
-                        return html`<img class="fighter-heroshot" src="${src}" alt="xx">`;
-                    })}
+                <div class="fight-odds d--f ai--c jc--sb p--md">
+                    <div>
+                        <p>Sherdog</p>
+                        <p>2.3 : .5</p>
+                    </div>
+                    <div>
+                        <p>UFC</p>
+                        <p>2.3 : .5</p>
+                    </div>
+                    <div>
+                        <p>Bet365</p>
+                        <p>2.3 : .5</p>
+                    </div>
+                    <div>
+                        <p>Vegas</p>
+                        <p>2.3 : .5</p>
+                    </div>
+                    <div>
+                        <p>Vegas</p>
+                        <p>2.3 : .5</p>
+                    </div>
+                </div>
+                <div class="fighter-details d--f jc--sa ai--fs">
+                    <div class="fighter-heroshot-containor">
+                        <img class="fighter-heroshot" src="${fighter_1_heroshot_src}" alt="xx">
+                    </div>
+                    <div class="fighter-attributes">
+                        <div class="fighter-1-attributes">
+                            <p>${fighter_1.Name.FirstName} ${fighter_1.Name.LastName}</p>
+                            <p>Age: ${fighter_1.Age}</p>
+                            <p>Height: ${fighter_1.Height}</p>
+                            <p>Weight: ${fighter_1.Weight}</p>
+                            <p>Reach: ${fighter_1.Reach}</p>
+                            <p>Record: ${fighter_1.Record}</p>
+                            <p>Stance: ${fighter_1.Stance}</p>
+                        </div>
+                        <div class="fighter-2-attributes">
+                            <p>${fighter_2.Name.FirstName} ${fighter_2.Name.LastName}</p>
+                            <p>Age: ${fighter_2.Age}</p>
+                            <p>Height: ${fighter_2.Height}</p>
+                            <p>Weight: ${fighter_2.Weight}</p>
+                            <p>Reach: ${fighter_2.Reach}</p>
+                            <p>Record: ${fighter_2.Record}</p>
+                            <p>Stance: ${fighter_2.Stance}</p>
+                        </div>
+                    </div>
+                    <div class="fighter-heroshot-containor">
+                        <img class="fighter-heroshot" src="${fighter_2_heroshot_src}" alt="xx">
+                    </div>
+                </div>
+                <div class="fight-analysis">
+                    <p>Analysis</p>
                 </div>`;
         },
         listeners :{
