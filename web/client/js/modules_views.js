@@ -85,7 +85,14 @@ function view_ufc_fight({ fight_id }){
         data: {
             id: null,
             fight_id,
-            header: "fight"
+            header: "fight",
+            odds: [
+                {name: "Sherdog", odds: "2.3 : .5"},
+                {name: "UFC", odds: "2.3 : .5"},
+                {name: "Bet365", odds: "2.3 : .5"},
+                {name: "Vegas", odds: "2.3 : .5"},
+                {name: "Vegas", odds: "2.3 : .5"}
+            ],
         },
         template: function(props) {
 
@@ -93,69 +100,74 @@ function view_ufc_fight({ fight_id }){
                 return loader();
             }
 
-            const fighters = JSON.parse(props.form.data.data)['Fighters'];
-
-            /*
-            
-            
-                        ${fighters.map( (fighter, i) => {
-                const src = `images/fighter/heroshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
-                return html`<img class="fighter-heroshot" src="${src}" alt="xx">`;
-                <-- Refactor the above to usei ndex fighters[0] and fighters [1] -->
-            })}
-            */
+            const fighters = props.fight.Fighters
             const fighter_1 = fighters[0];
             const fighter_2 = fighters[1];
 
-            //get src's
             const fighter_1_heroshot_src = `images/fighter/heroshot/${fighter_1.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
             const fighter_2_heroshot_src = `images/fighter/heroshot/${fighter_2.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
-            console.log(props)
+
             return html`
-                <div class="fight-odds d--f ai--c jc--sb p--md">
-                    <div>
-                        <p>Sherdog</p>
-                        <p>2.3 : .5</p>
-                    </div>
-                    <div>
-                        <p>UFC</p>
-                        <p>2.3 : .5</p>
-                    </div>
-                    <div>
-                        <p>Bet365</p>
-                        <p>2.3 : .5</p>
-                    </div>
-                    <div>
-                        <p>Vegas</p>
-                        <p>2.3 : .5</p>
-                    </div>
-                    <div>
-                        <p>Vegas</p>
-                        <p>2.3 : .5</p>
-                    </div>
+                <div class="fight-odds d--f ai--c jc--sb">
+                    ${props.odds.map( odd => {
+                        return html`
+                            <div class="fight-odds-item d--f fd--c ai--c jc--c">
+                                <p>${odd.name}</p>
+                                <p>${odd.odds}</p>
+                            </div>`;
+                    })}
+                </div>
+                <div class="event-list-manager ai--c d--f jc--sb plr--md">
+                    <p>${fighter_1.Name.FirstName} ${fighter_1.Name.LastName}</p>
+                    <p>VS</p>
+                    <p>${fighter_2.Name.FirstName} ${fighter_2.Name.LastName}</p>
                 </div>
                 <div class="fighter-details d--f jc--sa ai--fs">
                     <div class="fighter-heroshot-containor">
                         <img class="fighter-heroshot" src="${fighter_1_heroshot_src}" alt="xx">
                     </div>
                     <div class="fighter-attributes">
-                        <div class="fighter-1-attributes">
-                            <p>${fighter_1.Name.FirstName} ${fighter_1.Name.LastName}</p>
-                            <p>Age: ${fighter_1.Age}</p>
-                            <p>Height: ${fighter_1.Height}</p>
-                            <p>Weight: ${fighter_1.Weight}</p>
-                            <p>Reach: ${fighter_1.Reach}</p>
-                            <p>Record: ${fighter_1.Record}</p>
-                            <p>Stance: ${fighter_1.Stance}</p>
+                        <div>
+                            <h3 class="ta--c">Age</h3>
+                            <div class="d--f jc--sb">
+                                <p>${fighter_1.Age}</p>
+                                <p>${fighter_2.Age}</p>
+                            </div>
                         </div>
-                        <div class="fighter-2-attributes">
-                            <p>${fighter_2.Name.FirstName} ${fighter_2.Name.LastName}</p>
-                            <p>Age: ${fighter_2.Age}</p>
-                            <p>Height: ${fighter_2.Height}</p>
-                            <p>Weight: ${fighter_2.Weight}</p>
-                            <p>Reach: ${fighter_2.Reach}</p>
-                            <p>Record: ${fighter_2.Record}</p>
-                            <p>Stance: ${fighter_2.Stance}</p>
+                        <div>
+                            <h3 class="ta--c">Height</h3>
+                            <div class="d--f jc--sb">
+                                <p>${inches_to_feet(fighter_1.Height)}</p>
+                                <p>${inches_to_feet(fighter_2.Height)}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="ta--c">Weight</h3>
+                            <div class="d--f jc--sb">
+                                <p>${fighter_1.Weight}</p>
+                                <p>${fighter_2.Weight}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="ta--c">Reach</h3>
+                            <div class="d--f jc--sb">
+                                <p>${fighter_1.Reach}</p>
+                                <p>${fighter_2.Reach}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="ta--c">Record</h3>
+                            <div class="d--f jc--sb">
+                                <p>${fighter_1.Record.Wins}-${fighter_1.Record.Losses}-${fighter_1.Record.Draws}</p>
+                                <p>${fighter_2.Record.Wins}-${fighter_2.Record.Losses}-${fighter_2.Record.Draws}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="ta--c">Stance</h3>
+                            <div class="d--f jc--sb">
+                                <p>${fighter_1.Stance}</p>
+                                <p>${fighter_2.Stance}</p>
+                            </div>
                         </div>
                     </div>
                     <div class="fighter-heroshot-containor">
@@ -171,10 +183,10 @@ function view_ufc_fight({ fight_id }){
         setters: {
             fetch: async function(){
                 this.isLoading = true;
-                const fight = await arc.get(UFC_FIGHT, READ_ONE, {fight_fmid: this.data.fight_id});
-                console.log(fight)
+                const response = await arc.get(UFC_FIGHT, READ_ONE, {fight_fmid: this.data.fight_id});
                 this.isLoading = false;
-                this.data.form = fight;
+                const fight = JSON.parse(response.data.data);
+                this.data.fight = fight;
                 this.render();
             }
         }

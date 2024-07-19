@@ -768,3 +768,11 @@ function time_elapsed_since(psql_datetime) {
     const months = Math.floor(seconds_past / 2592000);
     return months === 1 ? '1 month ago' : months + ' months ago';
 }
+
+//convert inches to feet and inches
+function inches_to_feet(inches){
+    const feet = Math.floor(inches / 12);
+    const remaining_inches = inches % 12;
+
+    return `${feet}'${remaining_inches}"`;
+}
