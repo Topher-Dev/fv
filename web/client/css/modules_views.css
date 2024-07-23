@@ -66,7 +66,7 @@ img.fight-list-img {
     background-color: white;
     color: #585b63;
     /* padding: .5rem .75rem; */
-    box-shadow: var(--bs-lg);
+    box-shadow: var(--bs-sm);
     font-size: var(--fs-300);
     /* margin: 0.1rem 0rem .3rem 0rem; */
 }
@@ -83,14 +83,17 @@ ul.event-fight-list {
 }
 
 .fight-odds-item {
-    padding: 1rem 0.5rem;
+    padding: .75rem 0.5rem;
     width: 20%;
+    border: .2rem solid transparent;
 }
 
 .fight-odds-item.active {
     background-color: #393939c9;
     color: white;
     font-weight: 700;
+    border: .2rem solid white !important;
+    border-bottom: .2rem solid #393939c9;
 }
 
 .fight-odds > .fight-odds-item:not(:last-child) {
@@ -111,25 +114,23 @@ ul.event-fight-list {
 
 .fight-odds-chart-containor.active {
     display: block !important;
-    /* border-bottom: .35rem solid var(--clr-blue); */
-    box-shadow: var(--bs-lg);
     z-index: 10;
+    /* border: .2rem solid #393939c9; */
+    box-shadow: var(--bs-lg);
 }
 
 .fighter-details {
     position: relative;
     width: 100%;
     background-color: var(--clr-white);
-    box-shadow: var(--bs-lg);
 }
 
 .fighter-heroshot-containor {width: 33%;/* padding: 0 1rem; */}
 
 .fighter-heroshot {
     height: 29rem;
-    /* width: 50%; */
     margin: 0 auto;
-    padding: 1rem 0;
+    padding: 1.5rem 0;
 }
 
 .fighter-attributes {width: 34%;padding: 1rem .5rem;/* border: var(--br-primary); */font-size: 1.45rem;/* box-shadow: var(--bs-lg); */}
@@ -152,9 +153,66 @@ ul.event-fight-list {
 
 .fight-analysis {
     background-color: white;
-    height: 27rem;
-    margin: 0.25rem 0rem;
+    height: 32rem;
+    margin: 0.5rem 0 0 0;
     box-shadow: var(--bs-lg);
-    padding: .5rem;
+    padding: 0rem 1rem;
     /* border-radius: var(--br-radius); */
+}
+
+.fight-analysis-list {
+    /* height: 100%; */
+    overflow-y: scroll;
+}
+
+.fight-analysis-list > li {
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid #d0d0d0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    height: 7rem;
+    /* position: relative; */
+}
+
+.fight-analysis-list > li >h3 {
+    font-weight: bold;
+    line-height: 0rem;
+}
+
+.module-containor {
+    overflow: hidden;
+    height: 0;
+    position: absolute;
+    transition: top .1s, height 0.1s, color .1s;
+    top: 35rem;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.module-containor.active {
+    background-color: var(--clr-gray-dark);
+    height: 50rem;
+    top: 16.85rem;
+    z-index: 11;
+    color: white;
+    padding: 2rem;
+}
+
+.module-containor.active + div > svg {
+    fill: var(--clr-red) !important;
+    rotate: 45deg;
+    z-index: 12;
+}
+
+li.active > div.action-button{
+    z-index: 12;
+    background-color: white;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    /* padding: 1rem; */
+    border-radius: 50%;
+    box-shadow: var(--bs-lg);
 }

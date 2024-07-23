@@ -676,19 +676,6 @@ width: 2.5rem;
 height: 3rem;
 }
 
-.svg-plus {
-width: 3rem;
-height: 3rem;    
-stroke: #fff;
-/* margin-top: 1rem; */
-fill: var(--clr-placeholder);
-}
-
-.svg-plus > path {
-stroke-width: .04rem;
-/* width: 3rem; */
-/* width: 4rem; */
-}
 
 .svg-footer {
 width: 2.25rem;
@@ -944,6 +931,14 @@ nav::before{
 
 .svg-wreath.underdog path {
     fill: #959595;
+}
+
+.svg-plus {
+    fill: var(--clr-blue);
+    transition: .2s rotate;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
 }
 
 canvas {

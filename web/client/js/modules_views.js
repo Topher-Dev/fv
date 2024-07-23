@@ -242,7 +242,51 @@ function view_ufc_fight({ fight_id }){
                     </div>
                 </div>
                 <div class="fight-analysis">
-                    <p>Analysis</p>
+                    <ul class="fight-analysis-list">
+                        <li onclick="open_module()">
+                            <h3>FV-AI Prediction</h3>
+                            <div class="module-containor">
+                                <div class="module">
+                                    <h3>FV-AI Prediction</h3>
+                                    <p>AI Prediction</p>
+                                    <p>AI Prediction</p>
+                                    <p>AI Prediction</p>
+                                </div>
+                            </div>
+                            <div class="action-button">
+                                ${get_svg('plus', 'class="svg-plus"')}
+                            </div>
+                        </li>
+                        <li onclick="open_module()">
+                            <h3>Expert Analysis</h3>
+                            <div class="module-containor">
+                                <div class="module">
+                                    <h3>FV-AI Prediction</h3>
+                                    <p>AI Prediction</p>
+                                    <p>AI Prediction</p>
+                                    <p>AI Prediction</p>
+                                </div>
+                            </div>
+                            <div class="action-button">
+                                ${get_svg('plus', 'class="svg-plus"')}
+                            </div>
+                        </li>
+                        <li onclick="open_module()">
+                            <h3>My Prediction</h3>
+                            <div class="module-containor">
+                                <div class="module">
+                                    <h3>FV-AI Prediction</h3>
+                                    <p>AI Prediction</p>
+                                    <p>AI Prediction</p>
+                                    <p>AI Prediction</p>
+                                </div>
+                            </div>
+                            <div class="action-button">
+                                ${get_svg('plus', 'class="svg-plus"')}
+                            </div>
+                        </li>
+                    </ul>
+                    <footer>Footer</footer>
                 </div>`;
         },
         listeners :{
@@ -253,6 +297,12 @@ function view_ufc_fight({ fight_id }){
                     duration: 800, // Duration of the animation in milliseconds
                     easing: 'easeOutBounce' // Easing function for the animation
                 });
+            },
+            open_module: function(event){
+                console.log(event)
+                const li = event.target.closest("li");
+                li.querySelector(".module-containor").classList.toggle("active");
+                li.classList.toggle("active");
             }
         },
         setters: {
