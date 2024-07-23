@@ -36,6 +36,8 @@ function create_chart(id, config){
     window[id].attached === true && window[id].destroy();   
 
     window[id] = new Chart(document.getElementById(id).getContext('2d'), config);
+
+    return window[id];
 }
 
 function config_chart(type, data, options){
@@ -51,12 +53,9 @@ const empty_chart = {
     labels: [],
     datasets: [{
         data: []
-        }]
+    }]
 }
 
-chart_options = {
-    pie: {}
-}
 
 //------------------------------------------ FORMS  ------------------------------------------
 
