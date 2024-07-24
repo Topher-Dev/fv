@@ -114,8 +114,8 @@ function get_header(){
         },
         template: (props) => {
 
-            const exchange="test";
-            const symbol="test";
+            const exchange="UFC";
+            const symbol="user";
 
             return html`
                 <div onclick="handle_click()" id="header-top" class="d--f fd--r ai--c jc--sb">
@@ -158,7 +158,7 @@ function get_header(){
                     <h3 class="d--f ai--c">
                         ${get_svg("activity", 'class="svg-activity"')}
                         ${get_svg("spinner", 'class="hide svg-loading"')}
-                        <p class="security-details ml--xs tt--c t" style="max-width: 55vw;">${props.selected_event?.name || "selected_event"}</p>
+                        <p class="selected-event ml--xs tt--c t" style="max-width: 55vw;">${props.selected_event?.name || "selected_event"}</p>
                     </h3>
                     <h3 class="d--f ai--c jc--fs">
                         <p class="security-details tt--u blue t" style="font-size:1.3rem"><span style="font-weight: 100;margin-right: .05rem;">$</span>${symbol || "SYMBL"}</p>

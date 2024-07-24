@@ -20,6 +20,7 @@
     --clr-gray-dark: #5f6368;
     --clr-black: #202020;
     --clr-white: #fff;
+    --clr-charcoal: #585b63;
 
     --clr-primary: blue;
     --clr-secondary: lightblue;
@@ -326,7 +327,7 @@
     /* Color text / font */
     .green { color: var(--clr-green) }
     .red { color: var(--clr-red) }
-    .blue { color: var(--clr-blue) }
+    .blue {color: #1fff66;}
 
     .gray { color: var(--clr-gray) }
     .gold { color: var(--clr-gold) }

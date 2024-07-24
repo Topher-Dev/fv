@@ -6,4 +6,16 @@ class Ufc_fighter extends Controller {
     public $model_name = "ufc_fighter";
     public $table_name = "ufc_fighter";
 
+
+    public function read_one(){
+        [ $fmid ] = $this->needs("fmid");
+
+        $db = $this->get_db();
+
+        $fight = $db->select_one($this->table_name, "fmid", $fmid);
+
+        return $this->success("read_one", $fight);
+    }
+
+
 }

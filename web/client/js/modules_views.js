@@ -17,33 +17,42 @@ function view_ufc_event({ selected_event }){
             return html`
                 <div class="event-info d--f ai--c jc--sb">
                     <div>
-                        <p>Start Time: ${event_details.StartTime}</p>
-                        <p>Event Zone: ${event_details.TimeZone}</p>
-                        <p>Event Status: ${event_details.Status}</p>
-                    </div>
-                    <div>
-                        <p>State: ${event_details.Location.State}</p>
-                        <p>City: ${event_details.Location.City}</p>
+                        <p>Location: ${event_details.Location.State}, ${event_details.Location.City}</p>
                         <p>Venue: ${event_details.Location.Venue}</p>
                     </div>
+                    <div>
+                        <p>Zone: ${event_details.TimeZone}</p>
+                        <p>Status: ${event_details.Status}</p>
+                    </div>
                 </div>
-                <div class="ai--fe d--f event-list-manager fd--c">
-                    ${get_svg("caret-down-fill", 'style="fill:#585b63"')}
+                <div class="event-list-manager d--f fd--r ai--c jc--sb">
+                    <div class="event-time d--f fd--r ai--c g--sm">
+                        ${get_svg("clock", 'class="svg-clock"')}
+                        <p>${event_details.StartTime}</p>
+                    </div>
+                    <div class="event-list-dir d--f fd--r ai--c jc--sb g--sm">
+                        <p>ASC</p>
+                        ${get_svg("caret-down-fill", 'class="svg-caret-down-fill"')}
+                    </div>
                 </div>
                 <ul class="event-fight-list">
                     ${event_details.FightCard.map( (li, fi) => {
+                        //get first chart of card segment + fight order
+                        const fight_order = `${li.CardSegment.charAt(0)}${li.FightOrder}`;
+                        
                         return html`
                         <li 
                             data-fight-id="${li.FightId}" 
                             onclick="select_fight()" 
                             class="d--f fd--r ai--c jc--c fight"
                         >
-                            <div class="fight-tracker ps--a">${fi + 1}</div>${li.Fighters.map( (fighter, i) => {
+                            <div class="fight-tracker ps--a">${fight_order}</div>${li.Fighters.map( (fighter, i) => {
                                 const src = `images/fighter/headshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
                                 return html`
                                     <div class="fighter d--f jc--sb ai--c ${i===0?"fd--rr":"fd--r"}">
                                         <div class="fight-list-img-containor">
-                                            <img class="fight-list-img" src="${src}" alt="xx"></div>
+                                            <img class="fight-list-img ${i===0?'left':'right'}" src="${src}" alt="xx">
+                                        </div>
                                         <div class="d--f fd--c ai--c">
                                             <p class="fight-list-name">${fighter.Name.LastName}</p>
                                             <p style="font-size: 1.2rem;margin-top: .25rem;">10-0-0</p>
@@ -189,7 +198,7 @@ function view_ufc_fight({ fight_id }){
                         <canvas id="fight-odds-chart"></canvas>
                     </div>
                     <div class="d--f jc--sb ai--fs" style="width: 100%;">
-                        <div class="fighter-heroshot-containor">
+                        <div onclick="select_fighter()" data-fight-id="${fighter_1.FighterId}" class="fighter-heroshot-containor">
                             <img class="fighter-heroshot" src="${fighter_1_heroshot_src}" alt="xx">
                         </div>
                         <div class="fighter-attributes">
@@ -236,7 +245,7 @@ function view_ufc_fight({ fight_id }){
                                 </div>
                             </div>
                         </div>
-                        <div class="fighter-heroshot-containor">
+                        <div  onclick="select_fighter()" data-fight-id="${fighter_2.FighterId}" class="fighter-heroshot-containor">
                             <img class="fighter-heroshot" src="${fighter_2_heroshot_src}" alt="xx">
                         </div>
                     </div>
@@ -303,6 +312,12 @@ function view_ufc_fight({ fight_id }){
                 const li = event.target.closest("li");
                 li.querySelector(".module-containor").classList.toggle("active");
                 li.classList.toggle("active");
+            },
+            select_fighter: function(event){
+                const div = event.target.closest("div");
+                const fmid = div.dataset.fightId;
+                console.log(fmid);
+                app.mods.view.change("ufc_fighter", { fmid });
             }
         },
         setters: {
@@ -326,27 +341,132 @@ function view_ufc_fight({ fight_id }){
     return ufc_fight.do("fetch"), ufc_fight;
 }
 
-function view_ufc_fighter(){
+function view_ufc_fighter({ fmid }){
     const ufc_fighter = new Component('main', {
         data: {
-            header: "fighter"
+            header: "fighter",
+            fmid,
+            fighter: null,
         },
         template: function(props) {
 
-            if (this.isLoading || !props?.form){
+            if (this.isLoading || !props?.fighter){
                 return loader();
             }
 
-
+            //fighter contents {"Age": 36, "DOB": "1988-07-09", "Born": {"City": "Chicago", "State": "Illinois", "Country": "USA", "TriCode": "USA"}, "Name": {"LastName": "Muhammad", "NickName": "Remember the Name", "FirstName": "Belal"}, "MMAId": 129355, "Reach": 72.0, "Corner": "Blue", "Height": 71.0, "Record": {"Wins": 23, "Draws": 0, "Losses": 3, "NoContests": 1}, "Stance": "Orthodox", "Weight": 170.0, "Outcome": {"Outcome": null, "OutcomeId": null}, "UFCLink": "http://www.ufc.com/athlete/Belal-Muhammad", "WeighIn": null, "FighterId": 2778, "KOOfTheNight": false, "FightingOutOf": {"City": "Chicago", "State": "Illinois", "Country": "USA", "TriCode": "USA"}, "WeightClasses": [{"Description": "Welterweight", "Abbreviation": "WW", "WeightClassId": 4, "WeightClassOrder": 1}], "SubmissionOfTheNight": false, "PerformanceOfTheNight": false}
+            //cont {"stats": {"Wins by Knockout": "5", "Wins by Submission": "1"}, "record": "23-3-0 (W-L-D)", "division": "Welterweight Division", "nickname": "\"Remember The Name\"", "fighter_name": "Belal Muhammad", "head_img_url": "https://dmxg5wxfqgb4u.cloudfront.net/styles/event_results_athlete_headshot/s3/2023-05/MUHAMMAD_BELAL_05-06.png?itok=kXjdOJ-D"}
+            const fighter = props.fighter
+            
             return html`
                 <div>
-                    ${props.header}
-                </div>
-            `;
+                    <div class="header d--f ai--c jc--sb">
+                        <div>
+
+                        </div>
+                    </div>
+                    <div class="divider ai--fe d--f fd--c">
+                        ${get_svg("caret-down-fill", 'style="fill:#585b63"')}
+                    </div>
+                    <div class="content">
+                        <div class="fighter-info d--f ai--c jc--sb">
+                            <div>
+                                <h2>${fighter.Name.FirstName} ${fighter.Name.LastName}</h2>
+                                <p>${fighter.Name.NickName}</p>
+                            </div>
+                            <div>
+                                <p>Age: ${fighter.Age}</p>
+                                <p>DOB: ${fighter.DOB}</p>
+                                <p>City: ${fighter.Born.City}</p>
+                                <p>State: ${fighter.Born.State}</p>
+                                <p>Country: ${fighter.Born.Country}</p>
+                            </div>
+                        </div>
+                        <div class="fighter-stats d--f ai--c jc--sb">
+                            <div>
+                                <h3>Record</h3>
+                                <p>Wins: ${fighter.Record.Wins}</p>
+                                <p>Losses: ${fighter.Record.Losses}</p>
+                                <p>Draws: ${fighter.Record.Draws}</p>
+                                <p>No Contests: ${fighter.Record.NoContests}</p>
+                            </div>
+                            <div>
+                                <h3>Physical</h3>
+                                <p>Height: ${inches_to_feet(fighter.Height)}</p>
+                                <p>Weight: ${fighter.Weight}</p>
+                                <p>Reach: ${fighter.Reach}</p>
+                                <p>Stance: ${fighter.Stance}</p>
+                            </div>
+                            <div>
+                                <h3>Location</h3>
+                                <p>City: ${fighter.FightingOutOf.City}</p>
+                                <p>State: ${fighter.FightingOutOf.State}</p>
+                                <p>Country: ${fighter.FightingOutOf.Country}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fight-analysis">
+                        <ul class="fight-analysis-list">
+                            <li onclick="open_module()">
+                                <h3>FV-AI Prediction</h3>
+                                <div class="module-containor">
+                                    <div class="module">
+                                        <h3>FV-AI Prediction</h3>
+                                        <p>AI Prediction</p>
+                                        <p>AI Prediction</p>
+                                        <p>AI Prediction</p>
+                                    </div>
+                                </div>
+                                <div class="action-button">
+                                    ${get_svg('plus', 'class="svg-plus"')}
+                                </div>
+                            </li>
+                            <li onclick="open_module()">
+                                <h3>Expert Analysis</h3>
+                                <div class="module-containor">
+                                    <div class="module">
+                                        <h3>FV-AI Prediction</h3>
+                                        <p>AI Prediction</p>
+                                        <p>AI Prediction</p>
+                                        <p>AI Prediction</p>
+                                    </div>
+                                </div>
+                                <div class="action-button">
+                                    ${get_svg('plus', 'class="svg-plus"')}
+                                </div>
+                            </li>
+                            <li onclick="open_module()">
+                                <h3>My Prediction</h3>
+                                <div class="module-containor">
+                                    <div class="module">
+                                        <h3>FV-AI Prediction</h3>
+                                        <p>AI Prediction</p>
+                                        <p>AI Prediction</p>
+                                        <p>AI Prediction</p>
+                                    </div>
+                                </div>
+                                <div class="action-button">
+                                    ${get_svg('plus', 'class="svg-plus"')}
+                                </div>
+                            </li>
+                        </ul>
+                        <footer>Footer</footer>
+                    </div>
+                </div>`;
         },
         listeners :{
         },
-        setters: setters.LIST(UFC_FIGHTER, READ_LIST)
+        setters: {
+            fetch: async function(){
+                this.isLoading = true;
+                const response = await arc.get(UFC_FIGHTER, READ_ONE, {fmid: this.data.fmid});
+                this.isLoading = false;
+                console.log(response);
+                const fighter = JSON.parse(response.data.data);
+                this.data.fighter = fighter;
+                this.render();
+            }
+        }
     });
 
     return ufc_fighter.do("fetch"), ufc_fighter;

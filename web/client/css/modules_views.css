@@ -1,12 +1,13 @@
 
 li.fight {
     background-color: white;
-    color: #585b63;
+    color: var(--clr-charcoal);
     box-shadow: var(--bs-lg);
     width: 100%;
     overflow: hidden;
     position: relative;
     user-select: none;
+    margin-bottom: .2rem;
 }
 
 img.fight-list-img {
@@ -15,7 +16,14 @@ img.fight-list-img {
     margin-right: 0rem;
     min-width: 10rem;
     text-align: center;
-    /* padding: 2rem; */
+}
+
+img.fight-list-img.left {
+    margin-left: -1.5rem;
+}
+
+img.fight-list-img.right {
+    margin-right: -2rem;
 }
 
 .fight-list-name {
@@ -25,7 +33,7 @@ img.fight-list-img {
     color: #5f5e5e;
     text-align: center;
     /* margin-left: 5rem; */
-    font-size: 1.5rem;
+    font-size: 1.4rem;
 }
 
 .fight-list-img-containor {
@@ -50,6 +58,7 @@ img.fight-list-img {
     font-weight: bold;
     color: var(--clr-gray-dark);
     opacity: .95;
+    font-size: 1.2rem;
 }
 
 .event-list-manager{
@@ -57,30 +66,41 @@ img.fight-list-img {
     border-top: 0px solid #d0d0d0;
     border-bottom: 2px solid #d0d0d0;
     margin: .25rem 0rem 0 0rem;
-    font-size: 1.45rem;
+    font-size: 1.35rem;
+    color: var(--clr-charcoal);
+    background-color: white;
     padding: .25rem .75rem;
+    font-weight: bold;
 }
 
-.fight-odds,
+.fight-odds {
+    background-color: white;
+    color: var(--clr-charcoal);
+    /* padding: .5rem .75rem; */
+    /* box-shadow: var(--bs-sm); */
+    font-size: var(--fs-300);
+    height: 5.75rem;
+}
 .event-info {
     background-color: white;
-    color: #585b63;
-    /* padding: .5rem .75rem; */
+    color: var(--clr-charcoal);
+    padding: .5rem .75rem;
     box-shadow: var(--bs-sm);
     font-size: var(--fs-300);
-    /* margin: 0.1rem 0rem .3rem 0rem; */
+    height: 5.75rem;
+    white-space: nowrap;
+    font-size: 1.35rem;
 }
 
 ul.event-fight-list {
     height: 75vh;
     overflow-y: scroll;
+    /* font-size: 1.35rem; */
 }
 
 /* View UFC Fight*/
 
-.fight-odds {
-
-}
+.fight-odds {border-bottom: .2rem solid white !important;}
 
 .fight-odds-item {
     padding: .75rem 0.5rem;
@@ -89,11 +109,11 @@ ul.event-fight-list {
 }
 
 .fight-odds-item.active {
-    background-color: #393939c9;
+    background-color: var(--clr-charcoal);
     color: white;
     font-weight: 700;
-    border: .2rem solid white !important;
-    border-bottom: .2rem solid #393939c9;
+    /* border-right: .2rem solid white !important; */
+    border-bottom: .2rem solid white !important;
 }
 
 .fight-odds > .fight-odds-item:not(:last-child) {
