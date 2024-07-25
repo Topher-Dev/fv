@@ -1,26 +1,6 @@
-Mon 08 Jul 2024 11:25:36 PM ADT
-[ ] Try text under Icons for nav bar
-
-once the client has recieved all the neccessary javascript files the client app is launched
-with app start(). its at this point our server is going to start tracking the client we have this TCP connection 
-at a FV (application level). a request is made to the server, its purpose is to deliver the neccessary data to the 
-client to initalize the app. After this the specific default module (or specified with params) is loaded and a request is made for 
-the view specific module. 
-
-what needs to happen:
-1) We currently dont have the event_date on the psql record. Need to adjust the scrape script to collect this and add the field to the db
-table
-1)b the event_date will likely need to be transformed into a suitable format for the psql db to accept its
-2) Next we need to add the query to the server to get the event_date from the db and give it to the client on the initalize request
-3) Next this needs to be stores in the menu component as it will determine the default view, this value will be displayed in the UI
-and be updatable through the search/list module.
-
-this is our first look at the client, notabley an IP adress
-
 Fri Jul 12 01:44:32 UTC 2024
 [x] ensure imgs are being saved to correct folders with the correct lowercase naming conventions
 [x] move the storeage location outside of the gitrepo
-
 
 Sat Jul 13 06:59:45 UTC 2024
 [ ] add social media links to ufc_fighter records in ini.sql, s_ufc_fighter_1.py 
@@ -29,14 +9,12 @@ Sun 14 Jul 2024 01:21:27 AM ADT
 [ ] bug with extracting the correct headshot from the fighters ufc athele/page
 
 Mon 15 Jul 2024 12:58:40 AM ADT
-[ ] add utility for pushing version
+[x] add utility for pushing version
 
 Tue Jul 16 18:31:55 UTC 2024
 [ ] create new s_scraper for fighters, its main purpose being to extract the headshot and social links
 
-
-
-
-
-
+Wed Jul 24 19:05:23 UTC 2024
+[ ] Adjust styling on odds button
+[ ] Try adjusting size of nav bar thinner and add text
 
