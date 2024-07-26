@@ -77,10 +77,17 @@ function view_ufc_event({ selected_event }){
                                         </div>`;})}
                             </li>`
                     })}
+		    <li class="fight-list-end">
+			<button onclick="return_to_top()">Return to top</button>
+		    <li>
                 </ul>
             `;
         },
         listeners :{
+	    return_to_top: function(event){
+		console.log(event);
+                event.target.closest("ul").scroll(0,0);
+	    },
             select_fight: function(event){
                 console.log(event)
                 const li = event.target.closest("li");

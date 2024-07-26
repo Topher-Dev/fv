@@ -33,55 +33,15 @@ function get_header(){
                 return html`<div style="display:none"></div>`
             }
             if (rows){
-                if (rows.length > 0){
-                    return html`
-                        <ul style="list-style: none;"> ${rows.map(({ symbol, exchange, name, code }, i) => html`
-                            <li class="search-results-item" onclick="select_symbol()" key="${i}">
-                                <div class="d--f fd--r jc--sb pe--n">
-                                    <div class="d--f fd--r jc--fs g--sm">
-                                        <p class="tt--u t fw--b blue"><b>${symbol}</b></p>
-                                        <p style="max-width: 55vw;" class="tt--c t">${name}</p>
-                                    </div>
-                                    <div class="flag-containor d--f fd--r jc--fe g--sm">
-                                        <p class="tt--u t">${code}</p>
-                                        ${get_svg(exchange_to_flag(code), 'class="svg-flag"')}
-                                    </div>
-                                </div>
-                            </li>`)}
-                        </ul>`;
-                } else {
-                    return html`
-                    	<div class="d--f fd--c ai--c ptb--lg g--xxs">
-                        	<h3>No symbols match your search</h3>
-                       		${get_svg("inverse-smile", 'class="svg-inverse-smile"')}
-                    	</div>`;
-                }
+		return html`<ul>${rows.map((row) => {
+                    return html`<li onclick="select_event()">${row.name}</li>`;
+                })}</ul>`;
             } else {
-                return html`
-                    <ul>
-                        <li class="search-results-pre">Search a symbol...</li>
-                    </ul>`;
+                return html`no rows`;
             }
         },
         listeners: {
-            select_symbol: function(e){
-
-                const k = Number(e.target.getAttribute("key"));
-                const s = results.data.rows[k];
-
-                if (!app.data.security.symbol){
-                    app.data.security = s ;
-                    app.view.active?.name ? app.view.change(app.view.active.name) : app.view.change("overview");
-                } else {
-                    app.data.security = s ;
-                    app.view.active.component?.do("fetch_data");
-                }
-
-                const keys = ['name', 'symbol', 'exchange']
-
-                header.elem.querySelectorAll(".security-details").forEach( ( p, i ) => {
-                    p.innerText = s[keys[i]];
-                })
+            select_event: function(e){
 
                 setTimeout(() => {
                     results.do("close")
@@ -97,12 +57,15 @@ function get_header(){
                     rows,
                     open: true
                 }
+		this.render();
             },
             toggle_open: function() {
-                this.data.open = !this.data.open
+                this.data.open = !this.data.open;
+		this.render();
             },
             close: function(){
                 this.data.open = false;
+		this.render();
             }
         }
     });
@@ -228,10 +191,12 @@ function get_header(){
                     el.focus();
                 }
             },
-            search_focus: function(){
+            search_focus: async function(){
                 if (Hamburger.state()['is_open']) return;
                 Hamburger.open("search");
-                results.do("update_results", null);
+		const response = await arc.get(UFC_EVENT, READ_LIST);
+		console.log(response);
+                results.do("update_results", response.data.rows);
             },
 
             search_handle_input: async function({ target: el, code }){

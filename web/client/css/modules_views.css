@@ -242,3 +242,9 @@ li.active > div.action-button{
     border-radius: 50%;
     box-shadow: var(--bs-lg);
 }
+
+.fight-list-end {
+    padding: 2rem;
+    text-align: center;
+}
+
