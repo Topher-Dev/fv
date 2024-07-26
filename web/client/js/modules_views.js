@@ -15,7 +15,7 @@ function view_ufc_event({ selected_event }){
 
             console.log(event_details)
             return html`
-                <div class="event-info d--f ai--c jc--sb">
+                <div class="event-info d--f ai--c jc--sb hide">
                     <div>
                         <p>Location: ${event_details.Location.State}, ${event_details.Location.City}</p>
                         <p>Venue: ${event_details.Location.Venue}</p>
@@ -26,9 +26,9 @@ function view_ufc_event({ selected_event }){
                     </div>
                 </div>
                 <div class="event-list-manager d--f fd--r ai--c jc--sb">
-                    <div class="event-time d--f fd--r ai--c g--sm">
-                        ${get_svg("clock", 'class="svg-clock"')}
-                        <p>${event_details.StartTime}</p>
+                    <div class="event-time d--f fd--r ai--c g--xs">
+                        ${get_svg("date", 'class="svg-date"')}
+                        <p>${event_details.StartTime.substring(0,10)}</p>
                     </div>
                     <div class="event-list-dir d--f fd--r ai--c jc--sb g--sm">
                         <p>ASC</p>
@@ -40,26 +40,42 @@ function view_ufc_event({ selected_event }){
                         //get first chart of card segment + fight order
                         const fight_order = `${li.CardSegment.charAt(0)}${li.FightOrder}`;
                         
+                        //const decide if we are going to add a li divider
+                        const add_divider = fi !== 0 && event_details.FightCard[fi-1].CardSegment !== li.CardSegment;
+                        let divider = "";
+
+                        
+
+                        if (add_divider || fi === 0){
+                            //format: "2024-07-28T02:00Z"
+                            const card_segment_datetime = new Date(li.CardSegmentStartTime)
+                            const card_segment_time = `${card_segment_datetime.getHours()}:${card_segment_datetime.getMinutes() < 10 ? '0'+card_segment_datetime.getMinutes() : card_segment_datetime.getMinutes()}`;
+
+                            divider = html`<li class="event-fight-list-divider">${li.CardSegment} - ${card_segment_time}</li>`;
+                        }
+
                         return html`
-                        <li 
-                            data-fight-id="${li.FightId}" 
-                            onclick="select_fight()" 
-                            class="d--f fd--r ai--c jc--c fight"
-                        >
-                            <div class="fight-tracker ps--a">${fight_order}</div>${li.Fighters.map( (fighter, i) => {
-                                const src = `images/fighter/headshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
-                                return html`
-                                    <div class="fighter d--f jc--sb ai--c ${i===0?"fd--rr":"fd--r"}">
-                                        <div class="fight-list-img-containor">
-                                            <img class="fight-list-img ${i===0?'left':'right'}" src="${src}" alt="xx">
-                                        </div>
-                                        <div class="d--f fd--c ai--c">
-                                            <p class="fight-list-name">${fighter.Name.LastName}</p>
-                                            <p style="font-size: 1.2rem;margin-top: .25rem;">10-0-0</p>
-                                        </div>
-                                        <img class="fight-list-flag as--fs" src="images/flags/us.png" >
-                                    </div>`;})}
-                        </li>`
+                            ${divider}
+                            <li 
+                                data-fight-id="${li.FightId}" 
+                                onclick="select_fight()" 
+                                class="d--f fd--r ai--c jc--c fight"
+                            >
+                                <div class="fight-tracker ps--a">${fight_order}</div>${li.Fighters.map( (fighter, i) => {
+                                    const src = `images/fighter/headshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
+                                    const flag_src = `images/flags/${fighter.Born.TriCode.substring(0,2).toLowerCase()}.png`;
+                                    return html`
+                                        <div class="fighter d--f jc--sb ai--c ${i===0?"fd--rr":"fd--r"}">
+                                            <div class="fight-list-img-containor">
+                                                <img class="fight-list-img ${i===0?'left':'right'}" src="${src}" alt="xx">
+                                            </div>
+                                            <div class="d--f fd--c ai--c">
+                                                <p class="fight-list-name">${fighter.Name.LastName}</p>
+                                                <p style="font-size: 1.2rem;margin-top: .25rem;">${fighter.Record.Wins}-${fighter.Record.Losses}-${fighter.Record.Draws}</p>
+                                            </div>
+                                            <img class="fight-list-flag as--fs" src="${flag_src}" >
+                                        </div>`;})}
+                            </li>`
                     })}
                 </ul>
             `;

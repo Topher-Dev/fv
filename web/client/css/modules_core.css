@@ -538,9 +538,9 @@ nav {bottom: 0;/* border-top: 1px solid #d3d3d394; */z-index: 2 !important;/* op
 position: relative;
 }
 
-#nav-bottom-containor > ul {height: 5.1rem;/* position: relative; */}
+#nav-bottom-containor > ul {height: 4.5rem;}
 
-#nav-bottom-containor > ul > li {width: 46.33%;height: 100%;border-top: .5rem solid var(--clr-charcoal);/* background-color: #f0f0f0; */}
+#nav-bottom-containor > ul > li {width: 46.33%;height: 100%;border-top: .1rem solid #80808045;}
 
 .nav-item.active > .nav-icon > path.selected,
 .nav-item.active > .nav-icon > path.stroked {
@@ -556,7 +556,7 @@ fill: var(--clr-black);
 fill: var(--clr-placeholder)
 }
 
-.nav-icon {height: 2.55rem;width: 2.55rem;margin: 0 auto;fill: var(--clr-charcoal);}
+.nav-icon {height: 2.25rem;width: 2.25rem;margin: 0 auto;fill: var(--clr-charcoal);}
 
 .nav-icon > path {
 /* fill: var(--clr-placeholder);
@@ -574,28 +574,56 @@ transition: all 200ms ease-out;
 background-color: #f6f6f6;
 }
 
+#app-containor {
+    position: relative;
+    background-color: #f2f2f2;
+    height: 100vh;
+    z-index: 2;
+}
+
+
 #header-top {
 background-color: var(--clr-white);
 padding: .35rem .65rem 0 .5rem;
 position: relative;
 }
 
-#header-bottom {height: 2.75rem;border-top: 1px solid #d3d3d3c2;/* border-bottom: 1px solid #d0d0d0; */padding: .3rem .75rem .3rem .75rem;background-color: var(--clr-charcoal);color: white;}
+#header-bottom {
+    height: 2.75rem;border-top: 1px solid #d3d3d3c2;/* border-bottom: 1px solid #d0d0d0; */padding: .3rem .75rem .3rem .75rem;background-color: var(--clr-charcoal);color: white;}
 
-#header-bottom > h3 {font-weight: 600;color: var(--clr-gray-dark);font-family: sans-serif;font-size: 1.2rem;color: white;}
-
-#app-containor {position: relative;background-color: #f2f2f2;height: 100vh;z-index: 2;}
-
-#app-containor #header-bottom.active{
-
+#header-bottom > div {
+    font-weight: 600;
+    color: var(--clr-gray-dark);
+    font-family: sans-serif;
+    font-size: 1.2rem;
+    color: white;
 }
 
-#header-bottom.active > h3 > svg {
+#header-bottom.active > div > svg {
 fill: #fff;
 z-index: 1000;
 }
 
-#header-bottom.active > h3 > p {color: white;z-index: 1000;}
+#header-bottom.active > div > p {color: white;z-index: 1000;}
+
+.headear-bottom-left,
+.header-bottom-right {
+    width: 17%;
+}
+
+.header-bottom-left {
+    margin: 0;
+}
+
+.header-bottom-center {
+    width: 66%;
+    text-align: center;
+}
+
+.header-bottom-right {
+    margin: 0;
+
+}
 
 /* <Nav/> */
 
@@ -842,36 +870,47 @@ background: #fff;
 } 
 }
 
-#nav-bottom-containor > ul > li:nth-child(2) > button {
-    /* position: absolute; */
-    /* height: 79%; */
-    /* border-radius: 0.95rem; */
-    /* box-shadow: var(--bs-lg); */
-    /* bottom: 0.06rem; */
-    /* display: flex; */
-    /* background-color: white; */
-    /* align-items: center; */
+#nav-bottom-containor > ul > li:nth-child(2) > button > svg{
+    margin-bottom: -.25rem;
 }
+
+
+
 #nav-bottom-containor > ul > li:nth-child(2) {
     position: relative;
     /* width: 38%; */
 }
 
 #nav-bottom-containor > ul > li.nav-item.active > button {
-    background-color: #f0f0f0;
-    background-color: #1fa2ff2b;
+    background-color: #0e0e0e2b;
+}
+
+#nav-bottom-containor > ul > li.nav-item.active > button > svg {
+
 }
 
 #nav-bottom-containor > ul > li.nav-item.active {
-    border-top-color: #1fa2ff;
+    /* border-top-color: var(--clr-charcoal); */
 }
 
+.nav-item-title {
+    font-size: 1rem;
+    line-height: 1.2rem;
+    font-weight: 600;
+    color: var(--clr-charcoal);
+}
 
 #nav-bottom-containor > ul > li > button {
     width: 100%;
     height: 100%;
     z-index: 10;
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .2rem;
+    padding-top: .2rem;
 }
 
 .view-indicator {
@@ -906,7 +945,7 @@ nav::before{
     right: 0;
     height: 6.5rem;
     width: 100%;
-    background: linear-gradient(rgb(255 255 255 / 10%), rgb(255 255 255));
+    /* background: linear-gradient(rgb(255 255 255 / 10%), rgb(255 255 255)); */
     pointer-events: none;
 }
 
@@ -941,6 +980,12 @@ nav::before{
 .svg-clock {
     width: 1.75rem;
     height: 1.75rem;
+    fill: var(--clr-charcoal);
+}
+
+.svg-date {
+    width: 1.6rem;
+    height: 1.6rem;
     fill: var(--clr-charcoal);
 }
 

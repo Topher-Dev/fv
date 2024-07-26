@@ -114,7 +114,7 @@ function get_header(){
         },
         template: (props) => {
 
-            const exchange="UFC";
+            const fight_org="UFC";
             const symbol="user";
 
             return html`
@@ -155,16 +155,18 @@ function get_header(){
                     </div>
                 </div>
                 <div id="header-bottom" class="d--f fd--r ai--c jc--sb">
-                    <h3 class="d--f ai--c">
+                    <div class="header-bottom-left d--f ai--c g--xxxs">
                         ${get_svg("activity", 'class="svg-activity"')}
                         ${get_svg("spinner", 'class="hide svg-loading"')}
+                        <p class="t" style="font-weight:100;font-size:1.3rem">${fight_org || "fight_org"}</p>
+                    </div>
+                    <div class="header-bottom-center d--f fd--r jc--c">
                         <p class="selected-event ml--xs tt--c t" style="max-width: 55vw;">${props.selected_event?.name || "selected_event"}</p>
-                    </h3>
-                    <h3 class="d--f ai--c jc--fs">
-                        <p class="security-details tt--u blue t" style="font-size:1.3rem"><span style="font-weight: 100;margin-right: .05rem;">$</span>${symbol || "SYMBL"}</p>
-                        ${get_svg("dot", 'class="svg-dot" viewBox="0 0 16 16"')}
-                        <p class="security-details t" style="font-weight:100;font-size:1.3rem">${exchange || "exchange"}</p>
-                    </h3>
+                    </div>
+                    <div class="header-bottom-right d--f ai--c jc--fe">
+                        <p class="tt--u blue t" style="font-size:1.3rem"><span style="font-weight: 100;margin-right: .05rem;">$</span>${symbol || "SYMBL"}</p>
+                        ${get_svg("dot", 'class="hide svg-dot" viewBox="0 0 16 16"')}
+                    </div>
                 </div>
                 <div id="menu" class="app-min">
                     <div id="menu-home"></div>
@@ -295,8 +297,10 @@ function get_nav(){
                             class="d--f ai--c nav-item ${ i === 1 ? "active" : "" }" 
                             onclick="select()"
                         >
-                            <button>${get_svg(icon, 'class="nav-icon"')}</button>
-                            <p class="hide">${text}</p>
+                            <button class="">
+                                ${get_svg(icon, 'class="nav-icon"')}
+                                <p class="nav-item-title">${text}</p>
+                            </button>
                         </li>`)}
                     </ul>
                     <!-- <div id="li-indicator"></div> -->
@@ -431,24 +435,6 @@ function get_menu(){
     menu.render()
 }
 
-function get_html(){
-    return new Component('main', {
-        data: { html: null},
-        template: function({ html }){ return html || "<div>...loading</div>" },
-        setters: {
-            fetch_data: function(){
-                const that = this;
-                arc.get(SYSTEM, FETCH_HTML, { filename })
-                    .then( ({ data, status }) => {
-                        if ( status === 0 ){
-                            that.data.html = data;
-                        }
-                    });
-
-            }
-        }
-    })
-}
 
 function get_footer() { 
     return html`
