@@ -176,11 +176,46 @@ function view_ufc_fight({ fight_id }){
             fight_id,
             header: "fight",
             odds: [
-                {name: "Sherdog", odds: "2.3 : .5"},
-                {name: "UFC", odds: "2.3 : .5"},
-                {name: "Bet365", odds: "2.3 : .5"},
-                {name: "Vegas", odds: "2.3 : .5"},
-                {name: "Vegas", odds: "2.3 : .5"}
+                // {name: "Sherdog", odds: "2.3 : .5"},
+                // {name: "UFC", odds: "2.3 : .5"},
+                // {name: "Bet365", odds: "2.3 : .5"},
+                // {name: "Vegas", odds: "2.3 : .5"},
+                // {name: "Vegas", odds: "2.3 : .5"}
+                {
+                    name: "Sherdog",
+                    odds: {
+                        fighter_1: 2.3,
+                        fighter_2: 1.5
+                    },
+                },
+                {
+                    name: "UFC",
+                    odds: {
+                        fighter_1: 2.3,
+                        fighter_2: 1.5
+                    }
+                },
+                {
+                    name: "Bet365",
+                    odds: {
+                        fighter_1: 2.3,
+                        fighter_2: 1.5
+                    }
+                },
+                {
+                    name: "Vegas",
+                    odds: {
+                        fighter_1: 2.3,
+                        fighter_2: 1.5
+                    }
+                },
+                {
+                    name: "Vegas",
+                    odds: {
+                        fighter_1: 2.3,
+                        fighter_2: 1.5
+                    }
+                }
             ],
             chart : null,
         },
@@ -197,25 +232,54 @@ function view_ufc_fight({ fight_id }){
             const fighter_1_heroshot_src = `images/fighter/heroshot/${fighter_1.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
             const fighter_2_heroshot_src = `images/fighter/heroshot/${fighter_2.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
 
+            //fighter flags src
+            const fighter_1_flag_src = `images/flags/${fighter_1.Born.TriCode.substring(0,2).toLowerCase()}.png`;
+            const fighter_2_flag_src = `images/flags/${fighter_2.Born.TriCode.substring(0,2).toLowerCase()}.png`;
+
             return html`
                 <div class="fight-odds d--f ai--c jc--sb">
                     ${props.odds.map( odd => {
+
+                        //add a red color to the underdog, green to the favorite
+                        const fav = odd.odds.fighter_1 > odd.odds.fighter_2 ? "fighter_1" : "fighter_2";
+                        const und = fav === "fighter_1" ? "fighter_2" : "fighter_1";
+
+                        let fav_color = fav === "fighter_1" ? "c--green" : "c--red";
+                        let und_color = und === "fighter_1" ? "c--green" : "c--red";
+
+                        //if the odds are the same, we will just mark both gra
+                        if (odd.odds.fighter_1 === odd.odds.fighter_2){
+                            fav_color = "c--gray";
+                            und_color = "c--gray";
+                        }
+
                         return html`
                             <div onclick="toggle_chart()" class="fight-odds-item d--f fd--c ai--c jc--c">
-                                <p>${odd.name}</p>
-                                <p>${odd.odds}</p>
+                                <div>
+                                    <p>${odd.name}</p>
+                                    <div class="d--f jc--c g--xxxs ai--c">
+                                        <p class="${fav_color}">${odd.odds.fighter_1}</p>
+                                        <p>:</p>
+                                        <p class="${und_color}">${odd.odds.fighter_2}</p>
+                                    </div>
+                                </div>
                             </div>`;
                     })}
                 </div>
                 <div class="event-list-manager ai--c d--f jc--sb">
-                    <div class="d--f ai--c g--sm jc--c">
-                        ${get_svg("wreath", 'class="svg-wreath favourite"')}
-                        <p class="fighter-name">${fighter_1.Name.FirstName} ${fighter_1.Name.LastName}</p>
+                    <div class="fighter-containor d--f ai--c g--sm jc--c">
+                        <img class="fighter-flag" src="${fighter_1_flag_src}" alt="xx">
+                        <p class="fighter-name d--f fd--c ai--fs jc--c g--xs fg--1">
+                            <span>${fighter_1.Name.FirstName}</span>
+                            <span>${fighter_1.Name.LastName}</span>
+                        </p>
                     </div>
-                    <p>v</p>
-                    <div class="d--f ai--c g--sm jc--c">
-                        <p class="fighter-name">${fighter_2.Name.FirstName} ${fighter_2.Name.LastName}</p>
-                        ${get_svg("wreath", 'class="svg-wreath underdog"')}
+                    <div class="fighter-containor d--f ai--c g--sm jc--c">
+                        <p class="fighter-name d--f fd--c ai--fe jc--c g--xs fg--1">
+                            <span>${fighter_2.Name.FirstName}</span>
+                            <span>${fighter_2.Name.LastName}</span>
+                        </p>
+                        <img class="fighter-flag" src="${fighter_2_flag_src}" alt="xx">
                     </div>
                 </div>
                 <div class="fighter-details d--f jc--sa ai--fs">
@@ -388,12 +452,12 @@ function view_ufc_fighter({ fmid }){
             return html`
                 <div>
                     <div class="header d--f ai--c jc--sb">
-                        <div>
-
+                        <div class="fighter-img-containor">
+                            <img class="fighter-img" src="images/fighter/heroshot/${fighter.UFCLink.split("athlete/")[1].toLowerCase()}.png" alt="xx">
                         </div>
-                    </div>
-                    <div class="divider ai--fe d--f fd--c">
-                        ${get_svg("caret-down-fill", 'style="fill:#585b63"')}
+                        <div class="fighter-flag-containor">
+                            <img class="fighter-flag" src="images/flags/${fighter.Born.TriCode.substring(0,2).toLowerCase()}.png">
+                        </div>
                     </div>
                     <div class="content">
                         <div class="fighter-info d--f ai--c jc--sb">
@@ -423,12 +487,6 @@ function view_ufc_fighter({ fmid }){
                                 <p>Weight: ${fighter.Weight}</p>
                                 <p>Reach: ${fighter.Reach}</p>
                                 <p>Stance: ${fighter.Stance}</p>
-                            </div>
-                            <div>
-                                <h3>Location</h3>
-                                <p>City: ${fighter.FightingOutOf.City}</p>
-                                <p>State: ${fighter.FightingOutOf.State}</p>
-                                <p>Country: ${fighter.FightingOutOf.Country}</p>
                             </div>
                         </div>
                     </div>

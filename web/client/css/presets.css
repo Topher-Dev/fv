@@ -358,7 +358,7 @@
     /* Colors */
 
     /* Text color by color name */
-    .c--green { color: var(--clr-green) }
+    .c--green {color: var(--clr-green);}
     .c--green-light { color: var(--clr-green-light) }
     .c--red { color: var(--clr-red) }
     .c--red-light { color: var(--clr-red-light) }

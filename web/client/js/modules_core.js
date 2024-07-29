@@ -11,15 +11,14 @@ function get_header(){
 	template: (props) => {
 
             if (!props.rows){
-                return html`<div>No Rows</div>`
+                return loader();
             }
 
-            return html`<ul>${props.rows.map((row) => {
-                return html`<li 
-                                data-event-fmid="${row.fmid}" 
-                                onclick="select_event()"
-                                class="search-results-item">${row.name}</li>`;
-            })}</ul>`;
+            return html`<ul>${props.rows.map((row) => {return html`<li 
+                            data-event-fmid="${row.fmid}" 
+                            onclick="select_event()"
+                            class="search-results-item">${row.name}</li>`;
+                    })}</ul>`;
 
         },
         listeners: {

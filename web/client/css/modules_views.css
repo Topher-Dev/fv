@@ -27,13 +27,14 @@ img.fight-list-img.right {
 }
 
 .fight-list-name {
-    line-height: 1rem;
+    line-height: 1.6rem;
     z-index: 2;
     font-weight: 700;
     color: #5f5e5e;
     text-align: center;
-    /* margin-left: 5rem; */
     font-size: 1.4rem;
+    margin-top: .7rem;
+    max-width: 8.6rem;
 }
 
 .fight-list-img-containor {
@@ -64,9 +65,6 @@ img.fight-list-img.right {
 .event-list-manager{
     height: 4.5rem;
     transition: height .2s;
-    /* border-top: 0px solid #d0d0d0; */
-    /* border-bottom: 2px solid #d0d0d0; */
-    /* margin: .25rem 0rem 0 0rem; */
     font-size: 1.35rem;
     color: var(--clr-charcoal);
     background-color: white;
@@ -89,7 +87,8 @@ img.fight-list-img.right {
     /* padding: .5rem .75rem; */
     /* box-shadow: var(--bs-sm); */
     font-size: var(--fs-300);
-    height: 5.75rem;
+    padding: 2.5rem 0px;
+    height: 6.5rem;
 }
 .event-info {
     background-color: white;
@@ -125,21 +124,21 @@ ul.event-fight-list {
 }
 
 .fight-odds-item.active {
-    /* background-color: var(--clr-charcoal); */
-    /* color: white; */
     font-weight: 700;
-    /* border-right: .2rem solid white !important; */
     color: var(--clr-blue);
-    /* border-bottom: .2rem solid white !important; */
-    /* border-style: inset; */
-    /* border: .2rem inset #585b635c; */
-    box-shadow: var(--bs-lg);
+    box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%);
     border-radius: 0.1rem;
+    clip-path: polygon(0 0, 110% 0, 110% calc(100% - 1px), 0 calc(100% - 1px));
 }
 
 .fight-odds > .fight-odds-item:not(:last-child) {
     /* Your styles here */
-    border-right: 1px solid #d0d0d0;
+    border-right: 1px solid #d0d0d07a;
+}
+
+.fight-odds-item:not(.active) {
+    /* Your styles here */
+    border-bottom: 1px solid #d0d0d0;
 }
 
 .fight-odds-chart-containor {
@@ -263,3 +262,22 @@ li.active > div.action-button{
     text-align: center;
 }
 
+
+/* UFC_FIGHTER view */
+img.fighter-img {
+    padding: 2rem;
+    width: 16rem;
+}
+
+.fighter-flag-containor {
+    width: 20rem;
+}
+
+.fighter-flag {
+    opacity: .75;
+    height: 6rem;
+}
+
+.fighter-containor{
+    width: 50%;
+}
