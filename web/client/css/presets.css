@@ -413,6 +413,14 @@
         display: none;
     }
 
+    .open {
+        display: block !important;
+    }
+
+    .close {
+        display: none !important;
+    }
+
 
 /*  ELEMENTS */
 

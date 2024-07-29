@@ -2,46 +2,28 @@
 
 function get_header(){
 
-    const exchange_to_flag = exchange => {
-        switch (exchange) {
-            case "tor":
-            case "van":
-                return "flag-ca";
-            case "stu":
-            case "fra":
-            case "mun":
-                return "flag-de";
-            case "lse":
-            case "iob":
-                return "flag-gb";
-            case "mex":
-                return "flag-mx";
-            default:
-                return "flag-us";
-        }
-    }
-
     const results = new Component('#search-results', {
         data: {
             rows: null,
             open: false,
 
         },
-	template: ({ rows, open }) => {
+	template: (props) => {
 
-            if (!open){
-                return html`<div style="display:none"></div>`
+            if (!props.rows){
+                return html`<div>No Rows</div>`
             }
-            if (rows){
-		return html`<ul>${rows.map((row) => {
-                    return html`<li onclick="select_event()">${row.name}</li>`;
-                })}</ul>`;
-            } else {
-                return html`no rows`;
-            }
+
+            return html`<ul>${props.rows.map((row) => {
+                return html`<li data-event-fmid="${row.fmid}" onclick="select_event()">${row.name}</li>`;
+            })}</ul>`;
+
         },
         listeners: {
             select_event: function(e){
+                const id = e.target.getAttribute("data-event-fmid");
+                console.log(id);
+                app.mods.view.change("ufc_event", { id });
 
                 setTimeout(() => {
                     results.do("close")
@@ -53,19 +35,15 @@ function get_header(){
         },
         setters: {
             update_results: function(props, rows){
-                this.data = {
-                    rows,
-                    open: true
-                }
-		this.render();
+                this.data.rows = rows
+                this.is_open = true;
+		        this.render();
             },
             toggle_open: function() {
-                this.data.open = !this.data.open;
-		this.render();
+                this.is_open = !this.is_open;
             },
             close: function(){
-                this.data.open = false;
-		this.render();
+                this.is_open = false;
             }
         }
     });
@@ -118,7 +96,7 @@ function get_header(){
                     </div>
                 </div>
                 <div id="header-bottom" class="d--f fd--r ai--c jc--sb">
-                    <div class="header-bottom-left d--f ai--c g--xxxs">
+                    <div class="header-bottom-left d--f ai--c g--xxs">
                         ${get_svg("activity", 'class="svg-activity"')}
                         ${get_svg("spinner", 'class="hide svg-loading"')}
                         <p class="t" style="font-weight:100;font-size:1.3rem">${fight_org || "fight_org"}</p>
@@ -194,8 +172,8 @@ function get_header(){
             search_focus: async function(){
                 if (Hamburger.state()['is_open']) return;
                 Hamburger.open("search");
-		const response = await arc.get(UFC_EVENT, READ_LIST);
-		console.log(response);
+                const response = await arc.get(UFC_EVENT, READ_LIST);
+                console.log(response);
                 results.do("update_results", response.data.rows);
             },
 
@@ -279,9 +257,9 @@ function get_nav(){
                 //TODO remove ?.
                 if (view !== app?.active_view?.name){
 
-                    const id = app.mods.core.header.data.selected_event.id
+                    const fmid = app.mods.core.header.data.selected_event.fmid
 
-                    app.mods.view.change(view, { id});
+                    app.mods.view.change(view, { fmid});
                 } else {
                     app.active_view.do("fetch_data");
                 }

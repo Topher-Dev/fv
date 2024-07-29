@@ -112,18 +112,8 @@ var Application = (function () {
                 } else {
                     //console.log("Component loaded: updating data", view_name, component, run_time_options)
                     view = component;
-                    //check if this is a list or record view
-                    if (view.data?.form){
-                        view.data.form = null;
-                        view.data.id = run_time_options?.id;
-                        view.data.is_locked = run_time_options?.is_locked || true;
-                    }
-
-                    if (view.data?.list){
-                        view.data.list=null;
-                    }
-
-                    view.do("fetch", { ...run_time_options });
+                    view.data = { ...view.data, ...run_time_options };
+                    view.do("fetch");
                 }
 
                 // console.log(view);
@@ -147,6 +137,19 @@ var Application = (function () {
                 //console.log("Replacing",this.active.containor_class, containor_class)
                 main?.classList.replace(this.active.containor_class, containor_class);
             }
+
+            // //use a for loop to remove all active classes from nav-items and identify which one to add
+            let nav_items = Q(".nav-item", true);
+
+            for (let i = 0; i < nav_items.length; i++){
+                nav_items[i].classList.remove("active");
+                if (nav_items[i].getAttribute("key") === view_name){
+                    nav_items[i].classList.add("active");
+                }
+            }
+
+            //set the active view
+
 
             //store to access properties & methods if needed
             this.active = {

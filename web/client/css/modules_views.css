@@ -63,14 +63,24 @@ img.fight-list-img.right {
 
 .event-list-manager{
     height: 4.5rem;
+    transition: height .2s;
     /* border-top: 0px solid #d0d0d0; */
     /* border-bottom: 2px solid #d0d0d0; */
     /* margin: .25rem 0rem 0 0rem; */
     font-size: 1.35rem;
     color: var(--clr-charcoal);
     background-color: white;
-    padding: .5rem .35rem;
+    padding: .5rem 0.45rem .5rem 0.5rem;
     font-weight: bold;
+}
+
+.event-list-manager.active {
+    height: 10rem;
+}
+
+.event-list-manager.active svg {
+    fill: var(--clr-red) !important;
+    rotate: 45deg;
 }
 
 .fight-odds {
@@ -115,11 +125,16 @@ ul.event-fight-list {
 }
 
 .fight-odds-item.active {
-    background-color: var(--clr-charcoal);
-    color: white;
+    /* background-color: var(--clr-charcoal); */
+    /* color: white; */
     font-weight: 700;
     /* border-right: .2rem solid white !important; */
-    border-bottom: .2rem solid white !important;
+    color: var(--clr-blue);
+    /* border-bottom: .2rem solid white !important; */
+    /* border-style: inset; */
+    /* border: .2rem inset #585b635c; */
+    box-shadow: var(--bs-lg);
+    border-radius: 0.1rem;
 }
 
 .fight-odds > .fight-odds-item:not(:last-child) {
@@ -244,7 +259,7 @@ li.active > div.action-button{
 }
 
 .fight-list-end {
-    padding: 2rem;
+    padding: 2rem 2rem 5rem 2rem;
     text-align: center;
 }
 

@@ -12,9 +12,9 @@ class Ufc_fighter extends Controller {
 
         $db = $this->get_db();
 
-        $fight = $db->select_one($this->table_name, "fmid", $fmid);
+        $fighter = $db->select_one($this->table_name, "fmid", $fmid);
 
-        return $this->success("read_one", $fight);
+        return $this->success("read_one", $fighter);
     }
 
 

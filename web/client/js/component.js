@@ -716,15 +716,37 @@
 				_components: isStore ? {value: [], writable: true} : {value: null},
 				_listeners: {value: Object.freeze(listeners)},
 
+				is_open: {
+					get: function () {
+						return this.elem.classList.contains('open');
+					},
+					set: function (state) {
+
+						//validate state
+						if (typeof state !== "boolean") {
+							return err('Invalid state');
+						}
+
+						if (state) {
+							this.elem.classList.add('open');
+						} else {
+							this.elem.classList.remove('open');
+						}
+
+						return state;
+
+					}
+				},
+
 				// Public props
-				isLoading: {
+				is_loading: {
 					value: null,
 					writable: true
 				},
 				elem: {
 					get: function () {
 						return typeof elem === 'string' ? document.querySelector(elem) : elem;
-					}
+					},
 				},
 				data: {
 					get: function () {
@@ -816,7 +838,7 @@
 		
 			if (!typeof state === "boolean") return 
 
-			this.isLoading = state;
+			this.is_loading = state;
 
 			// Dispatch event
 			state === true 
@@ -850,7 +872,7 @@
 					return err('Render target not found.');
 				}
 		
-				//if (this.isLoading) return html`<div>..Loading</div>`;
+				//if (this.is_loading) return html`<div>..Loading</div>`;
 		
 				// Emit pre-render event
 				// If the event was cancelled, bail

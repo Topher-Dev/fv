@@ -323,7 +323,7 @@
       "request": {
         "requires": {
           "role": "",
-          "param": "id"
+          "param": "id,fmid"
         }
       },
       "response": {

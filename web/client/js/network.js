@@ -55,6 +55,16 @@
         const PUT = "PUT";
         const DELETE = "DELETE";
 
+        function loading(state){
+            if (state === true){
+                hide(".svg-activity");
+                show(".svg-loading");
+            } else {
+                hide(".svg-loading");
+                show(".svg-activity");
+            }
+        }
+
         /**
          * The core private function for creating an http request
          * @param {String}          Constant GET or POST
@@ -64,6 +74,13 @@
          */
 
         async function _jax(getpost, url, parameters = null) {
+
+            try {
+                loading(true);
+            } catch (error) {
+                console.log(error)
+            }
+
             return new Promise((resolve, reject) => {
                 let httpRequest;
         
@@ -86,6 +103,14 @@
                 };
         
                 httpRequest.onload = function () {
+
+                    //TODO
+                    try {
+                        loading(false);
+                    } catch (error) {
+                        console.log(error)
+                    }
+
                     if (this.status >= 200 && this.status < 300) {
                         resolve(httpRequest.response);
                     } else {

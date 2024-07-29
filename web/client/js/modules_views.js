@@ -2,12 +2,12 @@ function view_ufc_event({ selected_event }){
     const ufc_event = new Component('main', {
         data: {
             header: "event",
-            id: selected_event.id,
+            id: selected_event.fmid,
             event: null
         },
         template: function(props) {
 
-            if (this.isLoading || !props?.event){
+            if (this.is_loading || !props?.event){
                 return loader();
             }
      
@@ -30,9 +30,8 @@ function view_ufc_event({ selected_event }){
                         ${get_svg("date", 'class="svg-date"')}
                         <p>${event_details.StartTime.substring(0,10)}</p>
                     </div>
-                    <div class="event-list-dir d--f fd--r ai--c jc--sb g--sm">
-                        <p>ASC</p>
-                        ${get_svg("caret-down-fill", 'class="svg-caret-down-fill"')}
+                    <div onclick="toggle_drawer()" class="event-list-dir d--f fd--r ai--c jc--sb g--sm">
+                        ${get_svg('plus', 'class="svg-plus"')}
                     </div>
                 </div>
                 <ul class="event-fight-list">
@@ -43,8 +42,6 @@ function view_ufc_event({ selected_event }){
                         //const decide if we are going to add a li divider
                         const add_divider = fi !== 0 && event_details.FightCard[fi-1].CardSegment !== li.CardSegment;
                         let divider = "";
-
-                        
 
                         if (add_divider || fi === 0){
                             //format: "2024-07-28T02:00Z"
@@ -77,17 +74,22 @@ function view_ufc_event({ selected_event }){
                                         </div>`;})}
                             </li>`
                     })}
-		    <li class="fight-list-end">
-			<button onclick="return_to_top()">Return to top</button>
-		    <li>
-                </ul>
-            `;
+                    <li class="fight-list-end">
+                        <button onclick="return_to_top()">Return to top</button>
+                    </li>
+                </ul>`;
         },
         listeners :{
-	    return_to_top: function(event){
-		console.log(event);
+            sort_list: function(event){
+                
+            },
+            toggle_drawer: function(event){
+                event.target.closest(".event-list-manager").classList.toggle("active")
+            },
+            return_to_top: function(event){
+                console.log(event);
                 event.target.closest("ul").scroll(0,0);
-	    },
+            },
             select_fight: function(event){
                 console.log(event)
                 const li = event.target.closest("li");
@@ -98,10 +100,10 @@ function view_ufc_event({ selected_event }){
         },
         setters: {
             fetch: async function(){
-                this.isLoading = true;
-                const response = await arc.get(UFC_EVENT, READ_ONE, {id: this.data.id});
+                this.is_loading = true;
+                const response = await arc.get(UFC_EVENT, READ_ONE, {fmid: this.data.id});
                 console.log(response,"response")
-                this.isLoading = false;
+                this.is_loading = false;
                 //TODO DATE: 2024-18-07// fix this data.data crap
                 this.data.event = JSON.parse(response.data.data)['LiveEventDetail'];
                 this.render();
@@ -184,7 +186,7 @@ function view_ufc_fight({ fight_id }){
         },
         template: function(props) {
 
-            if (this.isLoading){
+            if (this.is_loading){
                 return loader();
             }
 
@@ -324,7 +326,9 @@ function view_ufc_fight({ fight_id }){
         listeners :{
             toggle_chart: function(event){
                 Q(".fight-odds-chart-containor").classList.toggle("active");
-                event.target.classList.toggle("active");
+
+                const foi = event.target.closest(".fight-odds-item")
+                foi.classList.toggle("active");
                 window['fight-odds-chart'].update({
                     duration: 800, // Duration of the animation in milliseconds
                     easing: 'easeOutBounce' // Easing function for the animation
@@ -345,9 +349,9 @@ function view_ufc_fight({ fight_id }){
         },
         setters: {
             fetch: async function(){
-                this.isLoading = true;
+                this.is_loading = true;
                 const response = await arc.get(UFC_FIGHT, READ_ONE, {fight_fmid: this.data.fight_id});
-                this.isLoading = false;
+                this.is_loading = false;
                 const fight = JSON.parse(response.data.data);
                 this.data.fight = fight;
                 this.render();
@@ -373,7 +377,7 @@ function view_ufc_fighter({ fmid }){
         },
         template: function(props) {
 
-            if (this.isLoading || !props?.fighter){
+            if (this.is_loading || !props?.fighter){
                 return loader();
             }
 
@@ -481,9 +485,9 @@ function view_ufc_fighter({ fmid }){
         },
         setters: {
             fetch: async function(){
-                this.isLoading = true;
+                this.is_loading = true;
                 const response = await arc.get(UFC_FIGHTER, READ_ONE, {fmid: this.data.fmid});
-                this.isLoading = false;
+                this.is_loading = false;
                 console.log(response);
                 const fighter = JSON.parse(response.data.data);
                 this.data.fighter = fighter;
