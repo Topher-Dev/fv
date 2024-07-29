@@ -119,16 +119,22 @@ function view_ufc_fight({ fight_id }){
     const chart_options = {
         responsive: true,
         legend: {
-            // position: 'top',
+            //position: 'top',
             display: false
+        },
+        title: {
+            display: true, // Enable the title
+            text: 'Betting Odds Time Series', // Title text
+            position: 'top', // Position the title at the top (default)
         },
         plugins: {
             tooltips: {
-                enabled: false
-             },
+                //enabled: false
+            },
             title: {
-                display: false,
-                text: 'UFC Betting Odds Over Time'
+                display: true, // Enable the title
+                text: 'UFC Betting Odds Over Time', // Title text
+                position: 'top', // Position the title at the top (default)
             }
         },
         scales: {
@@ -256,7 +262,7 @@ function view_ufc_fight({ fight_id }){
                         return html`
                             <div onclick="toggle_chart()" class="fight-odds-item d--f fd--c ai--c jc--c">
                                 <div>
-                                    <p>${odd.name}</p>
+                                    <p class="ta--c">${odd.name}</p>
                                     <div class="d--f jc--c g--xxxs ai--c">
                                         <p class="${fav_color}">${odd.odds.fighter_1}</p>
                                         <p>:</p>
@@ -267,14 +273,14 @@ function view_ufc_fight({ fight_id }){
                     })}
                 </div>
                 <div class="event-list-manager ai--c d--f jc--sb">
-                    <div class="fighter-containor d--f ai--c g--sm jc--c">
+                    <div data-fighter="0" onclick="toggle_odds()" class="fighter-containor active d--f ai--c g--sm jc--c">
                         <img class="fighter-flag" src="${fighter_1_flag_src}" alt="xx">
                         <p class="fighter-name d--f fd--c ai--fs jc--c g--xs fg--1">
                             <span>${fighter_1.Name.FirstName}</span>
                             <span>${fighter_1.Name.LastName}</span>
                         </p>
                     </div>
-                    <div class="fighter-containor d--f ai--c g--sm jc--c">
+                    <div data-fighter="1" onclick="toggle_odds()" class="fighter-containor active d--f ai--c g--sm jc--c">
                         <p class="fighter-name d--f fd--c ai--fe jc--c g--xs fg--1">
                             <span>${fighter_2.Name.FirstName}</span>
                             <span>${fighter_2.Name.LastName}</span>
@@ -388,6 +394,31 @@ function view_ufc_fight({ fight_id }){
                 </div>`;
         },
         listeners :{
+            toggle_odds: function(event){
+                //window['fight-odds-chart'].data.datasets[0].hidden = true;
+
+                let div;
+
+                if (event.target.classList.contains("fighter-containor")){
+                    div = event.target;
+                } else {
+                    div = event.target.closest(".fighter-containor");
+                }
+
+                div.classList.toggle("active");
+
+                const fighter = parseInt(div.dataset.fighter);
+
+                console.log(fighter, div);
+
+                const chart = window['fight-odds-chart'];
+
+                const dataset = chart.data.datasets[fighter];
+                dataset.hidden = !dataset.hidden;
+                chart.update();
+
+
+            },
             toggle_chart: function(event){
                 Q(".fight-odds-chart-containor").classList.toggle("active");
 
