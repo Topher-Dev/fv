@@ -15,7 +15,10 @@ function get_header(){
             }
 
             return html`<ul>${props.rows.map((row) => {
-                return html`<li data-event-fmid="${row.fmid}" onclick="select_event()">${row.name}</li>`;
+                return html`<li 
+                                data-event-fmid="${row.fmid}" 
+                                onclick="select_event()"
+                                class="search-results-item">${row.name}</li>`;
             })}</ul>`;
 
         },
@@ -87,7 +90,7 @@ function get_header(){
                         <button class="active" id="header-search-button">
                             ${get_svg("search")}
                         </button>
-                        <div id="search-results"></div>
+                        <div id="search-results" class="search-results"></div>
                     </div>
                     <div class="menu-header">
                         <button id="menu-button">
