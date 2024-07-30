@@ -606,7 +606,7 @@ z-index: 1000;
 
 #header-bottom.active > div > p {color: white;z-index: 1000;}
 
-.headear-bottom-left,
+.header-bottom-left,
 .header-bottom-right {
     width: 17%;
 }
