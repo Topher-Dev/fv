@@ -401,16 +401,9 @@ transform: rotatey(0);
     font-size: 1.3rem;
 }
 
-#search-results > ul {
-padding: 0 .5rem;
-}
-
-.search-results {
-    
-}
 
 .search-results-item {
-padding: 0.65rem .5rem;
+padding: 0 .75rem 0 0;
 border-bottom: 1px solid var(--clr-gray-light);
 background-color: #fff;
 /* transition: .2s background-color; */
@@ -1004,4 +997,9 @@ canvas {
 
 .event-list-manager.active {
     height: 10rem;
+}
+
+.event-list-flag {
+    height: 6.5rem;
+    width: 7rem;
 }

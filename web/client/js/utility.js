@@ -1,4 +1,9 @@
-
+function format_date(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 function clear_url_params() {
     // Get the current URL without any parameters
     const url_without_params = window.location.protocol + "//" + window.location.host + window.location.pathname;
@@ -773,4 +778,17 @@ function inches_to_feet(inches){
     const remaining_inches = inches % 12;
 
     return `${feet}'${remaining_inches}"`;
+}
+
+function format_date(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function format_time(date) {
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
 }

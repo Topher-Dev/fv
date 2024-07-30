@@ -14,17 +14,53 @@ function get_header(){
                 return loader();
             }
 
-            return html`<ul>${props.rows.map((row) => {return html`<li 
-                            data-event-fmid="${row.fmid}" 
-                            onclick="select_event()"
-                            class="search-results-item">${row.name}</li>`;
+            return html`<ul>${props.rows.map((row) => {
+                let event_data;
+                const start_datetime = new Date(row.prelims_card);
+		console.log(row);
+                if (row.data){
+		    event_data = JSON.parse(row.data)['LiveEventDetail'];
+                } else {
+                    event_data = {};
+                }
+
+                const flag_src = `images/flags/${event_data?.Location?.TriCode?.substring(0,2)?.toLocaleLowerCase()}.png`                                
+                return html`<li 
+                                data-event-fmid="${row.fmid}" 
+                                onclick="select_event()"
+                                class="search-results-item d--f ai--c jc--sb">
+                                    <div class="d--f ai--c g--xs">
+                                        <img class="event-list-flag" src="${flag_src}"/>
+                                        <div>
+  					    <p class="fw--b">${row.name}</p>
+    			 	            <p style="font-size:1.2rem">${event_data?.Location?.State} ${row.fmid}</p>
+				        </div>
+                                    </div>
+                                    <div>
+					<p>${format_date(start_datetime)}</p>
+					<p style="font-size:1.2rem" class="ta--r">${format_time(start_datetime)}</p>
+				    </div>
+                            </li>`;
                     })}</ul>`;
 
         },
         listeners: {
             select_event: function(e){
-                const id = e.target.getAttribute("data-event-fmid");
+
+                let el;
+
+		if (e.target.classList.contains("search-results-item")){
+		    el = e.target;
+                } else {
+                    el = e.target.closest(".search-results-item");
+                }
+
+
+                const id = el.getAttribute("data-event-fmid");
                 console.log(id);
+                const selected_event = this.data.rows.find( e => e.fmid == parseInt(id));
+                app.mods.core.header.data.selected_event = selected_event;
+		app.mods.core.header.render();
                 app.mods.view.change("ufc_event", { id });
 
                 setTimeout(() => {
@@ -174,8 +210,7 @@ function get_header(){
             search_focus: async function(){
                 if (Hamburger.state()['is_open']) return;
                 Hamburger.open("search");
-                const response = await arc.get(UFC_EVENT, READ_LIST);
-                console.log(response);
+                const response = await arc.get(UFC_EVENT, READ_LIST, { order_by: "prelims_card|desc"});
                 results.do("update_results", response.data.rows);
             },
 
@@ -207,7 +242,7 @@ function get_header(){
         middleLine_1 = Q("#middle-line-1");
         bottomLine_1 = Q("#bottom-line-1");
     });
-    
+
 
     return header.render(),header;
 }
