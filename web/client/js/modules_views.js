@@ -60,7 +60,7 @@ function view_ufc_event({ selected_event }){
                             >
                                 <div class="fight-tracker ps--a">${fight_order}</div>${li.Fighters.map( (fighter, i) => {
                                     const src = `images/fighter/headshot/${fighter.UFCLink.split("athlete/")[1]}.png`.toLowerCase();
-                                    const flag_src = `images/flags/${fighter.Born.TriCode.substring(0,2).toLowerCase()}.png`;
+                                    const flag_src = `images/flags/${fighter.Born.TriCode?.substring(0,2).toLowerCase()}.png`;
                                     return html`
                                         <div class="fighter d--f jc--sb ai--c ${i===0?"fd--rr":"fd--r"}">
                                             <div class="fight-list-img-containor">
@@ -93,9 +93,15 @@ function view_ufc_event({ selected_event }){
             select_fight: function(event){
                 console.log(event)
                 const li = event.target.closest("li");
+		li.classList.add("tapped")
+
                 const fight_id = li.dataset.fightId;
                 console.log(fight_id);
-                app.mods.view.change("ufc_fight", {fight_id});
+
+     	        setTimeout(() => {
+     	            li.classList.remove('tapped');
+                    app.mods.view.change("ufc_fight", {fight_id});
+	        }, 200); // Duration of the effect
             }
         },
         setters: {

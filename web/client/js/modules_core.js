@@ -9,40 +9,46 @@ function get_header(){
 
         },
 	template: (props) => {
-
-            if (!props.rows){
-                return loader();
+	    let is_loading = false;
+            if (!props?.rows){
+                //return loader();
             }
 
             return html`<ul>${props.rows.map((row) => {
-                let event_data;
-                const start_datetime = new Date(row.prelims_card);
-		console.log(row);
+				
+		let event_data;
                 if (row.data){
 		    event_data = JSON.parse(row.data)['LiveEventDetail'];
                 } else {
                     event_data = {};
                 }
 
-                const flag_src = `images/flags/${event_data?.Location?.TriCode?.substring(0,2)?.toLocaleLowerCase()}.png`                                
+                const start_datetime = is_loading ? new Date(row.prelims_card) : "";
+		const start_date = is_loading ? format_date(start_datetime) : "";
+		const start_time = is_loading ? format_time(start_datetime) : "";
+		const flag_src = is_loading ? `images/flags/${event_data?.Location?.TriCode?.substring(0,2)?.toLocaleLowerCase()}.png` : ""
+		const event_fmid = is_loading ? row.fmid : "";
+		const event_name = is_loading ? row.name : "";
+		const event_location = is_loading ? `${event_data?.Location?.State} ${row.fmid}` : "";
+
                 return html`<li 
-                                data-event-fmid="${row.fmid}" 
+                                data-event-fmid="${event_fmid}" 
                                 onclick="select_event()"
-                                class="search-results-item d--f ai--c jc--sb">
-                                    <div class="d--f ai--c g--xs">
-                                        <img class="event-list-flag" src="${flag_src}"/>
-                                        <div>
-  					    <p class="fw--b">${row.name}</p>
-    			 	            <p style="font-size:1.2rem">${event_data?.Location?.State} ${row.fmid}</p>
+                                class="${is_loading ? '' : 'loading'} search-results-item d--f ai--c jc--sb"
+			    >
+				<div class="d--f ai--c g--xs">
+					<img class="${is_loading ? '' : 'skeleton'} event-list-flag" src="${flag_src}"/>
+					<div>
+  					    <p class="${is_loading ? '' : 'skeleton'} fw--b">${event_name}</p>
+			 	            <p style="font-size:1.2rem">${event_location}</p>
 				        </div>
-                                    </div>
-                                    <div>
-					<p>${format_date(start_datetime)}</p>
-					<p style="font-size:1.2rem" class="ta--r">${format_time(start_datetime)}</p>
-				    </div>
+				</div>
+				<div>
+					<p>${start_date}</p>
+					<p style="font-size:1.2rem" class="${is_loading ? '' : 'skeleton'} ta--r">${start_time}</p>
+  	       		        </div>
                             </li>`;
                     })}</ul>`;
-
         },
         listeners: {
             select_event: function(e){

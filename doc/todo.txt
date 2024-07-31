@@ -23,3 +23,7 @@ Sun Jul 28 23:06:29 UTC 2024
 Tue Jul 30 03:35:04 UTC 2024
 [ ] Change flags need svgs
 [ ] Add all Graphik fonts
+
+Wed Jul 31 04:21:45 UTC 2024
+[ ] make sure past evens are being scraped
+[ ] make sure no image is being downloaded

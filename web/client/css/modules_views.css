@@ -68,7 +68,7 @@ img.fight-list-img.right {
     font-size: 1.35rem;
     color: var(--clr-charcoal);
     background-color: white;
-    padding: .5rem 0;
+    padding: .5rem 0 .5rem .35rem;
     font-weight: bold;
 }
 

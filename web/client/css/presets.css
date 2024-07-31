@@ -665,3 +665,43 @@
 .truncate-less {
     color: var(--clr-blue);
 }
+
+.skeleton {
+  background-color: #e0e0e0;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 100% 0; }
+}
+
+.skeleton::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* CSS class for tap effect */
+.tapped {
+  background-color: #ddd; /* Change the background color */
+  transition: background-color 0.2s ease; /* Smooth transition */
+}
+
+    li {
+      transition: background-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    li:active {
+      background-color: #ccc;
+    }

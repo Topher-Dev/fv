@@ -11,32 +11,52 @@ def fetch_fighter_data(fighter_url):
     validate_html_response(response, ['div.hero-profile'])
     return response.text
 
+
 def parse_fighter_data(html_content):
     try:
         print(f"[ParseFighterData] Parsing fighter data")
         soup = BeautifulSoup(html_content, 'html.parser')
 
-        # Extract hero image URL
-        head_img_tag = soup.select_one('img.image-style-event-results-athlete-headshot')
-        if not head_img_tag:
-            raise ValueError(f"[ParseFighterData] Head image tag not found")
-        head_img_url = head_img_tag['src']
-        
         # Extract fighter details
         fighter_name_tag = soup.select_one('h1.hero-profile__name')
         if not fighter_name_tag:
             raise ValueError(f"[ParseFighterData] Fighter name tag not found")
         fighter_name = fighter_name_tag.get_text(strip=True)
         
+        # Split the fighter's name into parts and convert to lowercase for comparison
+        name_parts = [part.lower() for part in fighter_name.split()]
+
+        head_img_url = "ufc.com/../themes/custom/ufc/assets/img/no-profile-image.png"  # Default image URL
+        head_img_tags = soup.select('img.image-style-event-results-athlete-headshot')
+        
+        print(f"[ParseFighterData] Checking {len(head_img_tags)} headshot images")
+
+        # Loop through each headshot image to find a matching URL
+        for img_tag in head_img_tags:
+            img_src = img_tag['src']
+            # Convert img_src to lowercase for comparison
+            img_src_lower = img_src.lower()
+
+            if img_tag.has_attr('alt'):
+                img_src_lower += " " + img_tag['alt'].lower()
+
+            # Check if all parts of the fighter's name are in the image src
+            if all(part in img_src_lower for part in name_parts):
+                head_img_url = img_src  # Store the original URL
+                print(f"[ParseFighterData] Found matching image URL: {head_img_url}")
+                break
+        else:
+            print(f"[ParseFighterData] No matching image URL found, using default URL: {head_img_url}")
+
         nickname_tag = soup.select_one('p.hero-profile__nickname')
         nickname = nickname_tag.get_text(strip=True) if nickname_tag else ""
-        
+
         division_tag = soup.select_one('div.hero-profile__division p.hero-profile__division-title')
         division = division_tag.get_text(strip=True) if division_tag else ""
-        
+
         record_tag = soup.select_one('div.hero-profile__division p.hero-profile__division-body')
         record = record_tag.get_text(strip=True) if record_tag else ""
-        
+
         stats_tags = soup.select('div.hero-profile__stat')
         stats = {stat.select_one('p.hero-profile__stat-text').get_text(strip=True): 
                  stat.select_one('p.hero-profile__stat-numb').get_text(strip=True) 
