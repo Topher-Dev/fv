@@ -220,6 +220,7 @@ function get_header(){
             search_focus: async function(){
                 if (Hamburger.state()['is_open']) return;
                 results.data.rows = null;
+                results.is_open = true;
                 results.render();
                 Hamburger.open("search");
                 const response = await arc.get(UFC_EVENT, READ_LIST, { order_by: "prelims_card|desc"});
