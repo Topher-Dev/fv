@@ -389,6 +389,13 @@ opacity: 1;
 transform: rotatey(0);
 }
 
+
+
+
+/* </Search> Component */
+
+/* <Results/> */
+
 #search-results {
     display: none;
     position: absolute;
@@ -399,23 +406,50 @@ transform: rotatey(0);
     background-color: #fff;
     z-index: 5;
     font-size: 1.3rem;
+    overflow-y: auto;
+    height: 90.5vh;
 }
 
 
 .search-results-item {
-padding: 0 .75rem 0 0;
-border-bottom: 1px solid var(--clr-gray-light);
-background-color: #fff;
-/* transition: .2s background-color; */
+    padding: 0 1rem 0 0;
+    border-bottom: 1px solid var(--clr-gray-light);
+    background-color: #fff;/* transition: .2s background-color; */
 }
 
-.search-results-pre,
-.search-results-none {
-padding: 2.65rem .5rem;
-text-align: center;
-} 
+.search-results-item-left {
 
-/* </Search> Component */
+}
+
+.search-results-item-flag {
+    height: 6.5rem;
+    width: 7rem !important;
+}
+
+.search-results-item-name {min-width: 21rem;height: 2rem;}
+
+.search-results-item-location {
+    width: 20.75rem;
+    height: 2rem;
+}
+
+.search-results-item-right {
+
+}
+
+.search-results-item-start-date {
+    width: 8.75rem;
+    height: 2rem;
+}
+
+.search-results-item-start-time {
+    width: 8.75rem;
+    height: 2rem;
+}
+
+
+
+/* </results> */
 
 
 /* <Menu> */
@@ -542,7 +576,7 @@ position: relative;
 
 .nav-item.active > .nav-icon > path.selected,
 .nav-item.active > .nav-icon > path.stroked {
-fill: var(--clr-black);
+    fill: var(--clr-black);
 }
 
 #nav-bottom-containor > ul > li >div {
@@ -551,25 +585,25 @@ fill: var(--clr-black);
 
 .nav-item > .nav-icon > path.unselected,
 .nav-icon > path.stroked {
-fill: var(--clr-placeholder)
+    fill: var(--clr-placeholder)
 }
 
 .nav-icon {height: 2.25rem;width: 2.25rem;margin: 0 auto;fill: var(--clr-charcoal);}
 
 .nav-icon > path {
-/* fill: var(--clr-placeholder);
-stroke: none; */
-transition: .3s all;
+    /* fill: var(--clr-placeholder);
+    stroke: none; */
+    transition: .3s all;
 }
 
 #li-indicator {
-position: absolute;
-width: 33%;
-height: .3rem;
-left: 0;
-bottom: 0;
-transition: all 200ms ease-out;
-background-color: #f6f6f6;
+    position: absolute;
+    width: 33%;
+    height: .3rem;
+    left: 0;
+    bottom: 0;
+    transition: all 200ms ease-out;
+    background-color: #f6f6f6;
 }
 
 #app-containor {

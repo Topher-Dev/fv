@@ -280,7 +280,10 @@ function view_ufc_fight({ fight_id }){
                 </div>
                 <div class="event-list-manager ai--c d--f jc--sb">
                     <div data-fighter="0" onclick="toggle_odds()" class="fighter-containor active d--f ai--c g--sm jc--c">
-                        <img class="fighter-flag" src="${fighter_1_flag_src}" alt="xx">
+                        <div class="carousel">
+                            <img class="fighter-flag front" src="${fighter_1_flag_src}" alt="xx">
+                            ${get_svg("wreath", 'class="carocel-image back"')}
+                        </div>
                         <p class="fighter-name d--f fd--c ai--fs jc--c g--xs fg--1">
                             <span>${fighter_1.Name.FirstName}</span>
                             <span>${fighter_1.Name.LastName}</span>
@@ -291,7 +294,10 @@ function view_ufc_fight({ fight_id }){
                             <span>${fighter_2.Name.FirstName}</span>
                             <span>${fighter_2.Name.LastName}</span>
                         </p>
-                        <img class="fighter-flag" src="${fighter_2_flag_src}" alt="xx">
+                        <div class="carocel">
+                            <img class="fighter-flag front" src="${fighter_2_flag_src}" alt="xx">
+                            ${get_svg("wreath", 'class="carocel-image back"')}
+                        </div>
                     </div>
                 </div>
                 <div class="fighter-details d--f jc--sa ai--fs">
@@ -423,17 +429,19 @@ function view_ufc_fight({ fight_id }){
                 dataset.hidden = !dataset.hidden;
                 chart.update();
 
-
             },
             toggle_chart: function(event){
-                Q(".fight-odds-chart-containor").classList.toggle("active");
+
+                //check if any of the fight odds items are active
+                const active = Q(".fight-odds-item.active", true);
+
+                if (active.length === 0){
+                    Q(".fight-odds-chart-containor").classList.toggle("active");
+                }
 
                 const foi = event.target.closest(".fight-odds-item")
                 foi.classList.toggle("active");
-                window['fight-odds-chart'].update({
-                    duration: 800, // Duration of the animation in milliseconds
-                    easing: 'easeOutBounce' // Easing function for the animation
-                });
+
             },
             open_module: function(event){
                 console.log(event)

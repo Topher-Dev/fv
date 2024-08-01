@@ -10,87 +10,91 @@ function get_header(){
         },
 	template: (props) => {
 	    let is_loading = false;
-            if (!props?.rows){
-                //return loader();
+        let rows;
+            
+        if (!props?.rows){
+            rows = [0,1,2,3,4,5,6,7,8,9,10];
+            is_loading = true;
+        } else {
+            rows = props.rows;
+        }
+
+        return html`<ul>${rows.map((row) => {
+            
+            let event_data;
+            if (row?.data){
+                event_data = JSON.parse(row.data)['LiveEventDetail'];
+            } else {
+                event_data = {};
             }
 
-            return html`<ul>${props.rows.map((row) => {
-				
-		let event_data;
-                if (row.data){
-		    event_data = JSON.parse(row.data)['LiveEventDetail'];
-                } else {
-                    event_data = {};
-                }
+            const start_datetime = is_loading ?  "" : new Date(row.prelims_card);
+            const start_date = is_loading ?  "" : format_date(start_datetime);
+            const start_time = is_loading ? "" : format_time(start_datetime);
+            const flag_src = is_loading ? "" : `images/flags/${event_data?.Location?.TriCode?.substring(0,2)?.toLocaleLowerCase()}.png`
+            const event_fmid = is_loading ? "" : row.fmid ;
+            const event_name = is_loading ?  "" : row.name;
+            const event_location = is_loading ? "" : `${event_data?.Location?.State} ${row.fmid}`;
 
-                const start_datetime = is_loading ? new Date(row.prelims_card) : "";
-		const start_date = is_loading ? format_date(start_datetime) : "";
-		const start_time = is_loading ? format_time(start_datetime) : "";
-		const flag_src = is_loading ? `images/flags/${event_data?.Location?.TriCode?.substring(0,2)?.toLocaleLowerCase()}.png` : ""
-		const event_fmid = is_loading ? row.fmid : "";
-		const event_name = is_loading ? row.name : "";
-		const event_location = is_loading ? `${event_data?.Location?.State} ${row.fmid}` : "";
-
-                return html`<li 
-                                data-event-fmid="${event_fmid}" 
-                                onclick="select_event()"
-                                class="${is_loading ? '' : 'loading'} search-results-item d--f ai--c jc--sb"
-			    >
-				<div class="d--f ai--c g--xs">
-					<img class="${is_loading ? '' : 'skeleton'} event-list-flag" src="${flag_src}"/>
-					<div>
-  					    <p class="${is_loading ? '' : 'skeleton'} fw--b">${event_name}</p>
-			 	            <p style="font-size:1.2rem">${event_location}</p>
-				        </div>
-				</div>
-				<div>
-					<p>${start_date}</p>
-					<p style="font-size:1.2rem" class="${is_loading ? '' : 'skeleton'} ta--r">${start_time}</p>
-  	       		        </div>
-                            </li>`;
-                    })}</ul>`;
+            return html`<li 
+                            data-event-fmid="${event_fmid}" 
+                            onclick="select_event()"
+                            class="search-results-item d--f ai--c jc--sb ${is_loading ? '' : 'loading'}"
+                        >
+                            <div class="search-results-item-left d--f ai--c g--xs">
+                                <img class="search-results-item-flag ${is_loading ? 'skeleton' : ''}" src="${flag_src}"/>
+                                <div class="d--f fd--c g--xxs">
+                                    <p class="search-results-item-name ${is_loading ? 'skeleton' : ''} fw--b">${event_name}</p>
+                                    <p class="search-results-item-location ${is_loading ? 'skeleton' : ''}">${event_location}</p>
+                                </div>
+                            </div>
+                            <div class="search-results-item-right d--f fd--c g--xxs">
+                                <p class="search-results-item-start-date ${is_loading ? 'skeleton' : ''}">${start_date}</p>
+                                <p class="search-results-item-start-time ${is_loading ? 'skeleton' : ''}">${start_time}</p>
+                            </div>
+                        </li>`;
+                })}</ul>`;
         },
         listeners: {
             select_event: function(e){
 
                 let el;
 
-		if (e.target.classList.contains("search-results-item")){
-		    el = e.target;
-                } else {
-                    el = e.target.closest(".search-results-item");
+                if (e.target.classList.contains("search-results-item")){
+                    el = e.target;
+                        } else {
+                            el = e.target.closest(".search-results-item");
+                        }
+
+                        const id = el.getAttribute("data-event-fmid");
+                        console.log(id);
+                        const selected_event = this.data.rows.find( e => e.fmid == parseInt(id));
+                        app.mods.core.header.data.selected_event = selected_event;
+                        app.mods.core.header.render();
+                        app.mods.view.change("ufc_event", { id });
+
+                        setTimeout(() => {
+                            results.do("close")
+                            Hamburger.close();
+                            
+                        }, 100)
+
+                    }
+            },
+            setters: {
+                update_results: function(props, rows){
+                    this.is_open = true;
+                    this.data.rows = rows;
+                    this.render();
+                },
+                toggle_open: function() {
+                    this.is_open = !this.is_open;
+                },
+                close: function(){
+                    this.is_open = false;
                 }
-
-
-                const id = el.getAttribute("data-event-fmid");
-                console.log(id);
-                const selected_event = this.data.rows.find( e => e.fmid == parseInt(id));
-                app.mods.core.header.data.selected_event = selected_event;
-		app.mods.core.header.render();
-                app.mods.view.change("ufc_event", { id });
-
-                setTimeout(() => {
-                    results.do("close")
-                    Hamburger.close();
-                    
-                }, 100)
-
             }
-        },
-        setters: {
-            update_results: function(props, rows){
-                this.data.rows = rows
-                this.is_open = true;
-		        this.render();
-            },
-            toggle_open: function() {
-                this.is_open = !this.is_open;
-            },
-            close: function(){
-                this.is_open = false;
-            }
-        }
-    });
+        });
 
     const header = new Component('header', {
         data: {
@@ -215,9 +219,14 @@ function get_header(){
             },
             search_focus: async function(){
                 if (Hamburger.state()['is_open']) return;
+                results.data.rows = null;
+                results.render();
                 Hamburger.open("search");
                 const response = await arc.get(UFC_EVENT, READ_LIST, { order_by: "prelims_card|desc"});
-                results.do("update_results", response.data.rows);
+                
+                
+                results.do("update_results", response.data.rows)
+
             },
 
             search_handle_input: async function({ target: el, code }){
