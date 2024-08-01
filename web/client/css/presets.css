@@ -697,35 +697,45 @@
   transition: background-color 0.2s ease; /* Smooth transition */
 }
 
-    li {
-      transition: background-color 0.2s ease;
-      cursor: pointer;
-    }
+li {
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
 
-    li:active {
-      background-color: #ccc;
-    }
+li:active {
+    background-color: #ccc;
+}
+
+.front, .back {
+    transition: all 0.5s ease;
+}
 
 .front {
-    transform: translateZ(150px);
     z-index: 2;
 }
 
 .back {
-    transform: translateZ(-200px) scale(0.5);
+    transform: translateZ(-20rem) scale(0);
     opacity: 0.5;
     z-index: 1;
-    top: -19px;
-    left: -30px;
+    top: -20%;
+    left: -54%;
 }
 
-.carocel:hover .front {
-    transform: translateZ(-150px) scale(0.5);
+.fighter-containor:not(.active) .carocel .front {
+    transform: translateZ(-150px) scale(0);
     opacity: 0.5;
 }
 
-.carocel:hover .back {
-    transform: translateZ(150px);
+
+.fighter-containor:not(.active) .carocel .back {
+    transform: scale(.45) translateZ(20rem);
     opacity: 1;
     z-index: 2;
+    top: 0.1rem;
+    left: 0;
+}
+
+.carocel-image > g >path {
+    fill: goldenrod
 }

@@ -279,8 +279,8 @@ function view_ufc_fight({ fight_id }){
                     })}
                 </div>
                 <div class="event-list-manager ai--c d--f jc--sb">
-                    <div data-fighter="0" onclick="toggle_odds()" class="fighter-containor active d--f ai--c g--sm jc--c">
-                        <div class="carousel">
+                    <div data-fighter="0" onclick="toggle_odds()" class="fighter-containor active d--f ai--c g--xss jc--c">
+                        <div class="carocel">
                             <img class="fighter-flag front" src="${fighter_1_flag_src}" alt="xx">
                             ${get_svg("wreath", 'class="carocel-image back"')}
                         </div>
@@ -289,7 +289,7 @@ function view_ufc_fight({ fight_id }){
                             <span>${fighter_1.Name.LastName}</span>
                         </p>
                     </div>
-                    <div data-fighter="1" onclick="toggle_odds()" class="fighter-containor active d--f ai--c g--sm jc--c">
+                    <div data-fighter="1" onclick="toggle_odds()" class="fighter-containor active d--f ai--c g--xss jc--c">
                         <p class="fighter-name d--f fd--c ai--fe jc--c g--xs fg--1">
                             <span>${fighter_2.Name.FirstName}</span>
                             <span>${fighter_2.Name.LastName}</span>
