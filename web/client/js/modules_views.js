@@ -278,7 +278,7 @@ function view_ufc_fight({ fight_id }){
                             </div>`;
                     })}
                 </div>
-                <div class="event-list-manager ai--c d--f jc--sb">
+                <div class="fight-header ai--c d--f jc--sb">
                     <div data-fighter="0" onclick="toggle_odds()" class="fighter-containor active d--f ai--c g--xss jc--c">
                         <div class="carocel">
                             <img class="fighter-flag front" src="${fighter_1_flag_src}" alt="xx">
@@ -442,6 +442,8 @@ function view_ufc_fight({ fight_id }){
                 const foi = event.target.closest(".fight-odds-item")
                 foi.classList.toggle("active");
 
+                this.elem.querySelectorAll(".fighter-containor").forEach( x => x.classList.remove("active"));
+
             },
             open_module: function(event){
                 console.log(event)
@@ -493,46 +495,59 @@ function view_ufc_fighter({ fmid }){
             //fighter contents {"Age": 36, "DOB": "1988-07-09", "Born": {"City": "Chicago", "State": "Illinois", "Country": "USA", "TriCode": "USA"}, "Name": {"LastName": "Muhammad", "NickName": "Remember the Name", "FirstName": "Belal"}, "MMAId": 129355, "Reach": 72.0, "Corner": "Blue", "Height": 71.0, "Record": {"Wins": 23, "Draws": 0, "Losses": 3, "NoContests": 1}, "Stance": "Orthodox", "Weight": 170.0, "Outcome": {"Outcome": null, "OutcomeId": null}, "UFCLink": "http://www.ufc.com/athlete/Belal-Muhammad", "WeighIn": null, "FighterId": 2778, "KOOfTheNight": false, "FightingOutOf": {"City": "Chicago", "State": "Illinois", "Country": "USA", "TriCode": "USA"}, "WeightClasses": [{"Description": "Welterweight", "Abbreviation": "WW", "WeightClassId": 4, "WeightClassOrder": 1}], "SubmissionOfTheNight": false, "PerformanceOfTheNight": false}
             //cont {"stats": {"Wins by Knockout": "5", "Wins by Submission": "1"}, "record": "23-3-0 (W-L-D)", "division": "Welterweight Division", "nickname": "\"Remember The Name\"", "fighter_name": "Belal Muhammad", "head_img_url": "https://dmxg5wxfqgb4u.cloudfront.net/styles/event_results_athlete_headshot/s3/2023-05/MUHAMMAD_BELAL_05-06.png?itok=kXjdOJ-D"}
             const fighter = props.fighter
-            
-            return html`
-                <div>
-                    <div class="header d--f ai--c jc--sb">
+/*
                         <div class="fighter-img-containor">
                             <img class="fighter-img" src="images/fighter/heroshot/${fighter.UFCLink.split("athlete/")[1].toLowerCase()}.png" alt="xx">
                         </div>
                         <div class="fighter-flag-containor">
                             <img class="fighter-flag" src="images/flags/${fighter.Born.TriCode.substring(0,2).toLowerCase()}.png">
                         </div>
+*/            
+	    const fighter_flag_src = `images/flags/${fighter.Born.TriCode.substring(0,2).toLowerCase()}.png`
+	    const fighter_heroshot_src = `images/fighter/heroshot/${fighter.UFCLink.split("athlete/")[1].toLowerCase()}.png`
+
+            return html`
+                <div>
+                    <div class="fighter-resource-items d--f fd--r ai--c">
+			<div>YT</div>
+			<div>SM</div>
+			<div>RK</div>
+			<div>FF</div>
+                        <div>GG</div>
                     </div>
-                    <div class="content">
-                        <div class="fighter-info d--f ai--c jc--sb">
-                            <div>
-                                <h2>${fighter.Name.FirstName} ${fighter.Name.LastName}</h2>
+                    <div class="fighter-header ai--c d--f jc--sb">
+                        <div  class="fighter-containor active d--f ai--c g--xss jc--c">
+                            <img class="fighter-flag front" src="${fighter_flag_src}" alt="xx">
+                            <p class="fighter-name d--f fd--c ai--fs jc--c g--xs fg--1">
+                                <span>${fighter.Name.FirstName}</span>
+                                <span>${fighter.Name.LastName}</span>
+                            </p>
+                        </div>
+                        <div class="fighter-containor active d--f ai--c g--xss jc--c">
+                        </div>
+                    </div>
+                    <div class="fighter-details d--f jc--sb">
+			<div class="fighter-heroshot-containor">
+			    <img class="fighter-heroshot" src="${fighter_heroshot_src}" alt="xx">
+			</div>
+                        <div class="fighter-info d--f fd--c ai--fs jc--sb">
+                                <p>${fighter.Name.FirstName} ${fighter.Name.LastName}</p>
                                 <p>${fighter.Name.NickName}</p>
-                            </div>
-                            <div>
                                 <p>Age: ${fighter.Age}</p>
                                 <p>DOB: ${fighter.DOB}</p>
                                 <p>City: ${fighter.Born.City}</p>
                                 <p>State: ${fighter.Born.State}</p>
                                 <p>Country: ${fighter.Born.Country}</p>
-                            </div>
-                        </div>
-                        <div class="fighter-stats d--f ai--c jc--sb">
-                            <div>
-                                <h3>Record</h3>
+                                <p>Record</p>
                                 <p>Wins: ${fighter.Record.Wins}</p>
                                 <p>Losses: ${fighter.Record.Losses}</p>
                                 <p>Draws: ${fighter.Record.Draws}</p>
                                 <p>No Contests: ${fighter.Record.NoContests}</p>
-                            </div>
-                            <div>
-                                <h3>Physical</h3>
+                                <p>Physical</p>
                                 <p>Height: ${inches_to_feet(fighter.Height)}</p>
                                 <p>Weight: ${fighter.Weight}</p>
                                 <p>Reach: ${fighter.Reach}</p>
                                 <p>Stance: ${fighter.Stance}</p>
-                            </div>
                         </div>
                     </div>
                     <div class="fight-analysis">

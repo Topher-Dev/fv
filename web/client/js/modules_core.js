@@ -9,7 +9,7 @@ function get_header(){
 
         },
 	template: (props) => {
-	    let is_loading = false;
+	let is_loading = false;
         let rows;
             
         if (!props?.rows){
@@ -41,7 +41,7 @@ function get_header(){
                             onclick="select_event()"
                             class="search-results-item d--f ai--c jc--sb ${is_loading ? '' : 'loading'}"
                         >
-                            <div class="search-results-item-left d--f ai--c g--xs">
+                            <div style="width:7rem;"  class="search-results-item-left d--f ai--c g--xs">
                                 <img class="search-results-item-flag ${is_loading ? 'skeleton' : ''}" src="${flag_src}"/>
                                 <div class="d--f fd--c g--xxs">
                                     <p class="search-results-item-name ${is_loading ? 'skeleton' : ''} fw--b">${event_name}</p>

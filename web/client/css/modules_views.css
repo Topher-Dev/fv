@@ -68,6 +68,16 @@ img.fight-list-img.right {
     font-size: 1.35rem;
     color: var(--clr-charcoal);
     background-color: white;
+    padding: .5rem 0 .5rem .35rem;
+    font-weight: bold;
+}
+
+.fight-header {
+    height: 5rem;
+    transition: height .2s;
+    font-size: 1.35rem;
+    color: var(--clr-charcoal);
+    background-color: white;
     padding: .5rem 0 .5rem 0;
     font-weight: bold;
 }
@@ -189,7 +199,8 @@ ul.event-fight-list {
 }
 
 .fighter-name {
-    line-height: 1.5rem;
+    font-size: 1.3rem;
+    line-height: 1rem;
 }
 
 .fight-analysis {
@@ -300,4 +311,22 @@ img.fighter-img {
     object-fit: cover;
     border-radius: 10px;
     transition: transform 1s, opacity 1s;
+}
+
+.fighter-resource-items{
+    background-color: white;
+    color: var(--clr-charcoal);
+    /* box-shadow: var(--bs-sm); */
+    font-size: var(--fs-300);
+    padding: 2.5rem 0px;
+    height: 6rem;
+    text-align: center;
+}
+
+.fighter-resource-items > div{
+	width:20%;
+}
+
+.fighter-info {
+    font-size: 1.2rem;
 }

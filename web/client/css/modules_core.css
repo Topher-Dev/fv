@@ -1020,10 +1020,6 @@ canvas {
     font-weight: 100;
 }
 
-.event-list-manager p {
-    font-size: 1.3rem;
-    line-height: 1rem;
-}
 
 .event-list-manager {
     transition: height .2s;
