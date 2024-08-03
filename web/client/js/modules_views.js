@@ -360,13 +360,18 @@ function view_ufc_fight({ fight_id }){
                 <div class="fight-analysis">
                     <ul class="fight-analysis-list">
                         <li onclick="open_module()">
-                            <h3>FV-AI Prediction</h3>
+                            <h3>Crowd Source Prediction</h3>
                             <div class="module-containor">
                                 <div class="module">
-                                    <h3>FV-AI Prediction</h3>
-                                    <p>AI Prediction</p>
-                                    <p>AI Prediction</p>
-                                    <p>AI Prediction</p>
+                                    <h3>Crowd Source Prediction</h3>
+                                    <p class="description">This chart shows the daily time series of the crowd source prediction for this fight</p>
+                                    <div class="chart-containor">Chart</div>
+                                    <div class="vote-inputs">
+                                        <input onchange="handle_vote()" type="checkbox" id="vote-1" name="vote-1" value="1">
+                                        <label for="vote-1">Fighter 1</label>
+                                        <input onchange="handle_vote()" type="checkbox" id="vote-2" name="vote-2" value="2">
+                                        <label for="vote-2">Fighter 2</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="action-button">
@@ -374,13 +379,15 @@ function view_ufc_fight({ fight_id }){
                             </div>
                         </li>
                         <li onclick="open_module()">
-                            <h3>Expert Analysis</h3>
+                            <h3>Guru Board</h3>
                             <div class="module-containor">
                                 <div class="module">
-                                    <h3>FV-AI Prediction</h3>
-                                    <p>AI Prediction</p>
-                                    <p>AI Prediction</p>
-                                    <p>AI Prediction</p>
+                                    <h3>Guru Board</h3>
+                                    <p>This module is for the top (10%) ranked gurus to give their analysis on the fight</p>
+                                    <div class="forum-post">
+                                        <textarea placeholder="Post your analysis"></textarea>
+                                        <button>Post</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="action-button">
@@ -391,10 +398,12 @@ function view_ufc_fight({ fight_id }){
                             <h3>My Prediction</h3>
                             <div class="module-containor">
                                 <div class="module">
-                                    <h3>FV-AI Prediction</h3>
-                                    <p>AI Prediction</p>
-                                    <p>AI Prediction</p>
-                                    <p>AI Prediction</p>
+                                    <h3>FV-AI Analysis</h3>
+                                    <p class="fv-ai-analysis">
+                                        We predict that fighter 1 will win this fight with a 70% probability. 
+                                        Also we predict that the fight will end in the 3rd round by submission.
+                                        And the fight will be a close one.
+                                    </p>
                                 </div>
                             </div>
                             <div class="action-button">
@@ -450,6 +459,7 @@ function view_ufc_fight({ fight_id }){
                 const li = event.target.closest("li");
                 li.querySelector(".module-containor").classList.toggle("active");
                 li.classList.toggle("active");
+                Q("#modal-overlay").classList.toggle("active");
             },
             select_fighter: function(event){
                 const div = event.target.closest("div");
@@ -553,13 +563,13 @@ function view_ufc_fighter({ fmid }){
                     <div class="fight-analysis">
                         <ul class="fight-analysis-list">
                             <li onclick="open_module()">
-                                <h3>FV-AI Prediction</h3>
+                                <h3>-</h3>
                                 <div class="module-containor">
                                     <div class="module">
-                                        <h3>FV-AI Prediction</h3>
-                                        <p>AI Prediction</p>
-                                        <p>AI Prediction</p>
-                                        <p>AI Prediction</p>
+                                        <h3>-</h3>
+                                        <p>-</p>
+                                        <p>-</p>
+                                        <p>-</p>
                                     </div>
                                 </div>
                                 <div class="action-button">
@@ -570,10 +580,10 @@ function view_ufc_fighter({ fmid }){
                                 <h3>Expert Analysis</h3>
                                 <div class="module-containor">
                                     <div class="module">
-                                        <h3>FV-AI Prediction</h3>
-                                        <p>AI Prediction</p>
-                                        <p>AI Prediction</p>
-                                        <p>AI Prediction</p>
+                                        <h3>-</h3>
+                                        <p>-</p>
+                                        <p>-</p>
+                                        <p>-</p>
                                     </div>
                                 </div>
                                 <div class="action-button">
@@ -584,10 +594,10 @@ function view_ufc_fighter({ fmid }){
                                 <h3>My Prediction</h3>
                                 <div class="module-containor">
                                     <div class="module">
-                                        <h3>FV-AI Prediction</h3>
-                                        <p>AI Prediction</p>
-                                        <p>AI Prediction</p>
-                                        <p>AI Prediction</p>
+                                        <h3>-</h3>
+                                        <p>-</p>
+                                        <p>-</p>
+                                        <p>-</p>
                                     </div>
                                 </div>
                                 <div class="action-button">

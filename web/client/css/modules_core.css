@@ -40,6 +40,7 @@
     z-index: 1;
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 #modal-containor {
@@ -50,7 +51,12 @@
     box-shadow: var(--shadow);
     border-radius: 1rem;
     padding: 1rem;
-max-width: 80vw;max-height: 80vh;font-size: 1.2rem;overflow: auto;}
+    max-width: 80vw;
+    max-height: 80vh;
+    font-size: 1.2rem;
+    overflow: auto;
+    display: none;
+    }
 
 #modal-close-button {
     position: absolute;
@@ -58,6 +64,7 @@ max-width: 80vw;max-height: 80vh;font-size: 1.2rem;overflow: auto;}
     top: 2rem;
     transform: scale(1.75);
     color: var(--clr-gray);
+    display: none;
 }
 
 #modal h1{
@@ -752,7 +759,7 @@ cursor: pointer;
 }
 
 button:active {
-    background-color: rgb(177, 177, 177); /* Change to the desired color */
+    
 }
 
 

@@ -230,27 +230,28 @@ ul.event-fight-list {
 
 .fight-analysis-list > li >h3 {
     font-weight: bold;
-    line-height: 0rem;
+    line-height: 1.4rem;
 }
 
 .module-containor {
     overflow: hidden;
     height: 0;
     position: absolute;
-    transition: top .1s, height 0.1s, color .1s;
-    top: 35rem;
+    transition: .1s all ease;
+    top: 40%;
     width: 100%;
-    bottom: 0;
+    bottom: 40%;
     left: 0;
 }
 
 .module-containor.active {
     background-color: var(--clr-gray-dark);
-    height: 50rem;
-    top: 16.85rem;
+    top: 20%;
     z-index: 11;
     color: white;
     padding: 2rem;
+    bottom: 20%;
+    height: auto;
 }
 
 .module-containor.active + div > svg {

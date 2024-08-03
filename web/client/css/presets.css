@@ -704,7 +704,7 @@ li {
 }
 
 li:active {
-    background-color: #ccc;
+  
 }
 
 .front, .back {
@@ -739,4 +739,9 @@ li:active {
 
 .carocel-image > g >path {
     fill: goldenrod
+}
+
+ul li:active {
+    transform: none; /* Negates any transform effects */
+    outline: none; /* Removes any outline effects */
 }
