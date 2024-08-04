@@ -17,6 +17,9 @@ var Application = (function () {
             login(data);
         }
         console.log("Application initialized", data)
+        application.user = data.user;
+	application.user.is_member = false;
+	application.user.is_logged = data.is_authenticated;
         application.mods.core.header.data.selected_event = data.upcoming_event;
         application.mods.core.header.render();
 

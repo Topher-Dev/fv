@@ -331,14 +331,13 @@ function get_nav(){
 
 function get_menu(){
 
-    const user = token.parse()
 
     const menu = new Component('#menu-home', {
         data: {
-            is_logged: Boolean(user),
+            is_logged: app.user.is_logged,
             profile: ``,
             footer: ``,
-            user: user,
+            user: app.user,
             menu_items: [
                 {
                     key: "login",
@@ -355,12 +354,14 @@ function get_menu(){
                     label: "About",
                     help: "Learn more about us",
                 },
+/*
                 {
                     key: "advertise",
                     label: "Advertising",
                     help: "Advertise with us",
                 },
-                {
+*/ 
+               {
                     key: "contact",
                     label: "Contact",
                     help: "Have a question or concern?",
@@ -388,15 +389,31 @@ function get_menu(){
                         <button id="logout" onclick="logout()">Logout</button>
                     </div>`;
 
-            }
-         
+            } else {
+
+		profile = html`
+		    <img class="user-profile-bg" src="images/ranks/3.jpg?v=2"/>
+		    <h3 class="full-logo">Full Logo (FightView)</h3>
+		    <div class="user-profile-containor d--f fd--r jc--sb">
+   			<div class="user-profile-col d--f fd--c ai--c g--xxs">
+			    <img class="user-profile-rank-img" src="images/ranks/2.png"/>
+			    <div class="d--f fd--rr ai--c g--xs">
+       			        <p class="user-profile-username" >${app.user.remote_addr}</p>
+   			        <div class="user-profile-status-indicator">${get_svg("dot", 'class="svg-person-status"')}</div>
+		            </div>
+			</div>
+			<div>2 Online</div>
+ 		    </div>
+		    <p class="menu-module-instructions">This is where some text will go that boils down and guide to the essense of the current menu moduke</p>`;
+	    }
+
             const footer = get_footer();
 
             return html`
-                <div class="d--f fd--c jc--sb" style="height:100%">
+                <div class="d--f fd--c" style="height:100%">
                     <div>
                         ${profile}
-                        <ul class="menu-list" style="margin-top: ${is_logged ? '1.75rem' : '4.75rem'}"> ${menu_items.map(({ key, label, help}) => html`
+                        <ul class="menu-list"> ${menu_items.map(({ key, label, help}) => html`
                             <li onclick="select()" key="${key}" class="d--f jc--sb ai--c menu-list-item">
                                 <h2 class="tt--c menu-item">${label}</h2>
                                 <p class="menu-item-text">${help}</p>
@@ -436,10 +453,10 @@ function get_footer() {
     return html`
         <div class="d--f fd--c ai--c jc--c g--md p--lg mt--md">
             <ul role="list" class="d--f ai--c jc--c g--xl">
-                <li><a class="td--n" href="https://stocktwits.com/Insider_Analysis" target="_blank" style="color:var(--clr-green)">Stocktwits</a></li>
+                <li><a class="td--n" href="https://stocktwits.com/Insider_Analysis" target="_blank">Stocktwits</a></li>
                 <li><a href="https://twitter.com/IA_machine" target="_blank">${get_svg("twitter", 'class="svg-footer"')}</a></li>
                 <li><a href="https://www.instagram.com/insider.analysis/" target="_blank">${get_svg("instagram", 'class="svg-footer"')}</a></li>
-                <li><a class="td--n" href="https://www.patreon.com/insider_analysis" target="_blank" style="color:var(--clr-green)">Patreon</a></li>
+                <li><a class="td--n" href="https://www.patreon.com/insider_analysis" target="_blank">Patreon</a></li>
             </ul>
             <div class="d--f g--md">
                 <button data-html="policy" onclick="modal()" class="ts--sm fw--r">Private Policy</button>
