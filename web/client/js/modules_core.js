@@ -198,6 +198,46 @@ function get_header(){
                     //open menu
                     } else if (is_open === false && mode === "menu"){
                         Hamburger.open("menu");
+   am5.ready(function() {
+            // Create root element
+            var root = am5.Root.new("chartdiv");
+
+            // Set themes
+            root.setThemes([
+                am5themes_Dark.new(root)
+            ]);
+
+            // Create the map chart
+            var chart = root.container.children.push(am5map.MapChart.new(root, {
+                panX: "rotateX",
+                panY: "rotateY",
+                projection: am5map.geoMercator()
+            }));
+
+            // Create polygon series for the world map
+            var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+                geoJSON: am5geodata_worldLow
+            }));
+
+            // Configure series
+            polygonSeries.mapPolygons.template.setAll({
+                tooltipText: "{name}",
+                interactive: true,
+                fill: am5.color(0x1f1f1f),
+                stroke: am5.color(0xffffff),
+                strokeWidth: 0.5
+            });
+
+            polygonSeries.mapPolygons.template.states.create("hover", {
+                fill: am5.color(0x5f5f5f)
+            });
+
+            // Add zoom control
+           
+
+            // Make stuff animate on load
+            chart.appear(1000, 100);
+        });
                     }
 
                     Hamburger.busy(false);
@@ -257,6 +297,8 @@ function get_header(){
         topLine_1 = Q("#top-line-1");
         middleLine_1 = Q("#middle-line-1");
         bottomLine_1 = Q("#bottom-line-1");
+
+
     });
 
 
@@ -392,7 +434,7 @@ function get_menu(){
             } else {
 
 		profile = html`
-		    <img class="user-profile-bg" src="images/ranks/3.jpg?v=2"/>
+		    <div class="user-profile-bg" id="chartdiv"></div>
 		    <h3 class="full-logo">Full Logo (FightView)</h3>
 		    <div class="user-profile-containor d--f fd--r jc--sb">
    			<div class="user-profile-col d--f fd--c ai--c g--xxs">
@@ -415,8 +457,10 @@ function get_menu(){
                         ${profile}
                         <ul class="menu-list"> ${menu_items.map(({ key, label, help}) => html`
                             <li onclick="select()" key="${key}" class="d--f jc--sb ai--c menu-list-item">
-                                <h2 class="tt--c menu-item">${label}</h2>
-                                <p class="menu-item-text">${help}</p>
+				<div class="d--f fd--c jc--fs">
+                                    <h2 class="tt--c menu-item">${label}</h2>
+                                    <p class="menu-item-text">${help}</p>
+				</div>
                                 ${get_svg("chevron-right", 'class="svg-test"')}
                             </li>`)}
                         </ul>

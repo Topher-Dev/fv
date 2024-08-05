@@ -499,7 +499,7 @@ appearance: none;
 -webkit-appearance: none;
 font-family: Graphik,Arial,sans-serif;
 font-size: 2.5rem;
-line-height: 5.75rem;
+line-height: 3rem;
 letter-spacing: -0.03em;
 }
 
@@ -521,8 +521,6 @@ padding: .5rem 0;
 }
 
 .menu-item-text {
-position: absolute;
-bottom: .2rem;
 font-size: 1.2rem;
 line-height: 1.25rem;
 }
@@ -1048,7 +1046,7 @@ canvas {
     border: .1rem solid #ffffffa6;
     color: white;
     margin-top: .75rem;
-    margin-bottom: 3.5rem;
+    margin-bottom: 2.5rem;
     width: 100%;
     min-height: 193px;
     overflow: hidden;
@@ -1080,13 +1078,14 @@ canvas {
 .user-profile-bg{
     z-index: -1;
     position: absolute;
-    left: -37px;
+    left: 0;
     right: 0;
-    max-width: 110%;
+    max-width: 100%;
     color: white;
     opacity: 1;
     top: 5rem;
-    min-height: 1
+    min-height: 22.5rem;
+    background-color: var(--clr-charcoal);
 }
 
 .menu-module-instructions {
@@ -1105,5 +1104,5 @@ canvas {
 }
 
 a {
-    color: #85870d;
+    color: var(--clr-charcoal);
 }

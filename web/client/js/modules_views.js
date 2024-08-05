@@ -395,7 +395,7 @@ function view_ufc_fight({ fight_id }){
                             </div>
                         </li>
                         <li onclick="open_module()">
-                            <h3>My Prediction</h3>
+                            <h3>FV-AI Analysis</h3>
                             <div class="module-containor">
                                 <div class="module">
                                     <h3>FV-AI Analysis</h3>
